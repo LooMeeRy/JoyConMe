@@ -1,84 +1,73 @@
-# actions/mouse.py
-import time
+import math
 
 from evdev import ecodes as e
 
 ACTION_INFO = {
     "id": "mouse_control",
-    "name": "ควบคุมเมาส์",
+    "name": "ควบคุมเมาส์และลูกกลิ้ง",
     "actions": [
-        {"key": "move_x", "type": "analog", "desc": "ขยับเมาส์แนวนอน (ซ้าย-ขวา)"},
-        {"key": "move_y", "type": "analog", "desc": "ขยับเมาส์แนวตั้ง (บน-ล่าง)"},
-        {
-            "key": "scroll_y",
-            "type": "analog",
-            "desc": "ลูกกลิ้งเมาส์ (Scroll ขึ้น-ลง)",
-        },  # ✨ เพิ่มบรรทัดนี้
+        {"key": "move_x", "type": "analog", "desc": "ขยับเมาส์แนวนอน"},
+        {"key": "move_y", "type": "analog", "desc": "ขยับเมาส์แนวตั้ง"},
+        {"key": "scroll_y", "type": "analog", "desc": "ลูกกลิ้งเมาส์"},
         {"key": "left_click", "type": "button", "desc": "คลิกซ้าย"},
         {"key": "right_click", "type": "button", "desc": "คลิกขวา"},
+        {
+            "key": "focus_mode",
+            "type": "button",
+            "desc": "โหมดโฟกัส (ช้าพิเศษ)",
+        },  # ✨ เพิ่ม Action ใหม่
     ],
 }
 
-# ตัวแปรจำเวลาของลูกกลิ้ง เพื่อไม่ให้มันเลื่อนรัวเกินไป
-last_scroll_time = 0
-base_scroll_delay = 0.08  # ปรับค่าน้อยลง = เลื่อนเร็วขึ้น
 
+def run(ui_virtual, joystick, app_config, mod_mapping):
+    # 1. ดึงค่าตั้งค่าจาก app_config
+    mouse_cfg = app_config.get("mouse", {})
+    speed_x = mouse_cfg.get("speed_x", 15)
+    speed_y = mouse_cfg.get("speed_y", 15)
+    deadzone = mouse_cfg.get("deadzone", 0.15)
 
-def process_mouse_movement(ui, joystick, mouse_config, analog_mapping, button_mapping):
-    global last_scroll_time
+    # 2. ดึงการตั้งค่าปุ่มจาก mapping.json
+    analogs = mod_mapping.get("analogs", {})
+    buttons = mod_mapping.get("buttons", {})
 
-    # --- ส่วนการขยับเมาส์ (Analog) ---
-    axis_x_id = analog_mapping.get("move_x")
-    axis_y_id = analog_mapping.get("move_y")
+    # --- ✨ ระบบ Focus Mode (Sniper Mode) ---
+    # ถ้ากดปุ่ม focus_mode ค้างไว้ จะลดความเร็วลงเหลือ 1/5 (หรือ 0.2)
+    current_multiplier = 1.0
+    focus_btn = buttons.get("focus_mode")
+    if focus_btn is not None and joystick.get_button(focus_btn):
+        current_multiplier = 0.2  # 🐢 ปรับตรงนี้ได้ ถ้าอยากให้ช้าลงอีกก็ลดเลขลง (เช่น 0.1)
 
-    deadzone = mouse_config.get("deadzone", 0.1)
-    speed_x = mouse_config.get("speed_x", 15)
-    speed_y = mouse_config.get("speed_y", 15)
+    # --- การขยับเมาส์ ---
+    ax = analogs.get("move_x")
+    ay = analogs.get("move_y")
+    if ax is not None and ay is not None:
+        val_x = joystick.get_axis(ax)
+        val_y = joystick.get_axis(ay)
 
-    move_x = 0
-    move_y = 0
+        # คำนวณความเร็วโดยคูณกับ current_multiplier
+        dx = int(val_x * speed_x * current_multiplier) if abs(val_x) > deadzone else 0
+        dy = int(val_y * speed_y * current_multiplier) if abs(val_y) > deadzone else 0
 
-    if axis_x_id is not None:
-        val_x = joystick.get_axis(axis_x_id)
-        if abs(val_x) > deadzone:
-            move_x = int(val_x * speed_x)
+        if dx != 0 or dy != 0:
+            ui_virtual.write(e.EV_REL, e.REL_X, dx)
+            ui_virtual.write(e.EV_REL, e.REL_Y, dy)
 
-    if axis_y_id is not None:
-        val_y = joystick.get_axis(axis_y_id)
-        if abs(val_y) > deadzone:
-            move_y = int(val_y * speed_y)
+    # --- ลูกกลิ้งเมาส์ ---
+    ascr = analogs.get("scroll_y")
+    if ascr is not None:
+        val_scr = joystick.get_axis(ascr)
+        if abs(val_scr) > 0.5:
+            direction = -1 if val_scr > 0 else 1
+            ui_virtual.write(e.EV_REL, e.REL_WHEEL, direction)
 
-    if move_x != 0 or move_y != 0:
-        ui.write(e.EV_REL, e.REL_X, move_x)
-        ui.write(e.EV_REL, e.REL_Y, move_y)
+    # --- การคลิก ---
+    if "left_click" in buttons:
+        state = joystick.get_button(buttons["left_click"])
+        ui_virtual.write(e.EV_KEY, e.BTN_LEFT, state)
 
-    # --- ✨ ส่วนลูกกลิ้งเมาส์ (Analog Scroll) ---
-    scroll_y_id = analog_mapping.get("scroll_y")
-    if scroll_y_id is not None:
-        val_scroll = joystick.get_axis(scroll_y_id)
-        if abs(val_scroll) > deadzone:
-            current_time = time.time()
-            # ยิ่งดันอนาล็อกแรง ดีเลย์จะยิ่งน้อย = ไถเร็วขึ้น!
-            dynamic_delay = base_scroll_delay / abs(val_scroll)
+    if "right_click" in buttons:
+        state = joystick.get_button(buttons["right_click"])
+        ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, state)
 
-            if current_time - last_scroll_time > dynamic_delay:
-                # ใน evdev: REL_WHEEL 1 คือดันขึ้น, -1 คือดันลง
-                # อนาล็อกดันขึ้น(ค่าลบ) -> สั่ง scroll 1 (ขึ้น)
-                direction = 1 if val_scroll < 0 else -1
-                ui.write(e.EV_REL, e.REL_WHEEL, direction)
-                last_scroll_time = current_time
-
-    # --- ส่วนการคลิก (Button) ---
-    # ตรวจสอบปุ่มคลิกซ้าย
-    left_id = button_mapping.get("left_click")
-    if left_id is not None:
-        # ส่งสถานะปุ่มจอย (0 หรือ 1) ไปเป็นสถานะปุ่มเมาส์ (Press/Release)
-        ui.write(e.EV_KEY, e.BTN_LEFT, joystick.get_button(left_id))
-
-    # ตรวจสอบปุ่มคลิกขวา
-    right_id = button_mapping.get("right_click")
-    if right_id is not None:
-        ui.write(e.EV_KEY, e.BTN_RIGHT, joystick.get_button(right_id))
-
-    # อัปเดตสถานะทั้งหมดไปที่ Kernel ทีเดียว
-    ui.syn()
+    ui_virtual.syn()

@@ -7,7 +7,8 @@
         },
         "buttons": {
             "right_click": 1,
-            "left_click": 0
+            "left_click": 0,
+            "focus_mode": 9
         }
     },
     "radial_setup": {

@@ -5,15 +5,23 @@ CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # เก็บค่า Default ไว้ที่นี่ที่เดียว
 DEFAULT_CONFIG = {
-    "mouse": {"deadzone": 0.1, "speed_x": 10, "speed_y": 10},
-    "system": {"sleep_time": 0.01},
+    "mouse": {"speed_x": 15, "speed_y": 15, "deadzone": 0.15, "scroll_delay": 0.08},
+    "ui": {
+        "items_per_page": 6,
+        "menu_radius": 220,
+        "selection_threshold": 0.4,
+        "wait_time_ms": 300,
+        "opacity": 210,
+    },
 }
+
 
 DEFAULT_MAPPING = {
     "mouse_control": {
-        "analogs": {"move_x": 0, "move_y": 1},
-        "buttons": {"left_click": 0, "right_click": 1},
-    }
+        "analogs": {"move_x": 0, "move_y": 1, "scroll_y": 3},
+        "buttons": {"right_click": 1, "left_click": 0},
+    },
+    "radial_setup": {"buttons": {"open_menu": 10}},
 }
 
 

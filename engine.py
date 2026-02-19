@@ -1,124 +1,155 @@
 import importlib
+import json
 import os
 import time
 
 import pygame
 from evdev import UInput
 from evdev import ecodes as e
-from PySide6.QtWidgets import QApplication
-
-from config.loader import load_json
-from config.setup import initialize_configs
 
 
-class InputEngine:
+class JoyConEngine:
     def __init__(self):
-        # 1. จัดการระบบ UI (PySide6)
-        # สร้าง QApplication instance ทิ้งไว้เพื่อให้ Action ต่างๆ เรียกใช้ UI ได้
-        self.qt_app = QApplication.instance() or QApplication([])
+        # 1. กำหนดเส้นทางและชื่อไฟล์
+        self.config_dir = "config"
+        self.config_path = os.path.join(self.config_dir, "config.json")
+        self.mapping_path = os.path.join(self.config_dir, "mapping.json")
+        self.actions_dir = "actions"
 
-        # 2. เตรียมไฟล์ Config และ Mapping
-        initialize_configs()
-        self.refresh_config()
+        # 2. ตรวจสอบโฟลเดอร์พื้นฐานว่ามีครบไหม
+        for folder in [self.config_dir, self.actions_dir]:
+            if not os.path.exists(folder):
+                os.makedirs(folder)
 
-        # 3. เตรียม Virtual Input (เมาส์และปุ่มพื้นฐาน)
-        capabilities = {
-            e.EV_REL: (e.REL_X, e.REL_Y, e.REL_WHEEL),
-            e.EV_KEY: (e.BTN_LEFT, e.BTN_RIGHT, e.BTN_MIDDLE, e.KEY_ENTER, e.KEY_ESC),
-        }
-        self.ui_virtual = UInput(events=capabilities, name="JoyConMe-Engine-Input")
+        # 3. โหลดการตั้งค่า (Config) และการจับคู่ปุ่ม (Mapping)
+        self.load_all_configs()
 
-        # 4. เตรียมจอยสติ๊ก
-        pygame.init()
-        pygame.joystick.init()
-        self.joystick = None
-        if pygame.joystick.get_count() > 0:
-            self.joystick = pygame.joystick.Joystick(0)
-            self.joystick.init()
-            print(f"🎮 Connected: {self.joystick.get_name()}")
-        else:
-            print("❌ No Joystick Found")
-
-        # 5. โหลด Actions ทั้งหมดจากโฟลเดอร์ actions/
+        # 4. เตรียมที่เก็บ Action และเริ่มสแกนโหลดโมดูลจากโฟลเดอร์ actions/
         self.actions = {}
         self.load_actions()
 
-    def refresh_config(self):
-        """โหลดค่าจากไฟล์ JSON ใหม่"""
-        self.app_config = load_json("config.json")
-        self.app_mapping = load_json("mapping.json")
+        # 5. เตรียมฮาร์ดแวร์จอยสติ๊กและอุปกรณ์จำลอง (Virtual Mouse)
+        self.init_hardware()
+        self.init_virtual_device()
+
+    def load_all_configs(self):
+        """โหลดไฟล์ตั้งค่า JSON เข้ามาในหน่วยความจำ (RAM)"""
+        # โหลดค่าความเร็วและระบบ (app_config)
+        if os.path.exists(self.config_path):
+            try:
+                with open(self.config_path, "r", encoding="utf-8") as f:
+                    self.app_config = json.load(f)
+            except Exception as ex:
+                print(f"⚠️ ไม่สามารถอ่าน config.json ได้: {ex}")
+                self.app_config = self._get_default_config()
+        else:
+            self.app_config = self._get_default_config()
+            self.save_app_config()
+
+        # โหลดค่าการตั้งค่าปุ่ม (mod_mapping)
+        if os.path.exists(self.mapping_path):
+            try:
+                with open(self.mapping_path, "r", encoding="utf-8") as f:
+                    self.mod_mapping = json.load(f)
+            except:
+                self.mod_mapping = {}
+        else:
+            self.mod_mapping = {}
+
+    def _get_default_config(self):
+        """ค่าเริ่มต้นกรณีไม่มีไฟล์ตั้งค่า"""
+        return {
+            "mouse": {
+                "speed_x": 15,
+                "speed_y": 15,
+                "deadzone": 0.15,
+                "scroll_delay": 0.08,
+            },
+            "ui": {"items_per_page": 6, "wait_time_ms": 300},
+            "system": {"tick_rate": 60, "device_name": "JoyConMe-Virtual-Mouse"},
+        }
+
+    def save_app_config(self):
+        """บันทึกการตั้งค่าปัจจุบันลงไฟล์ถาวร"""
+        with open(self.config_path, "w", encoding="utf-8") as f:
+            json.dump(self.app_config, f, indent=4, ensure_ascii=False)
 
     def load_actions(self):
-        """สแกนโฟลเดอร์ actions/ เพื่อโหลดโมดูลแบบ Dynamic"""
-        actions_dir = os.path.join(os.path.dirname(__file__), "actions")
-        if not os.path.exists(actions_dir):
+        """สแกนหาไฟล์ .py ในโฟลเดอร์ actions และดึงความสามารถมาใช้"""
+        if not os.path.exists(self.actions_dir):
             return
 
-        for f in os.listdir(actions_dir):
-            if f.endswith(".py") and f != "__init__.py":
-                mod_name = f[:-3]
+        for filename in os.listdir(self.actions_dir):
+            if filename.endswith(".py") and filename != "__init__.py":
+                mod_name = filename[:-3]
                 try:
-                    # นำเข้าโมดูล (Import)
+                    # โหลดโมดูลแบบ dynamic
                     module = importlib.import_module(f"actions.{mod_name}")
-                    if hasattr(module, "ACTION_INFO"):
-                        self.actions[module.ACTION_INFO["id"]] = module
-                        print(f"📦 Loaded Action: {module.ACTION_INFO['name']}")
+                    importlib.reload(module)
+
+                    # ตรวจสอบว่าโมดูลมีโครงสร้างตามที่เราต้องการไหม
+                    if hasattr(module, "run") and hasattr(module, "ACTION_INFO"):
+                        action_id = module.ACTION_INFO["id"]
+                        self.actions[action_id] = module
+                        print(f"✅ โหลด Action: {action_id} สำเร็จ")
                 except Exception as ex:
-                    print(f"⚠️ Error loading {f}: {ex}")
+                    print(f"❌ โหลดไฟล์ '{mod_name}' ไม่สำเร็จ: {ex}")
 
-    def run_tick(self):
-        """ทำงาน 1 รอบลูป (เรียกใช้จาก main.py)"""
-        if not self.joystick:
-            return
+    def refresh_config(self):
+        """สั่งโหลดไฟล์ตั้งค่าใหม่โดยไม่ต้องเปิด-ปิดโปรแกรมใหม่"""
+        self.load_all_configs()
+        print("🔄 รีโหลดการตั้งค่าเรียบร้อย!")
 
-        # อัปเดตเหตุการณ์ของ UI (ทำให้หน้าต่าง Overlay ไม่ค้าง)
-        self.qt_app.processEvents()
+    def init_hardware(self):
+        """ตั้งค่าการรับสัญญาณจากจอยสติ๊ก"""
+        pygame.init()
+        pygame.joystick.init()
+        if pygame.joystick.get_count() > 0:
+            self.joystick = pygame.joystick.Joystick(0)
+            self.joystick.init()
+            print(f"🎮 เชื่อมต่อจอย: {self.joystick.get_name()}")
+        else:
+            print("❌ ไม่พบจอยสติ๊ก")
+            self.joystick = None
 
-        # อัปเดตเหตุการณ์ของจอยสติ๊ก
-        pygame.event.pump()
-
-        # ตัวแปรสำหรับเช็คว่ามี Action ไหนขอ 'ล็อค' การควบคุมไว้หรือไม่
-        exclusive_mode = False
-
-        # --- ลำดับการรัน 1: รัน Action พิเศษ (เช่น Radial Menu Setup) ---
-        # เราให้ระบบ Setup มีสิทธิ์ทำงานก่อนเพื่อดูว่าจะเปิดเมนูไหม
-        if "radial_setup" in self.actions:
-            mod = self.actions["radial_setup"]
-            mapping = self.app_mapping.get("radial_setup", {})
-            result = mod.run(self.ui_virtual, self.joystick, self.app_config, mapping)
-
-            # ✨ เช็คสัญญาณขอรีโหลดไฟล์ JSON
-            if result == "RELOAD":
-                print("🔄 ตรวจพบการเปลี่ยนแปลง! กำลังโหลด mapping.json ใหม่...")
-                self.refresh_config()  # โหลดไฟล์ใหม่ทันที!
-                exclusive_mode = False
-            else:
-                exclusive_mode = result
-
-        # --- ลำดับการรัน 2: รัน Action ทั่วไป (เช่น ขยับเมาส์) ---
-        # ถ้าไม่มีการเปิดเมนูวงกลมอยู่ (Not Exclusive) ให้รัน Action อื่นๆ ตามปกติ
-        if not exclusive_mode:
-            for mod_id, module in self.actions.items():
-                if mod_id == "radial_setup":
-                    continue  # ข้ามตัวที่รันไปแล้ว
-
-                mod_mapping = self.app_mapping.get(mod_id, {})
-
-                # ตรวจสอบฟังก์ชันการรัน (รองรับทั้งแบบ .run() และ .process_mouse_movement())
-                if hasattr(module, "run"):
-                    module.run(
-                        self.ui_virtual, self.joystick, self.app_config, mod_mapping
-                    )
-                elif mod_id == "mouse_control" and hasattr(
-                    module, "process_mouse_movement"
-                ):
-                    module.process_mouse_movement(
-                        self.ui_virtual,
-                        self.joystick,
-                        self.app_config.get("mouse", {}),
-                        mod_mapping.get("analogs", {}),
-                        mod_mapping.get("buttons", {}),
-                    )
+    def init_virtual_device(self):
+        """สร้างเมาส์จำลองขึ้นมาในระบบ Linux"""
+        capabilities = {
+            e.EV_REL: (e.REL_X, e.REL_Y, e.REL_WHEEL),
+            e.EV_KEY: (e.BTN_LEFT, e.BTN_RIGHT, e.BTN_MIDDLE),
+        }
+        name = self.app_config.get("system", {}).get(
+            "device_name", "JoyConMe-Virtual-Mouse"
+        )
+        self.ui_virtual = UInput(capabilities, name=name)
 
     def get_sleep_time(self):
-        return self.app_config.get("system", {}).get("sleep_time", 0.01)
+        """คำนวณเวลาที่ต้องหยุดพักต่อรอบตามค่า Tick Rate"""
+        tick_rate = self.app_config.get("system", {}).get("tick_rate", 60)
+        return 1.0 / tick_rate
+
+    def run_tick(self):
+        """ลูปหลักที่คอยตรวจเช็คการกดปุ่มจอยในทุกๆ เฟรม"""
+        if self.joystick is None:
+            return
+
+        pygame.event.pump()
+
+        # 1. เช็คเมนูวงกลมก่อน (ถ้าเปิดอยู่จะหยุดการทำงานอื่น)
+        if "radial_setup" in self.actions:
+            mod = self.actions["radial_setup"]
+            mapping = self.mod_mapping.get("radial_setup", {})
+            result = mod.run(self.ui_virtual, self.joystick, self.app_config, mapping)
+
+            if result == "RELOAD":
+                self.refresh_config()
+                return
+            elif result is True:
+                return
+
+        # 2. รัน Action อื่นๆ (เมาส์, ลูกกลิ้ง ฯลฯ)
+        for mod_id, mod in self.actions.items():
+            if mod_id == "radial_setup":
+                continue
+            mapping = self.mod_mapping.get(mod_id, {})
+            mod.run(self.ui_virtual, self.joystick, self.app_config, mapping)
