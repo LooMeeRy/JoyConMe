@@ -1,0 +1,10 @@
+{
+  "mouse": {
+    "deadzone": 0.1,
+    "speed_x": 10,
+    "speed_y": 10
+  },
+  "system": {
+    "sleep_time": 0.01
+  }
+}

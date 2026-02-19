@@ -1,0 +1,12 @@
+{
+    "mouse_control": {
+        "analogs": {
+            "move_x": 0,
+            "move_y": 1
+        },
+        "buttons": {
+            "left_click": 0,
+            "right_click": 1
+        }
+    }
+}
