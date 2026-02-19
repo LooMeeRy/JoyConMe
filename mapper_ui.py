@@ -55,14 +55,19 @@ class MapperApp(App):
     def scan_actions(self):
         found = []
         path = os.path.join(os.path.dirname(__file__), "actions")
+        if not os.path.exists(path):
+            return found
+
         for f in os.listdir(path):
             if f.endswith(".py") and f != "__init__.py":
                 try:
+                    # พยายามโหลดโมดูล
                     m = importlib.import_module(f"actions.{f[:-3]}")
                     if hasattr(m, "ACTION_INFO"):
                         found.append(m.ACTION_INFO)
-                except:
-                    pass
+                except Exception as e:
+                    # ถ้าโหลดไม่ได้ ให้พิมพ์บอกใน Terminal ว่าติดอะไร
+                    print(f"❌ ไม่สามารถโหลด Action '{f}' ได้เพราะ: {e}")
         return found
 
     def compose(self) -> ComposeResult:

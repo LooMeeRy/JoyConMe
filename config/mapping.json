@@ -8,5 +8,10 @@
             "left_click": 0,
             "right_click": 1
         }
+    },
+    "radial_setup": {
+        "buttons": {
+            "open_menu": 10
+        }
     }
 }
