@@ -1,4 +1,6 @@
 # actions/mouse.py
+import time
+
 from evdev import ecodes as e
 
 ACTION_INFO = {
@@ -7,13 +9,24 @@ ACTION_INFO = {
     "actions": [
         {"key": "move_x", "type": "analog", "desc": "ขยับเมาส์แนวนอน (ซ้าย-ขวา)"},
         {"key": "move_y", "type": "analog", "desc": "ขยับเมาส์แนวตั้ง (บน-ล่าง)"},
+        {
+            "key": "scroll_y",
+            "type": "analog",
+            "desc": "ลูกกลิ้งเมาส์ (Scroll ขึ้น-ลง)",
+        },  # ✨ เพิ่มบรรทัดนี้
         {"key": "left_click", "type": "button", "desc": "คลิกซ้าย"},
         {"key": "right_click", "type": "button", "desc": "คลิกขวา"},
     ],
 }
 
+# ตัวแปรจำเวลาของลูกกลิ้ง เพื่อไม่ให้มันเลื่อนรัวเกินไป
+last_scroll_time = 0
+base_scroll_delay = 0.08  # ปรับค่าน้อยลง = เลื่อนเร็วขึ้น
+
 
 def process_mouse_movement(ui, joystick, mouse_config, analog_mapping, button_mapping):
+    global last_scroll_time
+
     # --- ส่วนการขยับเมาส์ (Analog) ---
     axis_x_id = analog_mapping.get("move_x")
     axis_y_id = analog_mapping.get("move_y")
@@ -38,7 +51,22 @@ def process_mouse_movement(ui, joystick, mouse_config, analog_mapping, button_ma
     if move_x != 0 or move_y != 0:
         ui.write(e.EV_REL, e.REL_X, move_x)
         ui.write(e.EV_REL, e.REL_Y, move_y)
-        ui.syn()
+
+    # --- ✨ ส่วนลูกกลิ้งเมาส์ (Analog Scroll) ---
+    scroll_y_id = analog_mapping.get("scroll_y")
+    if scroll_y_id is not None:
+        val_scroll = joystick.get_axis(scroll_y_id)
+        if abs(val_scroll) > deadzone:
+            current_time = time.time()
+            # ยิ่งดันอนาล็อกแรง ดีเลย์จะยิ่งน้อย = ไถเร็วขึ้น!
+            dynamic_delay = base_scroll_delay / abs(val_scroll)
+
+            if current_time - last_scroll_time > dynamic_delay:
+                # ใน evdev: REL_WHEEL 1 คือดันขึ้น, -1 คือดันลง
+                # อนาล็อกดันขึ้น(ค่าลบ) -> สั่ง scroll 1 (ขึ้น)
+                direction = 1 if val_scroll < 0 else -1
+                ui.write(e.EV_REL, e.REL_WHEEL, direction)
+                last_scroll_time = current_time
 
     # --- ส่วนการคลิก (Button) ---
     # ตรวจสอบปุ่มคลิกซ้าย
@@ -52,5 +80,5 @@ def process_mouse_movement(ui, joystick, mouse_config, analog_mapping, button_ma
     if right_id is not None:
         ui.write(e.EV_KEY, e.BTN_RIGHT, joystick.get_button(right_id))
 
-    # อัปเดตสถานะการกด
+    # อัปเดตสถานะทั้งหมดไปที่ Kernel ทีเดียว
     ui.syn()

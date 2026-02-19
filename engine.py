@@ -23,7 +23,7 @@ class InputEngine:
 
         # 3. เตรียม Virtual Input (เมาส์และปุ่มพื้นฐาน)
         capabilities = {
-            e.EV_REL: (e.REL_X, e.REL_Y),
+            e.EV_REL: (e.REL_X, e.REL_Y, e.REL_WHEEL),
             e.EV_KEY: (e.BTN_LEFT, e.BTN_RIGHT, e.BTN_MIDDLE, e.KEY_ENTER, e.KEY_ESC),
         }
         self.ui_virtual = UInput(events=capabilities, name="JoyConMe-Engine-Input")
