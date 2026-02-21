@@ -25,17 +25,6 @@
     },
     "exit_app": {
         "analogs": {},
-        "buttons": {
-            "exit_now": [
-                0,
-                {
-                    "hat": 0,
-                    "dir": [
-                        0,
-                        -1
-                    ]
-                }
-            ]
-        }
+        "buttons": {}
     }
 }
