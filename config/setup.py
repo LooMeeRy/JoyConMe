@@ -1,7 +1,7 @@
 import json
 import os
 
-CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_DIR = os.path.dirname(__file__)
 
 DEFAULT_CONFIG = {
     "mouse": {"speed_x": 25, "speed_y": 25, "deadzone": 0.15, "scroll_delay": 0.08},
