@@ -4,11 +4,11 @@ import os
 import time
 
 import pygame
-
-# Import Setup
-import setup
 from evdev import UInput
 from evdev import ecodes as e
+
+# Import Setup
+from config import setup
 
 
 class JoyConEngine:
