@@ -8,18 +8,23 @@
         "buttons": {
             "right_click": 1,
             "left_click": 0,
-            "focus": 9
+            "focus_mode": 9
         }
     },
     "radial_setup": {
-        "buttons": {}
+        "buttons": {
+            "open_menu": [
+                10,
+                11
+            ]
+        }
     },
     "sequence_engine": {
         "analogs": {},
         "buttons": {
             "open_listener": [
-                10,
-                11
+                7,
+                10
             ]
         }
     }

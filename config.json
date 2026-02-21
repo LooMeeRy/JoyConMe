@@ -1,0 +1,15 @@
+{
+    "mouse": {
+        "speed_x": 25,
+        "speed_y": 25,
+        "deadzone": 0.15,
+        "scroll_delay": 0.08
+    },
+    "ui": {
+        "items_per_page": 6,
+        "menu_radius": 220,
+        "selection_threshold": 0.4,
+        "wait_time_ms": 300,
+        "opacity": 210
+    }
+}

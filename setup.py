@@ -3,9 +3,8 @@ import os
 
 CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# เก็บค่า Default ไว้ที่นี่ที่เดียว
 DEFAULT_CONFIG = {
-    "mouse": {"speed_x": 15, "speed_y": 15, "deadzone": 0.15, "scroll_delay": 0.08},
+    "mouse": {"speed_x": 25, "speed_y": 25, "deadzone": 0.15, "scroll_delay": 0.08},
     "ui": {
         "items_per_page": 6,
         "menu_radius": 220,
@@ -15,13 +14,13 @@ DEFAULT_CONFIG = {
     },
 }
 
-
 DEFAULT_MAPPING = {
     "mouse_control": {
         "analogs": {"move_x": 0, "move_y": 1, "scroll_y": 3},
-        "buttons": {"right_click": 1, "left_click": 0},
+        "buttons": {"right_click": 1, "left_click": 0, "focus_mode": 9},
     },
-    "radial_setup": {"buttons": {"open_menu": 10}},
+    "radial_setup": {"buttons": {"open_menu": [10, 11]}},
+    "sequence_engine": {"analogs": {}, "buttons": {"open_listener": [7, 10]}},
 }
 
 
@@ -30,10 +29,9 @@ def create_if_not_exists(filename, default_data):
     if not os.path.exists(filepath):
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(default_data, f, indent=4)
-        print(f"[Setup] สร้างไฟล์ {filename} เริ่มต้นเรียบร้อยแล้ว")
+        print(f"[Setup] Created {filename}")
 
 
 def initialize_configs():
-    """ฟังก์ชันนี้จะถูกเรียกตอนเริ่มรันโปรแกรม เพื่อเตรียมไฟล์ให้พร้อม"""
     create_if_not_exists("config.json", DEFAULT_CONFIG)
     create_if_not_exists("mapping.json", DEFAULT_MAPPING)
