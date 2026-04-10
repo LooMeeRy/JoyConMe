@@ -133,7 +133,7 @@ class JoyConEngine:
     def _init_virtual_device(self):
         """สร้าง Virtual Input Device — รองรับทั้งเมาส์และคีย์บอร์ด"""
 
-        # รวม keyboard keys ทั้งหมดที่ต้องใช้
+        # ✨ แก้ไขตรงนี้: เพิ่ม keyboard keys ทั้งหมดที่ต้องใช้ให้ครบ
         keyboard_keys = [
             # a-z
             e.KEY_A,
@@ -162,11 +162,35 @@ class JoyConEngine:
             e.KEY_X,
             e.KEY_Y,
             e.KEY_Z,
+            # ตัวเลข 0-9
+            e.KEY_1,
+            e.KEY_2,
+            e.KEY_3,
+            e.KEY_4,
+            e.KEY_5,
+            e.KEY_6,
+            e.KEY_7,
+            e.KEY_8,
+            e.KEY_9,
+            e.KEY_0,
+            # สัญลักษณ์พิเศษ
+            e.KEY_MINUS,
+            e.KEY_EQUAL,
+            e.KEY_LEFTBRACE,
+            e.KEY_RIGHTBRACE,
+            e.KEY_BACKSLASH,
+            e.KEY_SEMICOLON,
+            e.KEY_APOSTROPHE,
+            e.KEY_COMMA,
+            e.KEY_DOT,
+            e.KEY_SLASH,
+            e.KEY_GRAVE,
             # special keys
             e.KEY_SPACE,
             e.KEY_ENTER,
             e.KEY_BACKSPACE,
             e.KEY_LEFTSHIFT,
+            e.KEY_RIGHTSHIFT,
             e.KEY_CAPSLOCK,
             # ปุ่มเมาส์
             e.BTN_LEFT,

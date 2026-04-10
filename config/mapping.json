@@ -32,6 +32,7 @@
     "buttons": {
       "toggle_keyboard": [0, 10],
       "select": 0,
+      "num_shift": 8,
       "enter": 1,
       "backspace": 3,
       "space": 4,

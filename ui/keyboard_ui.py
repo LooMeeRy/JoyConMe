@@ -16,6 +16,30 @@ CHAR_GROUPS = [
     "WXYZ",
 ]
 
+NUM_GROUPS = [
+    "123",
+    "456",
+    "789",
+    "0-=",
+    None,
+    "[]\\",
+    ";'",
+    ",.",
+    "/`",
+]
+
+SYM_GROUPS = [
+    "!@#",
+    "$%^",
+    "&*(",
+    ")_+",
+    None,
+    "{}|",
+    ':"',
+    "<>",
+    "?~",
+]
+
 GRID_POS = [
     (0, 0),
     (1, 0),
@@ -28,16 +52,18 @@ GRID_POS = [
     (2, 2),
 ]
 
-_C_BG = QColor(15, 15, 20, 210)
-_C_CELL = QColor(28, 30, 38, 220)
-_C_SEL = QColor(50, 50, 60, 240)
-_C_BORDER = QColor(55, 57, 68, 255)
-_C_SEL_BD = QColor(120, 120, 140, 255)
-_C_TEXT = QColor(180, 182, 195, 255)
-_C_SEL_TXT = QColor(240, 242, 255, 255)
-_C_DIM = QColor(70, 72, 85, 255)
-_C_DOT_ON = QColor(200, 202, 215, 255)
-_C_DOT_OFF = QColor(55, 57, 68, 255)
+# --- 🎨 ส่วนที่ปรับปรุงสีให้ชัดและเด่นขึ้น ---
+_C_BG = QColor(10, 10, 15, 235)  # พื้นหลังหลัก เข้มขึ้นให้ตัวอักษรเด่น
+_C_CELL = QColor(30, 32, 40, 240)  # พื้นหลังช่องปกติ
+_C_SEL = QColor(50, 55, 70, 255)  # พื้นหลังช่องที่เลือกอยู่
+_C_BORDER = QColor(85, 90, 105, 255)  # ขอบช่องปกติ (สว่างขึ้น)
+_C_SEL_BD = QColor(0, 255, 200, 255)  # ขอบช่องที่เลือก (สีฟ้าเขียวสว่าง Neon)
+_C_TEXT = QColor(255, 255, 255, 255)  # สีตัวอักษรปกติ (ขาวจั๊วะ 100%)
+_C_SEL_TXT = QColor(255, 230, 0, 255)  # สีตัวอักษรที่กำลังกด (เหลืองทองสว่าง)
+_C_DIM = QColor(150, 155, 170, 255)  # สีตัวอักษรรอง (สว่างขึ้นอ่านง่าย)
+_C_DOT_ON = QColor(255, 230, 0, 255)  # สีจุดสถานะที่เลือกอยู่
+_C_DOT_OFF = QColor(100, 105, 120, 255)  # สีจุดที่ไม่ได้เลือก
+# ----------------------------------------
 
 
 class KeyboardOverlay(QMainWindow):
@@ -62,13 +88,12 @@ class KeyboardOverlay(QMainWindow):
         self.selected_cell = 4
         self.char_index = -1
         self._shift = False
+        self._num_mode = False
 
-        # force always-on-top ซ้ำทุก 800ms
         self._top_timer = QTimer(self)
         self._top_timer.timeout.connect(self._force_top)
         self._top_timer.start(800)
 
-        # ปรับขนาดหน้าต่างใหม่ให้เป็นสี่เหลี่ยมจัตุรัสพอดีกับ Grid (ตัดส่วนโชว์ตัวอักษรออก)
         total = self.CS * 3 + self.GAP * 2 + self.PAD * 2
         self.resize(total, total)
 
@@ -86,7 +111,6 @@ class KeyboardOverlay(QMainWindow):
         self.move(geo.right() - self.width() - 18, geo.bottom() - self.height() - 18)
 
     def _force_top(self):
-        """บังคับ always on top ผ่าน wmctrl + Qt raise"""
         self.raise_()
         try:
             subprocess.Popen(
@@ -97,10 +121,15 @@ class KeyboardOverlay(QMainWindow):
         except:
             pass
 
-    # --- public API ---
-    def set_shift(self, is_shift: bool):
+    def set_mode(self, is_shift: bool, is_num: bool):
+        update = False
         if self._shift != is_shift:
             self._shift = is_shift
+            update = True
+        if self._num_mode != is_num:
+            self._num_mode = is_num
+            update = True
+        if update:
             self.update()
 
     def set_selected_cell(self, idx: int):
@@ -113,10 +142,8 @@ class KeyboardOverlay(QMainWindow):
         self.update()
 
     def set_typed_text(self, text: str):
-        # ปล่อยว่างไว้เพื่อรับค่าจาก actions/keyboard.py แต่ไม่เอาไปวาดแสดงผล
         pass
 
-    # --- paint ---
     def paintEvent(self, _):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -126,12 +153,12 @@ class KeyboardOverlay(QMainWindow):
 
     def _draw_panel(self, p):
         p.setBrush(QBrush(_C_BG))
-        p.setPen(QPen(_C_BORDER, 1))
+        p.setPen(QPen(_C_BORDER, 2))  # เพิ่มความหนาขอบกรอบนอกเป็น 2
         p.drawRoundedRect(1, 1, self.width() - 2, self.height() - 2, 10, 10)
 
     def _draw_grid(self, p):
         ox = self.PAD
-        oy = self.PAD  # เริ่มวาด Grid ชิดขอบบนได้เลย
+        oy = self.PAD
         for idx in range(9):
             col, row = GRID_POS[idx]
             x = ox + col * (self.CS + self.GAP)
@@ -139,12 +166,19 @@ class KeyboardOverlay(QMainWindow):
             self._draw_cell(p, QRect(x, y, self.CS, self.CS), idx)
 
     def _draw_cell(self, p, r, idx):
-        group = CHAR_GROUPS[idx]
+        if self._num_mode and self._shift:
+            group = SYM_GROUPS[idx]
+        elif self._num_mode:
+            group = NUM_GROUPS[idx]
+        else:
+            group = CHAR_GROUPS[idx]
+
         selected = idx == self.selected_cell
         is_mid = group is None
 
         p.setBrush(QBrush(_C_SEL if selected else _C_CELL))
-        p.setPen(QPen(_C_SEL_BD if selected else _C_BORDER, 1))
+        # ถัาเป็นช่องที่เลือก ให้ขอบหนาขึ้นเพื่อให้เด่นสุดๆ
+        p.setPen(QPen(_C_SEL_BD if selected else _C_BORDER, 2 if selected else 1))
         p.drawRoundedRect(r, 7, 7)
 
         if is_mid:
@@ -154,8 +188,11 @@ class KeyboardOverlay(QMainWindow):
         chars = list(group)
         if selected and self.char_index >= 0:
             ch = chars[self.char_index % len(chars)]
-            ch = ch.upper() if self._shift else ch.lower()
-            p.setFont(QFont("Consolas", 22, QFont.Weight.Bold))
+            if not self._num_mode:
+                ch = ch.upper() if self._shift else ch.lower()
+
+            # ปรับตัวอักษรใหญ่ขึ้นอีกนิด (จาก 22 เป็น 26)
+            p.setFont(QFont("Consolas", 26, QFont.Weight.Bold))
             p.setPen(_C_SEL_TXT)
             p.drawText(
                 QRect(r.x(), r.y(), r.width(), r.height() - 14),
@@ -164,8 +201,13 @@ class KeyboardOverlay(QMainWindow):
             )
             self._draw_dots(p, r, chars, self.char_index % len(chars))
         else:
-            text = " ".join(c.upper() if self._shift else c.lower() for c in chars)
-            p.setFont(QFont("Consolas", 11))
+            if not self._num_mode:
+                text = " ".join(c.upper() if self._shift else c.lower() for c in chars)
+            else:
+                text = " ".join(chars)
+
+            # ปรับตัวอักษรช่องปกติให้ใหญ่และหนาขึ้น (จาก 11 เป็น 12 แบบ Bold)
+            p.setFont(QFont("Consolas", 12, QFont.Weight.Bold))
             p.setPen(_C_TEXT if selected else _C_DIM)
             p.drawText(r, Qt.AlignmentFlag.AlignCenter, text)
 
@@ -182,7 +224,8 @@ class KeyboardOverlay(QMainWindow):
 
     def _draw_hints(self, p, r):
         hints = [("A", "sel"), ("X", "del"), ("Y", "spc"), ("B", "ent")]
-        p.setFont(QFont("Consolas", 8))
+        # ปรับฟอนต์คำอธิบายปุ่มให้หนาขึ้น
+        p.setFont(QFont("Consolas", 9, QFont.Weight.Bold))
         lh = 14
         sy = r.center().y() - (len(hints) * lh) // 2
         for i, (k, d) in enumerate(hints):
