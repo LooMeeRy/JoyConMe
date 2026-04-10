@@ -1,5 +1,8 @@
 import pygame
 
+MENU_NAME = "ตั้งค่าปุ่ม"
+MENU_TARGET = "button_main"
+
 from menus.utils import (
     format_button_name,
     get_all_available_actions,

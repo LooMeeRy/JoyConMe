@@ -1,5 +1,8 @@
 import pygame
 
+MENU_NAME = "จัดการสูตรลับ"
+MENU_TARGET = "cheat_main"
+
 from menus.utils import get_all_available_actions, get_emoji, load_recipes, save_recipes
 
 state = "main"

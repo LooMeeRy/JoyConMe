@@ -2,6 +2,9 @@
 import json
 import os
 
+MENU_NAME = "ความเร็วเมาส์"
+MENU_TARGET = "mouse_main"
+
 from menus.utils import load_config, save_config
 
 MENU_ITEMS = ["ช้า (5)", "ปกติ (15)", "เร็ว (25)", "ติดจรวด (40)", "กลับ"]
