@@ -1,16 +1,22 @@
 # menus/main_menu.py
 import importlib
+import sys
 from pathlib import Path
 
 MENU_ITEMS = []
 _loaded_menus = {}
+_target_menus = {}  # เพิ่ม Registry สำหรับเก็บ target ของแต่ละเมนู
 
 
 def reload_menus():
-    """ฟังก์ชันสำหรับสแกนหาไฟล์เมนูใหม่ๆ แบบอัตโนมัติ"""
-    global MENU_ITEMS, _loaded_menus
+    """ฟังก์ชันสำหรับสแกนหาไฟล์เมนูใหม่ๆ แบบอัตโนมัติ (Plug & Play)"""
+    global MENU_ITEMS, _loaded_menus, _target_menus
     MENU_ITEMS.clear()
     _loaded_menus.clear()
+    _target_menus.clear()
+
+    # ลงทะเบียนตัวเองเป็น target "main" เสมอ
+    _target_menus["main"] = sys.modules[__name__]
 
     # ชี้ไปที่โฟลเดอร์ menus/
     menu_dir = Path(__file__).parent
@@ -19,22 +25,33 @@ def reload_menus():
     for file_path in menu_dir.glob("*.py"):
         mod_name = file_path.stem
 
-        # ข้ามไฟล์ที่ไม่ใช่หน้าเมนูย่อย
+        # ข้ามไฟล์ระบบและไฟล์ตัวเอง
         if mod_name in ["main_menu", "utils", "__init__"] or mod_name.startswith("_"):
             continue
 
         try:
             module = importlib.import_module(f"menus.{mod_name}")
+            importlib.reload(module)  # บังคับ Reload โค้ดใหม่เสมอเวลาเปิดเมนู
 
-            # ตรวจสอบว่าในไฟล์เมนูมีการระบุตัวแปร MENU_NAME ไว้หรือไม่
+            # นำเข้าชื่อเมนู
             if hasattr(module, "MENU_NAME"):
                 _loaded_menus[module.MENU_NAME] = module
                 MENU_ITEMS.append(module.MENU_NAME)
+
+            # นำเข้าเป้าหมายของเมนู (เพื่อใช้เวลาสลับหน้า)
+            if hasattr(module, "MENU_TARGET"):
+                _target_menus[module.MENU_TARGET] = module
+
         except Exception as e:
             print(f"⚠️ [MainMenu] โหลดไฟล์เมนู {mod_name} ไม่สำเร็จ: {e}")
 
     # เพิ่มปุ่ม ปิดเมนู ไว้ท้ายสุดเสมอ
     MENU_ITEMS.append("ปิดเมนู")
+
+
+def get_menu_module(target_id):
+    """ส่งคืน Module ของเมนูตาม target ที่ร้องขอ"""
+    return _target_menus.get(target_id)
 
 
 # สแกนเมนูครั้งแรกเมื่อไฟล์ถูกโหลด
