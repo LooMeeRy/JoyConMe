@@ -11,8 +11,8 @@ CHAR_GROUPS = [
     "JKL",
     None,
     "MNO",
-    "PQS",
-    "TUV",
+    "PQR",
+    "STUV",
     "WXYZ",
 ]
 
