@@ -88,7 +88,12 @@ ACTION_INFO = {
     "name": "คีย์บอร์ดเสมือน",
     "actions": [
         {"key": "toggle_keyboard", "type": "button", "desc": "เปิด/ปิด คีย์บอร์ด"},
-        {"key": "num_shift", "type": "button", "desc": "กดค้างเพื่อใช้โหมดตัวเลข (เช่น L1)"},
+        {"key": "num_shift", "type": "button", "desc": "โหมดตัวเลข"},
+        {"key": "select", "type": "button", "desc": "เลือก"},
+        {"key": "enter", "type": "button", "desc": "ยืนยัน"},
+        {"key": "backspace", "type": "button", "desc": "ลบ"},
+        {"key": "space", "type": "button", "desc": "เว้นวรรค"},
+        {"key": "shift", "type": "button", "desc": "shift"},
     ],
 }
 

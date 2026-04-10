@@ -1,42 +1,48 @@
 {
-  "mouse_control": {
-    "analogs": {
-      "move_x": 0,
-      "move_y": 1,
-      "scroll_y": 3
+    "mouse_control": {
+        "analogs": {
+            "move_x": 0,
+            "move_y": 1,
+            "scroll_y": 3
+        },
+        "buttons": {
+            "right_click": 1,
+            "left_click": 0,
+            "focus": 9
+        }
     },
-    "buttons": {
-      "right_click": 1,
-      "left_click": 0,
-      "focus": 9
-    }
-  },
-  "radial_setup": {
-    "buttons": {}
-  },
-  "sequence_engine": {
-    "analogs": {},
-    "buttons": {
-      "open_listener": [10, 11]
-    }
-  },
-  "exit_app": {
-    "analogs": {},
-    "buttons": {}
-  },
-  "keyboard": {
-    "analogs": {
-      "select_x": 0,
-      "select_y": 1
+    "radial_setup": {
+        "buttons": {}
     },
-    "buttons": {
-      "toggle_keyboard": [0, 10],
-      "select": 0,
-      "num_shift": 8,
-      "enter": 1,
-      "backspace": 3,
-      "space": 4,
-      "shift": 9
+    "sequence_engine": {
+        "analogs": {},
+        "buttons": {
+            "open_listener": [
+                10,
+                11
+            ]
+        }
+    },
+    "exit_app": {
+        "analogs": {},
+        "buttons": {}
+    },
+    "keyboard": {
+        "analogs": {
+            "select_x": 0,
+            "select_y": 1
+        },
+        "buttons": {
+            "toggle_keyboard": [
+                0,
+                10
+            ],
+            "select": 0,
+            "num_shift": 8,
+            "enter": 1,
+            "backspace": 3,
+            "space": 4,
+            "shift": 9
+        }
     }
-  }
 }
