@@ -166,13 +166,32 @@ class MapperApp(App):
 
     def poll_joy(self):
         pygame.event.pump()
-        for event in pygame.event.get():
+        events = pygame.event.get()
+
+        # เช็คปุ่มก่อนเสมอ
+        for event in events:
             if event.type == pygame.JOYBUTTONDOWN:
                 self.input_captured("button", event.button)
+                if self.timer:
+                    self.timer.stop()
                 return
+
+        # เช็ค Analog ทีหลังและเพิ่ม Threshold เพื่อเลี่ยง Drift
+        for event in events:
             if event.type == pygame.JOYAXISMOTION:
-                if abs(event.value) > 0.5:
+                if abs(event.value) > 0.85:  # เพิ่มความต้านทาน Drift
                     self.input_captured("analog", event.axis)
+                    if self.timer:
+                        self.timer.stop()
+                    return
+
+        # 3. เช็ค Analog (เอาไว้หลังสุดและเพิ่ม Threshold เพื่อเลี่ยง Drift)
+        for event in events:
+            if event.type == pygame.JOYAXISMOTION:
+                if abs(event.value) > 0.8:  # ปรับเพิ่มจาก 0.5 เป็น 0.8
+                    self.input_captured("analog", event.axis)
+                    if self.timer:
+                        self.timer.stop()
                     return
 
     def input_captured(self, i_type, i_id):

@@ -13,7 +13,6 @@ from evdev import ecodes as e
 try:
     from config import setup
 except ImportError:
-    # Fallback ถ้า import ไม่ได้ (รันไฟล์โดยตรง)
     sys.path.insert(0, str(Path(__file__).parent))
     from config import setup
 
@@ -21,7 +20,6 @@ except ImportError:
 class JoyConEngine:
     """หัวใจหลักของระบบ JoyConMe - จัดการ Hardware และ Action Loop"""
 
-    # Class constants
     DEFAULT_TICK_RATE = 60
     CONFIG_DIR = "config"
     ACTIONS_DIR = "actions"
@@ -30,7 +28,6 @@ class JoyConEngine:
         self._config_path = os.path.join(self.CONFIG_DIR, "config.json")
         self._mapping_path = os.path.join(self.CONFIG_DIR, "mapping.json")
 
-        # State
         self._app_config = {}
         self._mod_mapping = {}
         self._actions = {}
@@ -38,25 +35,18 @@ class JoyConEngine:
         self._ui_virtual = None
         self._running = False
 
-        # Initialize
         self._init_configs()
         self._init_hardware()
         self._init_virtual_device()
         self._load_actions()
 
     def _init_configs(self):
-        """โหลดหรือสร้าง config เริ่มต้น"""
         setup.initialize_configs()
-
-        # สร้างโฟลเดอร์ถ้ายังไม่มี
         for folder in [self.CONFIG_DIR, self.ACTIONS_DIR]:
             os.makedirs(folder, exist_ok=True)
-
         self._load_all_configs()
 
     def _load_all_configs(self):
-        """โหลด config และ mapping จากไฟล์"""
-        # Load app config
         try:
             with open(self._config_path, "r", encoding="utf-8") as f:
                 self._app_config = json.load(f)
@@ -64,7 +54,6 @@ class JoyConEngine:
             print(f"⚠️ โหลด config.json ไม่สำเร็จ: {e}")
             self._app_config = {}
 
-        # Load mapping
         try:
             with open(self._mapping_path, "r", encoding="utf-8") as f:
                 self._mod_mapping = json.load(f)
@@ -73,7 +62,6 @@ class JoyConEngine:
             self._mod_mapping = {}
 
     def save_app_config(self):
-        """บันทึก config ปัจจุบันลงไฟล์"""
         try:
             with open(self._config_path, "w", encoding="utf-8") as f:
                 json.dump(self._app_config, f, indent=4, ensure_ascii=False)
@@ -83,7 +71,6 @@ class JoyConEngine:
             return False
 
     def _load_actions(self):
-        """โหลด Action Modules ทั้งหมดจากโฟลเดอร์ actions/"""
         if not os.path.exists(self.ACTIONS_DIR):
             print(f"⚠️ ไม่พบโฟลเดอร์ {self.ACTIONS_DIR}")
             return
@@ -95,7 +82,7 @@ class JoyConEngine:
             mod_name = filename[:-3]
             try:
                 module = importlib.import_module(f"{self.ACTIONS_DIR}.{mod_name}")
-                importlib.reload(module)  # รองรับ Hot-reload
+                importlib.reload(module)
 
                 if hasattr(module, "ACTION_INFO") and hasattr(module, "run"):
                     action_id = module.ACTION_INFO.get("id")
@@ -109,18 +96,15 @@ class JoyConEngine:
                 print(f"❌ Error loading {mod_name}: {ex}")
 
     def reload_actions(self):
-        """โหลด Action ใหม่ (สำหรับ Development)"""
         self._actions.clear()
         self._load_actions()
         print("🔄 Actions Reloaded!")
 
     def refresh_config(self):
-        """โหลด Config ใหม่"""
         self._load_all_configs()
         print("🔄 Config Reloaded!")
 
     def _init_hardware(self):
-        """เริ่มต้น Pygame Joystick"""
         try:
             pygame.init()
             pygame.joystick.init()
@@ -138,7 +122,6 @@ class JoyConEngine:
             self._joystick = None
 
     def _check_joystick_reconnect(self):
-        """ตรวจสอบการเชื่อมต่อจอยใหม่"""
         if self._joystick is None:
             pygame.joystick.quit()
             pygame.joystick.init()
@@ -148,16 +131,59 @@ class JoyConEngine:
         return False
 
     def _init_virtual_device(self):
-        """สร้าง Virtual Input Device สำหรับควบคุมเมาส์"""
+        """สร้าง Virtual Input Device — รองรับทั้งเมาส์และคีย์บอร์ด"""
+
+        # รวม keyboard keys ทั้งหมดที่ต้องใช้
+        keyboard_keys = [
+            # a-z
+            e.KEY_A,
+            e.KEY_B,
+            e.KEY_C,
+            e.KEY_D,
+            e.KEY_E,
+            e.KEY_F,
+            e.KEY_G,
+            e.KEY_H,
+            e.KEY_I,
+            e.KEY_J,
+            e.KEY_K,
+            e.KEY_L,
+            e.KEY_M,
+            e.KEY_N,
+            e.KEY_O,
+            e.KEY_P,
+            e.KEY_Q,
+            e.KEY_R,
+            e.KEY_S,
+            e.KEY_T,
+            e.KEY_U,
+            e.KEY_V,
+            e.KEY_W,
+            e.KEY_X,
+            e.KEY_Y,
+            e.KEY_Z,
+            # special keys
+            e.KEY_SPACE,
+            e.KEY_ENTER,
+            e.KEY_BACKSPACE,
+            e.KEY_LEFTSHIFT,
+            e.KEY_CAPSLOCK,
+            # ปุ่มเมาส์
+            e.BTN_LEFT,
+            e.BTN_RIGHT,
+            e.BTN_MIDDLE,
+        ]
+
         capabilities = {
             e.EV_REL: (e.REL_X, e.REL_Y, e.REL_WHEEL),
-            e.EV_KEY: (e.BTN_LEFT, e.BTN_RIGHT, e.BTN_MIDDLE),
+            e.EV_KEY: keyboard_keys,
         }
+
         name = self._app_config.get("system", {}).get("device_name", "JoyConMe")
 
         try:
             self._ui_virtual = UInput(capabilities, name=name)
-            print(f"🖱️ Virtual Device: {name}")
+            print(f"🖱️⌨️ Virtual Device: {name}")
         except Exception as ex:
             print(f"❌ สร้าง Virtual Device ไม่สำเร็จ: {ex}")
             print("💡 ตรวจสอบว่ารันด้วย sudo หรือมีสิทธิ์ /dev/uinput")
@@ -165,16 +191,13 @@ class JoyConEngine:
 
     @property
     def joystick(self):
-        """Getter สำหรับ Joystick"""
         return self._joystick
 
     @property
     def ui_virtual(self):
-        """Getter สำหรับ Virtual Device"""
         return self._ui_virtual
 
     def get_sleep_time(self):
-        """คำนวณเวลาพักตาม tick rate"""
         tick_rate = self._app_config.get("system", {}).get(
             "tick_rate", self.DEFAULT_TICK_RATE
         )
@@ -182,14 +205,14 @@ class JoyConEngine:
 
     def run_tick(self):
         """รัน 1 Tick ของ Engine"""
-        # ตรวจสอบจอยใหม่ถ้าหลุด
         if self._joystick is None:
             self._check_joystick_reconnect()
             return
 
+        pygame.event.get()
         pygame.event.pump()
 
-        # Priority 1: Radial Menu (กิน input ทั้งหมดถ้า active)
+        # Priority 1: Radial Menu
         if "radial_setup" in self._actions:
             result = self._run_action("radial_setup")
             if result == "RELOAD":
@@ -198,15 +221,21 @@ class JoyConEngine:
             if result is True:
                 return
 
-        # Priority 2: Sequence Engine
+        # Priority 2: Keyboard (กิน input ทั้งหมดถ้า active)
+        if "keyboard" in self._actions:
+            result = self._run_action("keyboard")
+            if result is True:
+                return
+
+        # Priority 3: Sequence Engine
         if "sequence_engine" in self._actions:
             result = self._run_action("sequence_engine")
             if result is True:
                 return
 
-        # Priority 3: Other Actions
+        # Priority 4: Other Actions (mouse, exit, etc.)
         for action_id, module in self._actions.items():
-            if action_id in ["radial_setup", "sequence_engine"]:
+            if action_id in ["radial_setup", "keyboard", "sequence_engine"]:
                 continue
             self._run_action(action_id, module)
 
@@ -228,7 +257,6 @@ class JoyConEngine:
             return None
 
     def cleanup(self):
-        """ปิดทรัพยากรทั้งหมด"""
         print("\n🧹 Cleaning up...")
         if self._ui_virtual:
             try:

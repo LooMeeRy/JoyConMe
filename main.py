@@ -1,6 +1,9 @@
+import os
 import signal
 import sys
 import time
+
+os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"  # บรรทัดนี้สำคัญมาก
 from pathlib import Path
 
 from PySide6.QtWidgets import QApplication

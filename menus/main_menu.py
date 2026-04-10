@@ -1,12 +1,10 @@
 # menus/main_menu.py
-import pygame
+from menus import keyboard_menu
 
-MENU_ITEMS = ["ตั้งค่าปุ่ม", "ความเร็วเมาส์", "จัดการสูตรลับ", "ปิดเมนู"]
+MENU_ITEMS = ["ตั้งค่าปุ่ม", "ความเร็วเมาส์", "จัดการสูตรลับ", "คีย์บอร์ด", "ปิดเมนู"]
 
 
 def run(selected_item, context):
-    overlay = context["overlay"]
-
     if selected_item == "ปิดเมนู":
         return "CLOSE_MENU"
     elif selected_item == "ตั้งค่าปุ่ม":
@@ -15,5 +13,7 @@ def run(selected_item, context):
         return "SWITCH:mouse_main"
     elif selected_item == "จัดการสูตรลับ":
         return "SWITCH:cheat_main"
+    elif selected_item == "คีย์บอร์ด":
+        return keyboard_menu.run(selected_item, context)
 
     return None
