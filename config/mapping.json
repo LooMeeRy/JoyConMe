@@ -44,5 +44,34 @@
             "space": 4,
             "shift": 9
         }
+    },
+    "system_control": {
+        "analogs": {},
+        "buttons": {
+            "vol_up": [
+                7,
+                {
+                    "hat": 0,
+                    "dir": [
+                        0,
+                        1
+                    ]
+                }
+            ],
+            "vol_down": [
+                7,
+                {
+                    "hat": 0,
+                    "dir": [
+                        0,
+                        -1
+                    ]
+                }
+            ],
+            "media_play": [
+                6,
+                7
+            ]
+        }
     }
 }

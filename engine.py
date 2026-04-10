@@ -192,6 +192,13 @@ class JoyConEngine:
             e.KEY_LEFTSHIFT,
             e.KEY_RIGHTSHIFT,
             e.KEY_CAPSLOCK,
+            e.KEY_PLAYPAUSE,
+            e.KEY_NEXTSONG,
+            e.KEY_PREVIOUSSONG,
+            e.KEY_STOPCD,
+            e.KEY_MUTE,
+            e.KEY_VOLUMEUP,
+            e.KEY_VOLUMEDOWN,
             # ปุ่มเมาส์
             e.BTN_LEFT,
             e.BTN_RIGHT,
