@@ -1,8 +1,6 @@
 import time
 from typing import Optional
 
-from evdev import ecodes as e
-
 try:
     from ui.keyboard_ui import CHAR_GROUPS, NUM_GROUPS, SYM_GROUPS, KeyboardOverlay
 except ImportError:
@@ -11,7 +9,63 @@ except ImportError:
     NUM_GROUPS = ["123", "456", "789", "0-=", None, "[]\\", ";'", ",.", "/`"]
     SYM_GROUPS = ["!@#", "$%^", "&*(", ")_+", None, "{}|", ':"', "<>", "?~"]
 
-# Map ทุกตัวอักษรไปที่ evdev keycode พร้อมบอกว่าต้องกด Shift ด้วยไหม
+
+# Mock Code สำหรับ evdev เพื่อส่งไปให้ VirtualInput ตีความบน Linux โดยไม่แครชบน Windows
+class e:
+    KEY_A = 30
+    KEY_B = 48
+    KEY_C = 46
+    KEY_D = 32
+    KEY_E = 18
+    KEY_F = 33
+    KEY_G = 34
+    KEY_H = 35
+    KEY_I = 23
+    KEY_J = 36
+    KEY_K = 37
+    KEY_L = 38
+    KEY_M = 50
+    KEY_N = 49
+    KEY_O = 24
+    KEY_P = 25
+    KEY_Q = 16
+    KEY_R = 19
+    KEY_S = 31
+    KEY_T = 20
+    KEY_U = 22
+    KEY_V = 47
+    KEY_W = 17
+    KEY_X = 45
+    KEY_Y = 21
+    KEY_Z = 44
+    KEY_1 = 2
+    KEY_2 = 3
+    KEY_3 = 4
+    KEY_4 = 5
+    KEY_5 = 6
+    KEY_6 = 7
+    KEY_7 = 8
+    KEY_8 = 9
+    KEY_9 = 10
+    KEY_0 = 11
+    KEY_MINUS = 12
+    KEY_EQUAL = 13
+    KEY_LEFTBRACE = 26
+    KEY_RIGHTBRACE = 27
+    KEY_BACKSLASH = 43
+    KEY_SEMICOLON = 39
+    KEY_APOSTROPHE = 40
+    KEY_COMMA = 51
+    KEY_DOT = 52
+    KEY_SLASH = 53
+    KEY_GRAVE = 41
+    KEY_BACKSPACE = 14
+    KEY_ENTER = 28
+    KEY_SPACE = 57
+    KEY_LEFTSHIFT = 42
+
+
+# Map ตัวอักษรสำหรับ Linux (evdev) ส่วน pynput จะรับ String แทน
 _CHAR_MAP = {
     "a": (e.KEY_A, False),
     "b": (e.KEY_B, False),
@@ -86,6 +140,8 @@ _CHAR_MAP = {
 ACTION_INFO = {
     "id": "keyboard",
     "name": "คีย์บอร์ดเสมือน",
+    "priority": 90,
+    "is_blocking": True,
     "actions": [
         {"key": "toggle_keyboard", "type": "button", "desc": "เปิด/ปิด คีย์บอร์ด"},
         {"key": "num_shift", "type": "button", "desc": "โหมดตัวเลข"},
@@ -102,38 +158,21 @@ _CYCLE_DELAY = 0.25
 _COMMIT_DELAY = 1.2
 
 
-def _press_key(ui_virtual, keycode: int):
-    try:
-        ui_virtual.write(e.EV_KEY, keycode, 1)
-        ui_virtual.syn()
-        time.sleep(0.02)
-        ui_virtual.write(e.EV_KEY, keycode, 0)
-        ui_virtual.syn()
-    except Exception as ex:
-        pass
-
-
 def _type_char(ui_virtual, char: str, is_upper: bool = False):
     if char.isalpha() and char.isascii():
         kc = _CHAR_MAP.get(char.lower(), (None, False))[0]
         shift = is_upper
+        pynput_char = char.upper() if is_upper else char.lower()
     elif char in _CHAR_MAP:
         kc, shift = _CHAR_MAP[char]
+        pynput_char = char
     else:
         return
 
-    if not kc:
+    if kc is None:
         return
 
-    if shift:
-        ui_virtual.write(e.EV_KEY, e.KEY_LEFTSHIFT, 1)
-        ui_virtual.syn()
-
-    _press_key(ui_virtual, kc)
-
-    if shift:
-        ui_virtual.write(e.EV_KEY, e.KEY_LEFTSHIFT, 0)
-        ui_virtual.syn()
+    ui_virtual.type_char(kc, pynput_char, shift)
 
 
 def _analog_to_cell(ax: float, ay: float) -> Optional[int]:
@@ -228,7 +267,7 @@ class KeyboardController:
             char = group[self._char_index]
 
             if self._pending_commit:
-                _press_key(ui_virtual, e.KEY_BACKSPACE)
+                ui_virtual.tap_special(e.KEY_BACKSPACE, "backspace")
                 if self._typed_text:
                     self._typed_text = self._typed_text[:-1]
 
@@ -271,7 +310,7 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            _press_key(ui_virtual, e.KEY_BACKSPACE)
+            ui_virtual.tap_special(e.KEY_BACKSPACE, "backspace")
             if self._typed_text:
                 self._typed_text = self._typed_text[:-1]
                 if self._overlay:
@@ -284,7 +323,7 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            _press_key(ui_virtual, e.KEY_SPACE)
+            ui_virtual.tap_special(e.KEY_SPACE, "space")
             self._typed_text += " "
             if self._overlay:
                 self._overlay.set_typed_text(self._typed_text)
@@ -296,7 +335,7 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            _press_key(ui_virtual, e.KEY_ENTER)
+            ui_virtual.tap_special(e.KEY_ENTER, "enter")
             self._typed_text = ""
             if self._overlay:
                 self._overlay.set_typed_text(self._typed_text)
@@ -342,8 +381,6 @@ class KeyboardController:
         idx_x = buttons.get("backspace", 3)
         idx_y = buttons.get("space", 4)
         idx_shift = buttons.get("shift", 9)
-
-        # ตั้งค่าให้ปุ่ม L1 (ค่าเริ่มต้นปกติคือปุ่ม 4 หรือ 6) เป็นตัวสลับโหมดตัวเลข
         idx_num_shift = buttons.get("num_shift", 4)
 
         try:
@@ -359,8 +396,7 @@ class KeyboardController:
             )
         except:
             btn_a = btn_b = btn_x = btn_y = False
-            self.is_shift = False
-            self.is_num_mode = False
+            self.is_shift = self.is_num_mode = False
 
         self._handle_btn_a(ui_virtual, btn_a)
         self._handle_btn_x(ui_virtual, btn_x)

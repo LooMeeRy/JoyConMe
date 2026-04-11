@@ -1,22 +1,25 @@
-import subprocess
 import time
+
+import pyautogui
+from pynput.keyboard import Controller, Key
 
 # --- Action Info ---
 ACTION_INFO = {
     "id": "system_control",
     "name": "ควบคุมระบบเครื่อง",
     "actions": [
-        {"key": "vol_up", "type": "button", "desc": "เพิ่มเสียง +5%"},
-        {"key": "vol_down", "type": "button", "desc": "ลดเสียง -5%"},
+        {"key": "vol_up", "type": "button", "desc": "เพิ่มเสียง"},
+        {"key": "vol_down", "type": "button", "desc": "ลดเสียง"},
         {"key": "vol_mute", "type": "button", "desc": "ปิด/เปิดเสียง (Mute)"},
-        {"key": "screenshot", "type": "button", "desc": "แคปหน้าจอ (Area)"},
+        {"key": "screenshot", "type": "button", "desc": "แคปหน้าจอ"},
         {"key": "media_play", "type": "button", "desc": "เล่น/หยุด เพลง"},
         {"key": "media_next", "type": "button", "desc": "เพลงถัดไป"},
     ],
 }
 
 _last_execution_time = 0
-_DEBOUNCE_DELAY = 0.3  # เพิ่ม Delay เป็น 0.3 วินาที เพื่อกันการกดเบิ้ล
+_DEBOUNCE_DELAY = 0.3
+_keyboard = Controller()  # จำลองคีย์บอร์ดแบบ Cross-platform
 
 
 def is_triggered(joystick, val):
@@ -43,14 +46,6 @@ def is_triggered(joystick, val):
     return False
 
 
-def run_cmd(cmd_list):
-    try:
-        subprocess.run(cmd_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return True
-    except:
-        return False
-
-
 def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
     global _last_execution_time
     key = trigger_key
@@ -70,22 +65,30 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
     if key is None:
         return False
 
-    # --- ส่วนสั่งงานระบบ ---
-    if key == "vol_up":
-        run_cmd(["pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%"])
-    elif key == "vol_down":
-        run_cmd(["pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%"])
-    elif key == "vol_mute":
-        run_cmd(["pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"])
-    elif key == "screenshot":
-        run_cmd(["spectacle", "-r", "-b"])
+    # --- ส่วนสั่งงานระบบแบบ Cross-Platform ---
+    try:
+        if key == "vol_up":
+            _keyboard.press(Key.media_volume_up)
+            _keyboard.release(Key.media_volume_up)
+        elif key == "vol_down":
+            _keyboard.press(Key.media_volume_down)
+            _keyboard.release(Key.media_volume_down)
+        elif key == "vol_mute":
+            _keyboard.press(Key.media_volume_mute)
+            _keyboard.release(Key.media_volume_mute)
+        elif key == "media_play":
+            _keyboard.press(Key.media_play_pause)
+            _keyboard.release(Key.media_play_pause)
+        elif key == "media_next":
+            _keyboard.press(Key.media_next_track)
+            _keyboard.release(Key.media_next_track)
+        elif key == "screenshot":
+            # สร้างชื่อไฟล์จาก Timestamp ป้องกันการเซฟทับ
+            filename = f"screenshot_{int(time.time())}.png"
+            pyautogui.screenshot(filename)
+            print(f"📸 บันทึกภาพหน้าจอ: {filename}")
 
-    elif key == "media_play":
-        # 🎵 ใช้ playerctl play-pause เพียงอย่างเดียว และระบุ -a เพื่อคุมทุกตัว
-        # การไม่ใช้ Virtual Key ร่วมด้วยจะช่วยลดปัญหาการ "กดเบิ้ล" ในระดับซอฟต์แวร์ครับ
-        run_cmd(["playerctl", "play-pause", "-a"])
-
-    elif key == "media_next":
-        run_cmd(["playerctl", "next", "-a"])
+    except Exception as e:
+        print(f"⚠️ System Control Error: {e}")
 
     return True

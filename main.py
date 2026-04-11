@@ -1,11 +1,12 @@
 import os
 import signal
 import sys
-import time
-
-os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"  # บรรทัดนี้สำคัญมาก
 from pathlib import Path
 
+# อนุญาตให้ Pygame อ่านจอยแม้โปรแกรมจะอยู่เบื้องหลัง
+os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
+
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
 
 # Add project root to path (สำหรับกรณีรันจากที่อื่น)
@@ -17,84 +18,81 @@ from engine import JoyConEngine
 
 
 class JoyConApp:
-    """Wrapper class สำหรับจัดการ Application Lifecycle"""
+    """Wrapper class สำหรับจัดการ Application Lifecycle ด้วย QTimer (Qt-Native)"""
 
     def __init__(self):
-        self.app: QApplication = None
-        self.engine: JoyConEngine = None
-        self._running = False
+        # สร้าง QApplication ก่อน
+        self.app = QApplication(sys.argv)
+        self.engine = JoyConEngine()
+
+        # 1. Main Engine Timer: ทำหน้าที่รัน Tick ของเกมแพด
+        self.engine_timer = QTimer()
+        self.engine_timer.timeout.connect(self._run_tick)
+
+        # 2. Signal Catcher Timer: ทริคสำหรับให้ Python ตรวจจับ Ctrl+C ได้ขณะรัน Qt Event Loop
+        self.signal_timer = QTimer()
+        self.signal_timer.timeout.connect(lambda: None)
 
     def _signal_handler(self, signum, frame):
-        """จัดการ Ctrl+C"""
+        """จัดการการกด Ctrl+C เพื่อปิดโปรแกรมอย่างปลอดภัย"""
         print("\n⚠️ ได้รับสัญญาณหยุด...")
-        self._running = False
+        self.cleanup()
 
     def _setup_signal_handlers(self):
         """ตั้งค่า Signal Handlers"""
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
-
-        # สำหรับ Windows
         if hasattr(signal, "SIGBREAK"):
             signal.signal(signal.SIGBREAK, self._signal_handler)
 
     def run(self):
-        """Main loop"""
-        # สร้าง QApplication ก่อน
-        self.app = QApplication(sys.argv)
-
-        # ตั้งค่า Signal
+        """เริ่มการทำงานของแอปพลิเคชัน"""
         self._setup_signal_handlers()
 
         try:
-            # สร้าง Engine
-            self.engine = JoyConEngine()
-
-            print("🚀 ระบบ JoyConMe พร้อมทำงาน...")
+            print("🚀 ระบบ JoyConMe พร้อมทำงาน (Native Qt Loop)...")
             print("   - กด Ctrl+C เพื่อหยุด")
             print("   - หรือใช้สูตรลับปิดโปรแกรม (ถ้าตั้งไว้)")
 
-            self._running = True
+            # คำนวณ Tick Rate เป็น Milliseconds (วินาที * 1000)
+            interval_ms = int(self.engine.get_sleep_time() * 1000)
 
-            while self._running:
-                try:
-                    # รัน Engine Tick
-                    self.engine.run_tick()
+            # เริ่มทำงาน Timer ทั้งสองตัว
+            self.engine_timer.start(interval_ms)
+            self.signal_timer.start(500)  # ให้ Python ตื่นมาเช็ค Signal ทุกๆ 0.5 วิ
 
-                    # อัปเดต UI Events
-                    self.app.processEvents()
+            # เข้าสู่ Native Qt Event Loop (บล็อกการทำงานไว้ที่นี่จนกว่าจะปิดแอป)
+            exit_code = self.app.exec()
+            sys.exit(exit_code)
 
-                    # พักตาม tick rate
-                    time.sleep(self.engine.get_sleep_time())
-
-                except Exception as e:
-                    print(f"⚠️ Error in main loop: {e}")
-                    time.sleep(0.1)  # ชะลอถ้ามี error
-
-        except KeyboardInterrupt:
-            print("\n👋 ผู้ใช้หยุดโปรแกรม")
         except Exception as e:
             print(f"\n❌ Fatal Error: {e}")
             import traceback
 
             traceback.print_exc()
-        finally:
             self.cleanup()
 
+    def _run_tick(self):
+        """ฟังก์ชันที่ถูกเรียกซ้ำๆ ตามค่า Interval ของ QTimer"""
+        try:
+            self.engine.run_tick()
+        except Exception as e:
+            print(f"⚠️ Error in engine tick loop: {e}")
+
     def cleanup(self):
-        """Cleanup resources"""
+        """คืนค่าทรัพยากรทั้งหมดก่อนปิดแอป"""
+        print("\nกำลังปิดระบบ...")
+        self.engine_timer.stop()
+        self.signal_timer.stop()
+
         if self.engine:
             try:
                 self.engine.cleanup()
             except Exception as e:
                 print(f"⚠️ Error during cleanup: {e}")
 
-        if self.app:
-            try:
-                self.app.quit()
-            except:
-                pass
-
+        # สั่งปิดหน้าต่าง UI และ Event Loop
+        self.app.quit()
         print("👋 ปิดโปรแกรมเรียบร้อย")
         sys.exit(0)
 

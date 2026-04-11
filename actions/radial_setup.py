@@ -26,6 +26,8 @@ except ImportError:
 ACTION_INFO = {
     "id": "radial_setup",
     "name": "ระบบตั้งค่าเมนูวงกลม",
+    "priority": 100,
+    "is_blocking": True,
     "actions": [{"key": "open_menu", "type": "button", "desc": "เปิด/ปิด เมนูวงกลม"}],
 }
 

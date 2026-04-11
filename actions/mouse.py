@@ -1,25 +1,21 @@
-import math
 import os
 import time
 
 import pygame
-from evdev import ecodes as e
 
 # --- Action Info ---
 ACTION_INFO = {
     "id": "mouse_control",
     "name": "ควบคุมเมาส์",
+    "priority": 0,
+    "is_blocking": False,
     "actions": [
         {"key": "move_x", "type": "analog", "desc": "ขยับแกน X"},
         {"key": "move_y", "type": "analog", "desc": "ขยับแกน Y"},
         {"key": "scroll_y", "type": "analog", "desc": "เลื่อน Scroll"},
         {"key": "left_click", "type": "button", "desc": "คลิกซ้าย"},
         {"key": "right_click", "type": "button", "desc": "คลิกขวา"},
-        {
-            "key": "focus",
-            "type": "button",
-            "desc": "โฟกัส (ชะลอเมาส์)",
-        },  # ✨ เพิ่ม Action นี้
+        {"key": "focus", "type": "button", "desc": "โฟกัส (ชะลอเมาส์)"},
     ],
 }
 
@@ -49,20 +45,15 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
     # 1. Trigger Mode (สูตรลับ)
     if trigger_key is not None:
         if trigger_key == "left_click":
-            ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 1)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("left", True)
             time.sleep(0.05)
-            ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 0)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("left", False)
             return
         elif trigger_key == "right_click":
-            ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 1)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("right", True)
             time.sleep(0.05)
-            ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 0)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("right", False)
             return
-        # Focus ไม่ควรถูกเรียกแบบ Trigger เพราะมันคือการกดค้าง แต่ถ้าสูตรเรียกก็ให้ผ่านไป
         return
 
     # 2. Normal Mode
@@ -71,6 +62,7 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
 
     if not app_config:
         app_config = load_config()
+
     mouse_cfg = app_config.get("mouse", {})
     speed_x = mouse_cfg.get("speed_x", 20)
     speed_y = mouse_cfg.get("speed_y", 20)
@@ -96,7 +88,7 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
             if abs(val) > 0.15:
                 move_val = int(val * speed_x)
                 if move_val != 0:
-                    ui_virtual.write(e.EV_REL, e.REL_X, move_val)
+                    ui_virtual.mouse_move(move_val, 0)
         except:
             pass
 
@@ -107,22 +99,20 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
             if abs(val) > 0.15:
                 move_val = int(val * speed_y)
                 if move_val != 0:
-                    ui_virtual.write(e.EV_REL, e.REL_Y, move_val)
+                    ui_virtual.mouse_move(0, move_val)
         except:
             pass
 
-    # Scroll
+    # --- Scroll ---
     if "scroll_y" in mod_mapping.get("analogs", {}):
         try:
             axis_idx = mod_mapping["analogs"]["scroll_y"]
             val = joystick.get_axis(axis_idx)
             if abs(val) > 0.7:
                 scroll_amount = -1 if val > 0 else 1
-                ui_virtual.write(e.EV_REL, e.REL_WHEEL, scroll_amount)
+                ui_virtual.mouse_scroll(scroll_amount)
         except:
             pass
-
-    ui_virtual.syn()
 
     # --- Button Clicks (State Machine) ---
     # Left Click
@@ -132,12 +122,10 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
             is_down = joystick.get_button(btn_idx)
 
             if is_down and not _left_is_pressed:
-                ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 1)
-                ui_virtual.syn()
+                ui_virtual.mouse_click("left", True)
                 _left_is_pressed = True
             elif not is_down and _left_is_pressed:
-                ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 0)
-                ui_virtual.syn()
+                ui_virtual.mouse_click("left", False)
                 _left_is_pressed = False
         except:
             pass
@@ -149,12 +137,10 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
             is_down = joystick.get_button(btn_idx)
 
             if is_down and not _right_is_pressed:
-                ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 1)
-                ui_virtual.syn()
+                ui_virtual.mouse_click("right", True)
                 _right_is_pressed = True
             elif not is_down and _right_is_pressed:
-                ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 0)
-                ui_virtual.syn()
+                ui_virtual.mouse_click("right", False)
                 _right_is_pressed = False
         except:
             pass
