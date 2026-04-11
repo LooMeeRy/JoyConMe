@@ -1,9 +1,5 @@
+# menus/button_main.py
 import time
-
-import pygame
-
-MENU_NAME = "ตั้งค่าปุ่ม"
-MENU_TARGET = "button_main"
 
 from menus.utils import (
     format_button_name,
@@ -11,6 +7,9 @@ from menus.utils import (
     load_mapping,
     save_mapping,
 )
+
+MENU_NAME = "ตั้งค่าปุ่ม"
+MENU_TARGET = "button_main"
 
 # --- State Management ---
 state = "main"
@@ -20,31 +19,12 @@ target_item = None
 pending_action = None
 new_input_val = None
 new_action_val = None
-selected_cat = None
 all_actions = []
 
-_capture_buffer = []
-_last_capture_time = 0
-_CAPTURE_WINDOW = 0.5
-
-MENU_MAIN = ["เพิ่มปุ่ม", "แก้ไขปุ่ม", "กลับ"]
-MENU_EDIT = ["เปลี่ยนปุ่ม", "เปลี่ยน Action", "ลบการตั้งค่า", "กลับ"]
+MENU_MAIN = ["เพิ่มการตั้งค่าใหม่", "รายการที่ตั้งไว้", "กลับ"]
+MENU_EDIT_OPTS = ["เปลี่ยนปุ่มจอย", "ลบการตั้งค่า", "กลับ"]
 MENU_CONFIRM = ["ยกเลิก", "ยืนยัน"]
 ITEMS_PER_PAGE = 6
-
-
-def get_edit_items():
-    if not edit_list:
-        return ["(ว่าง)", "กลับ"]
-    start = edit_page * ITEMS_PER_PAGE
-    end = start + ITEMS_PER_PAGE
-    items = [i["label"] for i in edit_list[start:end]]
-    if start > 0:
-        items.append("ก่อนหน้า")
-    if end < len(edit_list):
-        items.append("ถัดไป")
-    items.append("กลับ")
-    return items
 
 
 def reset():
@@ -55,8 +35,7 @@ def reset():
         target_item, \
         pending_action, \
         new_input_val, \
-        new_action_val, \
-        _capture_buffer
+        new_action_val
     state = "main"
     edit_list = []
     edit_page = 0
@@ -64,7 +43,20 @@ def reset():
     pending_action = None
     new_input_val = None
     new_action_val = None
-    _capture_buffer = []
+
+
+def get_edit_items():
+    if not edit_list:
+        return ["(ไม่มีข้อมูล)", "กลับ"]
+    start = edit_page * ITEMS_PER_PAGE
+    end = start + ITEMS_PER_PAGE
+    items = [i["label"] for i in edit_list[start:end]]
+    if start > 0:
+        items.append("⬅️ ก่อนหน้า")
+    if end < len(edit_list):
+        items.append("ถัดไป ➡️")
+    items.append("กลับ")
+    return items
 
 
 def run(selected_item, context):
@@ -75,271 +67,240 @@ def run(selected_item, context):
         target_item, \
         pending_action, \
         new_action_val, \
-        selected_cat, \
-        all_actions
+        all_actions, \
+        new_input_val
     overlay = context["overlay"]
 
+    full_mapping = load_mapping()
+    active_prof = full_mapping.get("active_profile", "default")
+    mapping = full_mapping.get("profiles", {}).get(active_prof, {})
+
+    # --- 1. หน้าหลัก ---
     if state == "main":
         if selected_item == "กลับ":
             return "SWITCH:main"
-        elif selected_item == "เพิ่มปุ่ม":
-            pending_action = "add_new"
-            return "LISTEN_INPUT"
-        elif selected_item == "แก้ไขปุ่ม":
+        elif selected_item == "เพิ่มการตั้งค่าใหม่":
+            state = "select_cat"
+            all_actions = get_all_available_actions()
+            overlay.menu_items = sorted(
+                list(set([i["mod_name"] for i in all_actions]))
+            ) + ["ยกเลิก"]
+            return "UPDATE_UI"
+        elif selected_item == "รายการที่ตั้งไว้":
             state = "select_edit"
-            edit_page = 0
-            edit_list.clear()
-
-            # ✨ เจาะจงไปที่ Active Profile
-            full_mapping = load_mapping()
-            active_prof = full_mapping.get("active_profile", "default")
-            mapping = full_mapping.get("profiles", {}).get(active_prof, {})
-
-            if mapping:
-                for m_id, m_data in mapping.items():
-                    if not isinstance(m_data, dict):
-                        continue
-
-                    # ดึงปุ่ม (Buttons)
-                    for k, v in m_data.get("buttons", {}).items():
+            edit_list = []
+            for m_id, categories in mapping.items():
+                for cat_id, keys in categories.items():
+                    for k, v in keys.items():
+                        if m_id == "macro_keyboard":
+                            label = f"📜 {v} (ปุ่ม {k})"
+                        else:
+                            label = f"🎮 {k} ({format_button_name(v)})"
                         edit_list.append(
                             {
-                                "label": f"{format_button_name(v)} ({k})",
+                                "label": label,
                                 "mod": m_id,
-                                "type": "buttons",
+                                "cat": cat_id,
                                 "key": k,
+                                "val": v,
                             }
                         )
-
-                    # ดึงแกน Analog
-                    for k, v in m_data.get("analogs", {}).items():
-                        edit_list.append(
-                            {
-                                "label": f"แกน {v} ({k})",
-                                "mod": m_id,
-                                "type": "analogs",
-                                "key": k,
-                            }
-                        )
-
             overlay.menu_items = get_edit_items()
             return "UPDATE_UI"
 
-    elif state == "select_edit":
+    # --- 2. เลือกหมวดหมู่ ---
+    elif state == "select_cat":
+        if selected_item == "ยกเลิก":
+            reset()
+            overlay.menu_items = MENU_MAIN
+        else:
+            state = "select_action"
+            filtered = [i for i in all_actions if i["mod_name"] == selected_item]
+            overlay.menu_items = [i["label"] for i in filtered] + ["กลับ"]
+            context["temp_actions"] = filtered
+        return "UPDATE_UI"
+
+    # --- 3. เลือก Action ---
+    elif state == "select_action":
         if selected_item == "กลับ":
             state = "main"
             overlay.menu_items = MENU_MAIN
-            return "UPDATE_UI"
-        elif selected_item == "ถัดไป":
+        else:
+            all_actions = get_all_available_actions()
+            new_action_val = next(
+                (i for i in all_actions if i["label"] == selected_item), None
+            )
+            if new_action_val:
+                pending_action = "add_new"
+                overlay.center_msg = f"ตั้งค่า: {selected_item}\nกดปุ่มหรือโยกแกน..."
+                return "LISTEN_INPUT"
+        return "UPDATE_UI"
+
+    # --- 4. แก้ไขรายการเดิม ---
+    elif state == "select_edit":
+        if selected_item == "กลับ":
+            reset()
+            overlay.menu_items = MENU_MAIN
+        elif selected_item == "ถัดไป ➡️":
             edit_page += 1
             overlay.menu_items = get_edit_items()
-            return "UPDATE_UI"
-        elif selected_item == "ก่อนหน้า":
+        elif selected_item == "⬅️ ก่อนหน้า":
             edit_page -= 1
             overlay.menu_items = get_edit_items()
-            return "UPDATE_UI"
-        elif selected_item != "(ว่าง)":
+        elif selected_item != "(ไม่มีข้อมูล)":
             target_item = next(
                 (i for i in edit_list if i["label"] == selected_item), None
             )
             if target_item:
-                state = "edit_action"
-                overlay.menu_items = MENU_EDIT
-                overlay.center_msg = f"{target_item['label']}"
-                return "UPDATE_UI"
+                state = "edit_opts"
+                overlay.menu_items = MENU_EDIT_OPTS
+                overlay.center_msg = f"แก้ไข: {target_item['label']}"
+        return "UPDATE_UI"
 
-    elif state == "edit_action":
+    elif state == "edit_opts":
         if selected_item == "กลับ":
             state = "select_edit"
             overlay.menu_items = get_edit_items()
-            return "UPDATE_UI"
         elif selected_item == "ลบการตั้งค่า":
             pending_action = "delete"
             state = "confirm"
             overlay.menu_items = MENU_CONFIRM
-            overlay.center_msg = "ยืนยันลบ?"
-            return "UPDATE_UI"
-        elif selected_item == "เปลี่ยนปุ่ม":
+            overlay.center_msg = "ยืนยันการลบ?"
+        elif selected_item == "เปลี่ยนปุ่มจอย":
             pending_action = "change_btn"
             return "LISTEN_INPUT"
-        elif selected_item == "เปลี่ยน Action":
-            pending_action = "change_action"
-            state = "select_cat"
-            all_actions = get_all_available_actions()
-            overlay.menu_items = list(set([i["mod_name"] for i in all_actions])) + [
-                "ยกเลิก"
-            ]
-            return "UPDATE_UI"
+        return "UPDATE_UI"
 
-    elif state == "select_cat":
-        if selected_item == "ยกเลิก":
-            state = "main" if pending_action == "add_new" else "edit_action"
-            overlay.menu_items = MENU_MAIN if pending_action == "add_new" else MENU_EDIT
-            return "UPDATE_UI"
-        else:
-            selected_cat = selected_item
-            state = "select_action"
-            filtered = [
-                i["label"] for i in all_actions if i["mod_name"] == selected_cat
-            ]
-            overlay.menu_items = filtered + ["กลับ"]
-            return "UPDATE_UI"
-
-    elif state == "select_action":
-        if selected_item == "กลับ":
-            state = "select_cat"
-            overlay.menu_items = list(set([i["mod_name"] for i in all_actions])) + [
-                "ยกเลิก"
-            ]
-            return "UPDATE_UI"
-        else:
-            new_action_val = next(
-                (
-                    i
-                    for i in all_actions
-                    if i["label"] == selected_item and i["mod_name"] == selected_cat
-                ),
-                None,
-            )
-            if new_action_val:
-                state = "confirm"
-                overlay.menu_items = MENU_CONFIRM
-                overlay.center_msg = f"{new_action_val['label']}\nกดยืนยัน"
-                return "UPDATE_UI"
-
+    # --- 5. ยืนยันและบันทึกลง JSON ---
     elif state == "confirm":
         if selected_item == "ยืนยัน":
-            # 🚨 จุดสำคัญ: บันทึกลงใน Active Profile
-            full_mapping = load_mapping()
-            active_prof = full_mapping.get("active_profile", "default")
+            m_id = (
+                new_action_val["mod"]
+                if pending_action == "add_new"
+                else target_item["mod"]
+            )
+            cat = (
+                new_action_val["cat"]
+                if pending_action == "add_new"
+                else target_item["cat"]
+            )
 
-            # ตรวจสอบโครงสร้าง
             if "profiles" not in full_mapping:
                 full_mapping["profiles"] = {}
             if active_prof not in full_mapping["profiles"]:
                 full_mapping["profiles"][active_prof] = {}
-
             mapping = full_mapping["profiles"][active_prof]
 
-            # 1. กรณีลบ
-            if pending_action == "delete" and target_item:
-                m, c, k = target_item["mod"], target_item["type"], target_item["key"]
-                if m in mapping and c in mapping[m] and k in mapping[m][c]:
-                    del mapping[m][c][k]
+            if m_id not in mapping:
+                mapping[m_id] = {"buttons": {}, "analogs": {}}
 
-            # 2. กรณีเปลี่ยนปุ่ม
-            elif (
-                pending_action == "change_btn"
-                and new_input_val is not None
-                and target_item
-            ):
-                m, c, k = target_item["mod"], target_item["type"], target_item["key"]
-                if m not in mapping:
-                    mapping[m] = {"analogs": {}, "buttons": {}}
-                mapping[m][c][k] = new_input_val
+            if pending_action == "delete":
+                if target_item["key"] in mapping[m_id][cat]:
+                    del mapping[m_id][cat][target_item["key"]]
+            else:
+                # การลบของเก่าทิ้งเมื่อใช้ "เปลี่ยนปุ่มจอย"
+                if pending_action == "change_btn":
+                    if m_id == "macro_keyboard":
+                        old_joy_key = target_item["key"]
+                        if old_joy_key in mapping[m_id][cat]:
+                            del mapping[m_id][cat][old_joy_key]
 
-            # 3. กรณีเพิ่มปุ่มใหม่
-            elif (
-                pending_action == "add_new"
-                and new_action_val
-                and new_input_val is not None
-            ):
-                n_mod, n_cat, n_key = (
-                    new_action_val["mod"],
-                    new_action_val["cat"],
-                    new_action_val["key"],
-                )
-                if n_mod not in mapping:
-                    mapping[n_mod] = {"analogs": {}, "buttons": {}}
-                if n_cat not in mapping[n_mod]:
-                    mapping[n_mod][n_cat] = {}
-                mapping[n_mod][n_cat][n_key] = new_input_val
+                # จัดรูปแบบ JSON ให้เป๊ะ
+                final_val = new_input_val
+                if cat == "analogs":
+                    if isinstance(new_input_val, dict) and "axis" in new_input_val:
+                        final_val = new_input_val["axis"]
+                    elif isinstance(new_input_val, list) and len(new_input_val) > 0:
+                        first = new_input_val[0]
+                        if isinstance(first, dict) and "axis" in first:
+                            final_val = first["axis"]
+                        else:
+                            final_val = first
 
-            # 4. กรณีเปลี่ยน Action (ลบที่เก่า ย้ายไปที่ใหม่)
-            elif pending_action == "change_action" and target_item and new_action_val:
-                old_val = (
-                    mapping.get(target_item["mod"], {})
-                    .get(target_item["type"], {})
-                    .get(target_item["key"])
-                )
-                # ลบของเก่า
-                if (
-                    target_item["mod"] in mapping
-                    and target_item["type"] in mapping[target_item["mod"]]
-                ):
-                    if (
-                        target_item["key"]
-                        in mapping[target_item["mod"]][target_item["type"]]
-                    ):
-                        del mapping[target_item["mod"]][target_item["type"]][
-                            target_item["key"]
-                        ]
-                # เพิ่มที่ใหม่
-                n_mod, n_cat, n_key = (
-                    new_action_val["mod"],
-                    new_action_val["cat"],
-                    new_action_val["key"],
-                )
-                if n_mod not in mapping:
-                    mapping[n_mod] = {"analogs": {}, "buttons": {}}
-                if n_cat not in mapping[n_mod]:
-                    mapping[n_mod][n_cat] = {}
-                mapping[n_mod][n_cat][n_key] = old_val
+                # บันทึก
+                if m_id == "macro_keyboard":
+                    joy_key = str(final_val).replace("'", '"')
+                    macro_name = (
+                        new_action_val["key"]
+                        if pending_action == "add_new"
+                        else target_item["val"]
+                    )
+                    mapping[m_id][cat][joy_key] = macro_name
+                else:
+                    act_key = (
+                        new_action_val["key"]
+                        if pending_action == "add_new"
+                        else target_item["key"]
+                    )
+                    mapping[m_id][cat][act_key] = final_val
 
-            # ✨ บันทึกไฟล์ลงดิสก์
             save_mapping(full_mapping)
-            reset()
-            overlay.menu_items = MENU_MAIN
-            overlay.center_msg = "บันทึกเรียบร้อย!"
 
-            # 🚀 หัวใจสำคัญ: ส่งสัญญาณ SAVE_MAPPING เพื่อให้ Engine โหลดปุ่มใหม่ทันที
+            # ✨ สร้างรายการ Edit List ใหม่ เพื่อให้โชว์ปุ่มอัปเดตล่าสุด
+            edit_list.clear()
+            for m, categories in mapping.items():
+                for c_id, keys in categories.items():
+                    for k, v in keys.items():
+                        if m == "macro_keyboard":
+                            label = f"📜 {v} (ปุ่ม {k})"
+                        else:
+                            label = f"🎮 {k} ({format_button_name(v)})"
+                        edit_list.append(
+                            {"label": label, "mod": m, "cat": c_id, "key": k, "val": v}
+                        )
+
+            # ✨ พากลับไปที่หน้า "รายการที่ตั้งไว้" ทันที ไม่ต้องกลับไปหน้าแรก
+            state = "select_edit"
+            overlay.menu_items = get_edit_items()
+            overlay.center_msg = "บันทึกสำเร็จ!"
+
+            # ล้างเฉพาะตัวแปรชั่วคราวทิ้ง (ไม่ทำลาย state หน้าปัจจุบัน)
+            target_item = None
+            pending_action = None
+            new_input_val = None
+            new_action_val = None
+
             return "SAVE_MAPPING"
 
         else:
-            reset()
-            overlay.menu_items = MENU_MAIN
+            # ✨ ถ้ายกเลิก ให้ถอยกลับ 1 สเต็ปอย่างฉลาด
+            if pending_action == "add_new":
+                state = "main"
+                overlay.menu_items = MENU_MAIN
+            else:
+                state = "edit_opts"
+                overlay.menu_items = MENU_EDIT_OPTS
+                overlay.center_msg = f"แก้ไข: {target_item['label']}"
+
+            pending_action = None
+            new_input_val = None
             return "UPDATE_UI"
 
     return None
 
 
 def set_detected_input(val):
-    global new_input_val, _capture_buffer, _last_capture_time
-    now = time.time()
-    incoming_btns = val if isinstance(val, list) else [val]
-
-    if now - _last_capture_time > _CAPTURE_WINDOW:
-        _capture_buffer = incoming_btns
+    global new_input_val
+    if isinstance(val, list):
+        if len(val) == 1:
+            new_input_val = val[0]
+        elif len(val) > 1:
+            new_input_val = val
+        else:
+            new_input_val = None
     else:
-        for b in incoming_btns:
-            if b not in _capture_buffer:
-                _capture_buffer.append(b)
-
-    _last_capture_time = now
-    if len(_capture_buffer) > 1:
-        new_input_val = sorted(_capture_buffer, key=lambda x: str(x))
-    else:
-        new_input_val = _capture_buffer[0] if _capture_buffer else None
+        new_input_val = val
 
 
 def proceed_after_input(context):
-    global state, new_action_val, all_actions, selected_cat, _capture_buffer
+    global state, new_input_val
     overlay = context["overlay"]
+    state = "confirm"
+    overlay.menu_items = MENU_CONFIRM
 
-    if pending_action == "change_btn":
-        state = "confirm"
-        overlay.menu_items = MENU_CONFIRM
-        name = format_button_name(new_input_val)
-        overlay.center_msg = f"ค่าใหม่: {name}\nกดยืนยัน"
-        _capture_buffer = []
-        return "UPDATE_UI"
+    from menus.utils import format_button_name
 
-    elif pending_action == "add_new":
-        state = "select_cat"
-        all_actions = get_all_available_actions()
-        overlay.menu_items = list(set([i["mod_name"] for i in all_actions])) + ["ยกเลิก"]
-        overlay.center_msg = "ตรวจพบปุ่มแล้ว\nเลือก Action ต่อ"
-        _capture_buffer = []
-        return "UPDATE_UI"
+    display_name = format_button_name(new_input_val)
 
-    return None
+    overlay.center_msg = f"จับสัญญาณ: {display_name}\nยืนยันเพื่อบันทึก"
+    return "UPDATE_UI"

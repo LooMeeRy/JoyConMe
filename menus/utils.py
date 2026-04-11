@@ -1,3 +1,4 @@
+# menus/utils.py
 import json
 import os
 from pathlib import Path
@@ -5,10 +6,8 @@ from typing import Any, Dict, List, Optional
 
 
 def get_project_root() -> Path:
-    """หา Root ของโปรเจค"""
-    # เริ่มจากไฟล์นี้
+    """หา Root ของโปรเจกต์"""
     current = Path(__file__).resolve().parent
-    # ขึ้นไป 1 ระดับ (จาก menus/ ไป root)
     return current.parent
 
 
@@ -20,6 +19,8 @@ def get_config_path(filename: str) -> Path:
 def load_json_safe(filepath: Path, default: Any = None) -> Any:
     """โหลด JSON อย่างปลอดภัย"""
     try:
+        if not filepath.exists():
+            return default if default is not None else {}
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -56,6 +57,17 @@ def save_mapping(data: Dict) -> bool:
     return save_json_safe(get_config_path("mapping.json"), data)
 
 
+# ✨ ฟังก์ชันใหม่สำหรับคลังมาโคร (Macro Library)
+def load_macros() -> Dict[str, List[Any]]:
+    """โหลดรายการมาโครทั้งหมดจากคลัง"""
+    return load_json_safe(get_config_path("macros.json"), {})
+
+
+def save_macros(data: Dict[str, List[Any]]) -> bool:
+    """บันทึกรายการมาโครลงคลัง"""
+    return save_json_safe(get_config_path("macros.json"), data)
+
+
 def load_recipes() -> List[Dict]:
     return load_json_safe(get_config_path("recipes.json"), [])
 
@@ -74,13 +86,27 @@ def get_all_available_actions() -> List[Dict]:
         print(f"⚠️ ไม่พบโฟลเดอร์ actions")
         return actions
 
+    # 1. เพิ่มตัวเลือก "มาโครจากคลัง" เป็นหมวดหมู่พิเศษ
+    macros = load_macros()
+    if macros:
+        for macro_name in macros.keys():
+            actions.append(
+                {
+                    "label": f"📜 {macro_name}",
+                    "mod": "macro_keyboard",  # ผูกกับ action ตัวรันมาโคร
+                    "mod_name": "คลังมาโคร",
+                    "cat": "buttons",
+                    "key": macro_name,  # ส่งชื่อมาโครไปเป็นค่าที่จะเซฟลง mapping
+                }
+            )
+
+    # 2. สแกนไฟล์ .py ปกติ
     for f in actions_dir.glob("*.py"):
         if f.name.startswith("_"):
             continue
 
         mod_name = f.stem
         try:
-            # ใช้ importlib.util แทน __import__ เพื่อความปลอดภัย
             import importlib.util
 
             spec = importlib.util.spec_from_file_location(f"actions.{mod_name}", f)
@@ -133,6 +159,10 @@ def get_emoji(val: Any) -> str:
     if isinstance(val, list):
         return "".join([get_emoji(v) for v in val])
 
+    # ถ้าเป็นชื่อมาโคร
+    if isinstance(val, str):
+        return "📜"
+
     return "❓"
 
 
@@ -140,10 +170,8 @@ def format_button_name(v: Any) -> str:
     """แปลงค่า input เป็นข้อความอ่านง่าย"""
     if v is None:
         return "(ไม่ได้ตั้งค่า)"
-
     if isinstance(v, int):
         return f"ปุ่ม {v}"
-
     if isinstance(v, list):
         return " + ".join([f"ปุ่ม {x}" for x in v])
 
@@ -159,6 +187,10 @@ def format_button_name(v: Any) -> str:
         if d[0] == 1:
             dirs.append("ขวา")
         return f"Hat ({' '.join(dirs)})"
+
+    # ✨ ถ้าเป็นชื่อมาโครจากคลัง
+    if isinstance(v, str):
+        return f"มาโคร: {v}"
 
     return str(v)
 

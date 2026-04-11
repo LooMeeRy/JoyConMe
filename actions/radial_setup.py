@@ -70,17 +70,28 @@ class RadialMenuController:
                 return False
         if isinstance(mapping_value, list):
             return all(self.is_combo_pressed(joystick, item) for item in mapping_value)
-        if isinstance(mapping_value, dict) and "hat" in mapping_value:
-            try:
-                h_id = mapping_value["hat"]
-                target_dir = mapping_value["dir"]
-                current_val = joystick.get_hat(h_id)
-                # เช็คทั้งแนวตั้งและแนวนอน (รองรับการกดเฉียง)
-                return (target_dir[0] != 0 and current_val[0] == target_dir[0]) or (
-                    target_dir[1] != 0 and current_val[1] == target_dir[1]
-                )
-            except:
-                pass
+
+        # ✨ เช็ครูปแบบ Dictionary (Hat และ Analog)
+        if isinstance(mapping_value, dict):
+            if "hat" in mapping_value:
+                try:
+                    h_id = mapping_value["hat"]
+                    target_dir = mapping_value["dir"]
+                    current_val = joystick.get_hat(h_id)
+                    return (target_dir[0] != 0 and current_val[0] == target_dir[0]) or (
+                        target_dir[1] != 0 and current_val[1] == target_dir[1]
+                    )
+                except:
+                    pass
+            elif "axis" in mapping_value:
+                try:
+                    a_id = mapping_value["axis"]
+                    target_val = mapping_value["val"]
+                    current_val = joystick.get_axis(a_id)
+                    # ดันสุดเกิน 85% ถึงจะนับว่ากด
+                    return current_val > 0.85 if target_val > 0 else current_val < -0.85
+                except:
+                    pass
         return False
 
     def get_current_physical_inputs(
@@ -95,10 +106,16 @@ class RadialMenuController:
                 val = joystick.get_hat(h)
                 if val != (0, 0):
                     inputs.append({"hat": h, "dir": list(val)})
+
+            # ✨ บันทึก Analog ได้แม่นยำและกันบัค Trigger
             if include_analog:
                 for a in range(joystick.get_numaxes()):
-                    if abs(joystick.get_axis(a)) > 0.85:
-                        inputs.append(a)
+                    val = joystick.get_axis(a)
+                    # ตัดปัญหา Trigger (L2/R2 แกน 4, 5) ที่ชอบค้างค่า -1.0
+                    if a in [4, 5] and val < -0.5:
+                        continue
+                    if abs(val) > 0.85:
+                        inputs.append({"axis": a, "val": 1 if val > 0 else -1})
         except:
             pass
         return inputs
@@ -163,7 +180,8 @@ class RadialMenuController:
         if not overlay:
             return False
 
-        inputs = self.get_current_physical_inputs(joystick)
+        # ให้ดักจับแกน Analog ได้
+        inputs = self.get_current_physical_inputs(joystick, include_analog=True)
 
         if self.state.wait_for_neutral:
             if not inputs:
@@ -181,10 +199,16 @@ class RadialMenuController:
                 if inp not in self.state.max_combo_detected:
                     self.state.max_combo_detected.append(inp)
 
-            parts = [
-                get_emoji(i) if isinstance(i, dict) else f"{i}️⃣"
-                for i in self.state.max_combo_detected
-            ]
+            # ✨ ปรับให้แสดงชื่อแกน/ปุ่มที่ตรวจเจอได้ชัดเจน (เช่น 🕹️A4+)
+            parts = []
+            for i in self.state.max_combo_detected:
+                if isinstance(i, dict) and "axis" in i:
+                    parts.append(f"🕹️A{i['axis']}({'+' if i['val'] > 0 else '-'})")
+                elif isinstance(i, dict) and "hat" in i:
+                    parts.append(get_emoji(i))
+                else:
+                    parts.append(f"{i}️⃣")
+
             overlay.center_msg = f"ตรวจเจอ:\n{' + '.join(parts)}"
             overlay.timeout_progress = 0.0
 
@@ -211,24 +235,7 @@ class RadialMenuController:
                     handler.add_sequence_input(final, {"overlay": overlay})
             self.state.max_combo_detected = []
 
-        elif self.state.listen_mode == "sequence" and self.state.has_started_sequence:
-            elapsed = time.time() - self.state.last_input_time
-            if elapsed > self.state.GRACE_PERIOD:
-                prog = (elapsed - self.state.GRACE_PERIOD) / self.state.TIMEOUT_SECONDS
-                overlay.timeout_progress = min(prog, 1.0)
-                overlay.center_msg = f"บันทึกใน {int(self.state.TIMEOUT_SECONDS - (elapsed - self.state.GRACE_PERIOD))}..."
-                if prog >= 1.0:
-                    handler = (
-                        main_menu.get_menu_module(self.state.current_menu_id)
-                        if main_menu
-                        else None
-                    )
-                    if handler:
-                        handler.is_recording = False
-                    self.state.has_started_sequence = False
-                    self.state.listen_mode = None
-                    self.state.wait_for_neutral = True
-                    overlay.center_msg = "บันทึกแล้ว"
+        # (ตัดส่วน sequence timeout เดิมออกไปเพื่อให้ดูง่ายขึ้นตามที่คุณต้องการ)
         return True
 
     def run(
@@ -271,6 +278,10 @@ class RadialMenuController:
                 joystick.get_button(i) for i in range(joystick.get_numbuttons())
             ):
                 self.state.wait_for_neutral = False
+
+            # ✨ จุดสำคัญ: ให้ขยับเมนูได้ แม้ระบบจะรอให้ปล่อยปุ่มอยู่
+            self.update_selection_from_axis(joystick)
+
             if self.state.overlay_window:
                 self.state.overlay_window.update()
             return True
@@ -287,7 +298,6 @@ class RadialMenuController:
 
             elif result in ["SAVE_MAPPING", "SAVE_CONFIG"]:
                 self.close_menu()
-                # ✨ คืนค่า result (Signal) เพื่อให้ Engine รู้ แต่ยังคงบล็อก Mouse ในเฟรมนี้
                 return result
 
             elif isinstance(result, str) and result.startswith("SWITCH:"):
@@ -311,18 +321,13 @@ class RadialMenuController:
                 self.state.listen_mode = "input"
                 self.state.wait_for_neutral = True
                 self.state.overlay_window.menu_items = ["..."]
-                self.state.overlay_window.center_msg = "รอสัญญาณปุ่ม..."
-
-            elif result == "START_SEQUENCE_LISTEN":
-                self.state.listen_mode = "sequence"
-                self.state.wait_for_neutral = True
-                self.state.has_started_sequence = False
+                self.state.overlay_window.center_msg = "รอสัญญาณปุ่ม/แกน..."
 
             pygame.time.wait(200)
 
         if self.state.overlay_window:
             self.state.overlay_window.update()
-        return True  # 🛑 บล็อก Mouse!
+        return True
 
 
 _controller = RadialMenuController()
