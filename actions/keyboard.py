@@ -140,7 +140,7 @@ _CHAR_MAP = {
 ACTION_INFO = {
     "id": "keyboard",
     "name": "คีย์บอร์ดเสมือน",
-    "priority": 90,
+    "priority": 2,
     "is_blocking": True,
     "actions": [
         {"key": "toggle_keyboard", "type": "button", "desc": "เปิด/ปิด คีย์บอร์ด"},

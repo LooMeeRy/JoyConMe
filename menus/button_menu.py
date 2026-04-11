@@ -23,10 +23,9 @@ new_action_val = None
 selected_cat = None
 all_actions = []
 
-# --- ระบบ Buffer สำหรับการ Mapping ปุ่ม Combo ---
 _capture_buffer = []
 _last_capture_time = 0
-_CAPTURE_WINDOW = 0.5  # ช่วงเวลาสะสมปุ่ม (วินาที)
+_CAPTURE_WINDOW = 0.5
 
 MENU_MAIN = ["เพิ่มปุ่ม", "แก้ไขปุ่ม", "กลับ"]
 MENU_EDIT = ["เปลี่ยนปุ่ม", "เปลี่ยน Action", "ลบการตั้งค่า", "กลับ"]
@@ -90,20 +89,18 @@ def run(selected_item, context):
             state = "select_edit"
             edit_page = 0
             edit_list.clear()
-            mapping = load_mapping()
+
+            # ✨ เจาะจงไปที่ Active Profile
+            full_mapping = load_mapping()
+            active_prof = full_mapping.get("active_profile", "default")
+            mapping = full_mapping.get("profiles", {}).get(active_prof, {})
+
             if mapping:
                 for m_id, m_data in mapping.items():
                     if not isinstance(m_data, dict):
                         continue
-                    for k, v in m_data.get("analogs", {}).items():
-                        edit_list.append(
-                            {
-                                "label": f"แกน {v} ({k})",
-                                "mod": m_id,
-                                "type": "analogs",
-                                "key": k,
-                            }
-                        )
+
+                    # ดึงปุ่ม (Buttons)
                     for k, v in m_data.get("buttons", {}).items():
                         edit_list.append(
                             {
@@ -113,6 +110,18 @@ def run(selected_item, context):
                                 "key": k,
                             }
                         )
+
+                    # ดึงแกน Analog
+                    for k, v in m_data.get("analogs", {}).items():
+                        edit_list.append(
+                            {
+                                "label": f"แกน {v} ({k})",
+                                "mod": m_id,
+                                "type": "analogs",
+                                "key": k,
+                            }
+                        )
+
             overlay.menu_items = get_edit_items()
             return "UPDATE_UI"
 
@@ -200,11 +209,25 @@ def run(selected_item, context):
 
     elif state == "confirm":
         if selected_item == "ยืนยัน":
-            mapping = load_mapping()
+            # 🚨 จุดสำคัญ: บันทึกลงใน Active Profile
+            full_mapping = load_mapping()
+            active_prof = full_mapping.get("active_profile", "default")
+
+            # ตรวจสอบโครงสร้าง
+            if "profiles" not in full_mapping:
+                full_mapping["profiles"] = {}
+            if active_prof not in full_mapping["profiles"]:
+                full_mapping["profiles"][active_prof] = {}
+
+            mapping = full_mapping["profiles"][active_prof]
+
+            # 1. กรณีลบ
             if pending_action == "delete" and target_item:
                 m, c, k = target_item["mod"], target_item["type"], target_item["key"]
                 if m in mapping and c in mapping[m] and k in mapping[m][c]:
                     del mapping[m][c][k]
+
+            # 2. กรณีเปลี่ยนปุ่ม
             elif (
                 pending_action == "change_btn"
                 and new_input_val is not None
@@ -214,6 +237,8 @@ def run(selected_item, context):
                 if m not in mapping:
                     mapping[m] = {"analogs": {}, "buttons": {}}
                 mapping[m][c][k] = new_input_val
+
+            # 3. กรณีเพิ่มปุ่มใหม่
             elif (
                 pending_action == "add_new"
                 and new_action_val
@@ -226,13 +251,18 @@ def run(selected_item, context):
                 )
                 if n_mod not in mapping:
                     mapping[n_mod] = {"analogs": {}, "buttons": {}}
+                if n_cat not in mapping[n_mod]:
+                    mapping[n_mod][n_cat] = {}
                 mapping[n_mod][n_cat][n_key] = new_input_val
+
+            # 4. กรณีเปลี่ยน Action (ลบที่เก่า ย้ายไปที่ใหม่)
             elif pending_action == "change_action" and target_item and new_action_val:
                 old_val = (
                     mapping.get(target_item["mod"], {})
                     .get(target_item["type"], {})
                     .get(target_item["key"])
                 )
+                # ลบของเก่า
                 if (
                     target_item["mod"] in mapping
                     and target_item["type"] in mapping[target_item["mod"]]
@@ -244,6 +274,7 @@ def run(selected_item, context):
                         del mapping[target_item["mod"]][target_item["type"]][
                             target_item["key"]
                         ]
+                # เพิ่มที่ใหม่
                 n_mod, n_cat, n_key = (
                     new_action_val["mod"],
                     new_action_val["cat"],
@@ -251,40 +282,40 @@ def run(selected_item, context):
                 )
                 if n_mod not in mapping:
                     mapping[n_mod] = {"analogs": {}, "buttons": {}}
+                if n_cat not in mapping[n_mod]:
+                    mapping[n_mod][n_cat] = {}
                 mapping[n_mod][n_cat][n_key] = old_val
 
-            save_mapping(mapping)
+            # ✨ บันทึกไฟล์ลงดิสก์
+            save_mapping(full_mapping)
             reset()
             overlay.menu_items = MENU_MAIN
-            overlay.center_msg = "บันทึกแล้ว!"
-            return "UPDATE_UI"
+            overlay.center_msg = "บันทึกเรียบร้อย!"
+
+            # 🚀 หัวใจสำคัญ: ส่งสัญญาณ SAVE_MAPPING เพื่อให้ Engine โหลดปุ่มใหม่ทันที
+            return "SAVE_MAPPING"
+
         else:
             reset()
             overlay.menu_items = MENU_MAIN
             return "UPDATE_UI"
+
     return None
 
 
-# --- ฟังก์ชันสำหรับดักจับ Input แบบ Combo (แก้ไขปัญหาปล่อยปุ่มไม่พร้อมกัน) ---
 def set_detected_input(val):
     global new_input_val, _capture_buffer, _last_capture_time
     now = time.time()
-
-    # แปลง input เป็น list เสมอ
     incoming_btns = val if isinstance(val, list) else [val]
 
-    # ถ้าห่างจากปุ่มล่าสุดเกิน 0.5 วินาที ให้ถือว่าเป็นชุดใหม่
     if now - _last_capture_time > _CAPTURE_WINDOW:
         _capture_buffer = incoming_btns
     else:
-        # ถ้ายังอยู่ในช่วงเวลา ให้สะสมปุ่มเพิ่ม (Combo)
         for b in incoming_btns:
             if b not in _capture_buffer:
                 _capture_buffer.append(b)
 
     _last_capture_time = now
-
-    # สรุปค่า: ถ้ามีหลายปุ่มให้เก็บเป็น List ถ้ามีปุ่มเดียวให้เก็บเป็น Int
     if len(_capture_buffer) > 1:
         new_input_val = sorted(_capture_buffer, key=lambda x: str(x))
     else:
@@ -300,15 +331,15 @@ def proceed_after_input(context):
         overlay.menu_items = MENU_CONFIRM
         name = format_button_name(new_input_val)
         overlay.center_msg = f"ค่าใหม่: {name}\nกดยืนยัน"
-        _capture_buffer = []  # ล้างบัฟเฟอร์เมื่อเสร็จสิ้น
+        _capture_buffer = []
         return "UPDATE_UI"
 
     elif pending_action == "add_new":
         state = "select_cat"
         all_actions = get_all_available_actions()
         overlay.menu_items = list(set([i["mod_name"] for i in all_actions])) + ["ยกเลิก"]
-        overlay.center_msg = "ตรวจพบแล้ว\nเลือก Action ต่อ"
-        _capture_buffer = []  # ล้างบัฟเฟอร์เมื่อเสร็จสิ้น
+        overlay.center_msg = "ตรวจพบปุ่มแล้ว\nเลือก Action ต่อ"
+        _capture_buffer = []
         return "UPDATE_UI"
 
     return None

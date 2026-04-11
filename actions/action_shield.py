@@ -1,63 +1,46 @@
-import time
+import json
+import os
 
+# --- Action Info ---
 ACTION_INFO = {
     "id": "action_shield",
     "name": "ระบบล็อก Action (Shield)",
-    "priority": 95,  # 🌟 Priority สูงกว่าเมาส์และคีย์บอร์ด (แต่ต่ำกว่าเมนูตั้งค่า)
-    "is_blocking": True,  # 🌟 สำคัญมาก: บอก Engine ว่าถ้าทำงานอยู่ ให้บล็อกตัวอื่น
+    "priority": 1,  # ✨ อยู่ในกลุ่ม System (รันก่อน Mouse/Keyboard)
+    "is_blocking": True,  # ✨ สำคัญ: ต้องเป็น True เพื่อให้ Bypass Shield ได้ในระดับ Engine
     "actions": [
-        {
-            "key": "toggle_shield",
-            "type": "button",
-            "desc": "เปิด/ปิด การทำงาน Action อื่นทั้งหมด",
-        }
+        {"key": "toggle_shield", "type": "button", "desc": "เปิด/ปิด การล็อก Action ทั้งหมด"}
     ],
 }
 
-# --- State Variables ---
-# เก็บสถานะไว้ในหน่วยความจำ ไม่ต้องอ่าน/เขียนลงไฟล์
-_is_shield_active = False
-_btn_prev = False  # ตัวแปรดักจับไม่ให้ปุ่มทำงานรัวๆ เวลากดค้าง
-
 
 def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
-    global _is_shield_active, _btn_prev
-
-    # --- 1. เช็คจากการถูกเรียกผ่านสูตรลับ (Trigger Key) ---
+    """
+    ฟังก์ชันหลักสำหรับสลับสถานะเกราะป้องกัน (Shield)
+    """
+    # 🚨 ตรวจสอบการเรียกใช้งาน (ผ่านสูตรลับ หรือ ปุ่ม Hotkey)
     if trigger_key == "toggle_shield":
-        _is_shield_active = not _is_shield_active
-        # print(
-        #     f"\n🛡️ Action Shield: {'🔴 เปิดใช้งาน (LOCK)' if _is_shield_active else '🟢 ปิดใช้งาน (UNLOCK)'}"
+        # 1. เข้าถึงตำแหน่งข้อมูลใน Config
+        if "system" not in app_config:
+            app_config["system"] = {}
+
+        # 2. อ่านค่าปัจจุบัน (ถ้าไม่มีให้ถือว่าเป็น False)
+        current_status = app_config["system"].get("action_shield", False)
+
+        # 3. สลับสถานะ (Toggle)
+        new_status = not current_status
+        app_config["system"]["action_shield"] = new_status
+
+        # 4. แสดงผลแจ้งเตือนใน Console
+        # status_msg = (
+        #     "🔒 SHIELD ACTIVE (Locked)"
+        #     if new_status
+        #     else "🔓 SHIELD INACTIVE (Unlocked)"
         # )
-        return _is_shield_active
+        # print(f"\n🛡️ [ActionShield] {status_msg}")
 
-    # --- 2. เช็คจากการกดปุ่มปกติที่ตั้งไว้ใน mapping.json ---
-    if joystick and mod_mapping:
-        btn_idx = mod_mapping.get("buttons", {}).get("toggle_shield")
+        # 🚨 หัวใจสำคัญ: ส่งสัญญาณ SAVE_CONFIG กลับไปหา Engine
+        # เพื่อให้ Engine เรียกฟังก์ชัน save_app_config() และอัปเดตสถานะใน RAM ทันที
+        return "SAVE_CONFIG"
 
-        if btn_idx is not None:
-            try:
-                # อ่านค่าปุ่มจากจอยสติ๊ก
-                is_pressed = joystick.get_button(btn_idx)
-
-                # เช็คแบบ "Just Pressed" (เพิ่งถูกกดลงไป 1 ครั้งเท่านั้น)
-                if is_pressed and not _btn_prev:
-                    _is_shield_active = not _is_shield_active
-                    # print(
-                    #     f"\n🛡️ Action Shield: {'🔴 เปิดใช้งาน (LOCK)' if _is_shield_active else '🟢 ปิดใช้งาน (UNLOCK)'}"
-                    # )
-
-                # บันทึกสถานะการกดไว้เช็คในรอบถัดไป
-                _btn_prev = is_pressed
-            except Exception as e:
-                pass
-
-    # --- 3. การทำงานของ Shield (บล็อก/ไม่บล็อก) ---
-    if _is_shield_active:
-        # 🔴 ถ้าโล่ถูกเปิดใช้งานอยู่ ให้ return True
-        # Engine จะเห็น True + is_blocking=True แล้วจะหยุด Action อื่นๆ ทันที
-        return True
-
-    # 🟢 ถ้าไม่ได้เปิดโล่ return False
-    # Engine จะปล่อยผ่านให้เมาส์และ Action อื่นๆ ทำงานต่อไปตามปกติ
+    # กรณีรันปกติ (ไม่ได้ถูก Trigger) ให้คืน False
     return False

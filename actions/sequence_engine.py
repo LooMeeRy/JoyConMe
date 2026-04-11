@@ -5,39 +5,16 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-import pygame
-
-try:
-    from PySide6.QtCore import Qt
-    from PySide6.QtGui import QFont
-    from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
-
-    QT_AVAILABLE = True
-except ImportError:
-    QT_AVAILABLE = False
-
-try:
-    from menus.utils import get_emoji, normalize_input
-except ImportError:
-    # Fallback กรณีหา Path ไม่เจอ
-    def normalize_input(x):
-        return x
-
-    def get_emoji(x):
-        return "❓"
-
-
+# --- 1. ข้อมูลพื้นฐาน Action ---
 ACTION_INFO = {
     "id": "sequence_engine",
     "name": "ระบบสูตรลับ",
-    "priority": 99,
-    "is_blocking": False,
-    "actions": [
-        {"key": "open_listener", "type": "button", "desc": "เปิดรับสูตร (Cheat Mode)"}
-    ],
+    "priority": 0,
+    "is_blocking": True,  # ✨ Bypass Shield ได้ (ใช้เป็นมาสเตอร์คีย์)
 }
 
 
+# --- 2. คลาสเก็บสถานะ ---
 @dataclass
 class SequenceState:
     input_buffer: List[Any] = field(default_factory=list)
@@ -50,20 +27,26 @@ class SequenceState:
     TIMEOUT_SECONDS: float = 2.0
 
 
+# --- 3. คลาสประมวลผลหลัก ---
 class SequenceEngine:
     RECIPE_PATH = os.path.join("config", "recipes.json")
 
     def __init__(self):
         self.state = SequenceState()
-        self._ui_window: Optional[QWidget] = None
-        self._init_ui()
+        self._ui_window = None
+        # ตรวจสอบการโหลด UI เฉพาะกรณีมีหน้าจอ
+        try:
+            from PySide6.QtWidgets import QApplication
+
+            if QApplication.instance():
+                self._init_ui()
+        except:
+            pass
 
     def _init_ui(self):
-        if not QT_AVAILABLE:
-            return
-        app = QApplication.instance()
-        if not app:
-            return
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QFont
+        from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
         self._ui_window = QWidget()
         self._ui_window.setWindowFlags(
@@ -78,18 +61,21 @@ class SequenceEngine:
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setFont(QFont("Segoe UI Emoji", 16, QFont.Weight.Bold))
         label.setStyleSheet(
-            "QLabel#seqLabel { background-color: rgba(0, 0, 0, 200); color: #FFFFFF; padding: 15px 25px; border-radius: 10px; border: 2px solid #444; }"
+            "QLabel#seqLabel { background-color: rgba(0, 0, 0, 220); color: #FFFFFF; padding: 15px 25px; border-radius: 10px; border: 2px solid #555; }"
         )
 
         layout = QVBoxLayout(self._ui_window)
-        layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(label)
         self._ui_window.setLayout(layout)
 
     def _show_ui(self, text: str):
         if not self._ui_window:
             return
-        label = self._ui_window.findChild(QLabel, "seqLabel")
+        from PySide6.QtWidgets import QApplication
+
+        label = self._ui_window.findChild(
+            importlib.import_module("PySide6.QtWidgets").QLabel, "seqLabel"
+        )
         if label:
             label.setText(text)
         self._ui_window.adjustSize()
@@ -109,9 +95,57 @@ class SequenceEngine:
             return []
         try:
             with open(self.RECIPE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+                return data if isinstance(data, list) else data.get("recipes", [])
         except:
             return []
+
+    def _deep_normalize(self, val):
+        """จัดการแกะก้ามปู [[...]] และแปลงเป็น String เพื่อเปรียบเทียบสูตร"""
+        while isinstance(val, list) and len(val) > 0:
+            val = val[0]
+        if isinstance(val, dict):
+            return str(dict(sorted(val.items())))
+        return str(val)
+
+    def _execute_action(self, ui_virtual, joystick, app_config, action_data):
+        if not action_data:
+            return None
+        # ✨ ใช้คีย์ "mod" ตาม JSON ของคุณ
+        mod = action_data.get("mod")
+        key = action_data.get("key")
+
+        if not mod:
+            return None
+        try:
+            module = importlib.import_module(f"actions.{mod}")
+            importlib.reload(module)
+            # 🚨 ส่งคืนค่า (เช่น "EXIT") ไปที่ Engine ใหญ่
+            return module.run(ui_virtual, joystick, app_config, {}, trigger_key=key)
+        except Exception as ex:
+            print(f"❌ [Sequence] Execute Error: {ex}")
+            return None
+
+    def _process_feedback(self, current_time, ui_virtual, joystick, app_config):
+        if self.state.feedback_mode is None:
+            return False
+        elapsed = current_time - self.state.feedback_start_time
+        if elapsed < 1.0:
+            return True
+
+        res = None
+        if self.state.feedback_mode == "success":
+            res = self._execute_action(
+                ui_virtual,
+                joystick,
+                app_config,
+                self.state.current_recipe_data.get("action"),
+            )
+
+        self._hide_ui()
+        self.state.feedback_mode = None
+        self.state.is_active = False
+        return res if res else True
 
     def _get_current_inputs(self, joystick) -> List[Any]:
         inputs = []
@@ -127,106 +161,23 @@ class SequenceEngine:
             pass
         return inputs
 
-    # ✨ จุดที่แก้ไข 1: ปรับให้แกะก้ามปูซ้อน [[0]] อัตโนมัติ
-    def _deep_normalize(self, val):
-        while isinstance(val, list) and len(val) > 0:
-            val = val[0]
-        return normalize_input(val)
+    def run(self, ui_virtual, joystick, app_config, mod_mapping) -> Any:
+        current_time = time.time()
 
-    # ✨ จุดที่แก้ไข 2: ส่งต่อค่าสำคัญ (joystick, app_config) ให้ Action อื่นทำงานได้จริง
-    def _execute_action(self, ui_virtual, joystick, app_config, action_data: Dict):
-        if not action_data:
-            return None
-        mod = action_data.get("mod")
-        key = action_data.get("key")
-
-        try:
-            module = importlib.import_module(f"actions.{mod}")
-            # ต้องส่ง joystick และ app_config ไปด้วย เพื่อให้ Shield เซฟค่าได้
-            return module.run(
-                ui_virtual=ui_virtual,
-                joystick=joystick,
-                app_config=app_config,
-                mod_mapping={},
-                trigger_key=key,
-            )
-        except Exception as ex:
-            print(f"[Sequence] Error executing {mod}: {ex}")
-            return None
-
-    def _check_timeout(self, current_time: float) -> bool:
-        if current_time - self.state.last_input_time <= self.state.TIMEOUT_SECONDS:
-            return False
-
-        if len(self.state.input_buffer) == 0:
-            self._hide_ui()
-            self.state.is_active = False
-            return False
-
-        recipes = self._get_recipes()
-        for recipe in recipes:
-            req = recipe.get("sequence", [])
-            if len(self.state.input_buffer) < len(req):
-                continue
-
-            current_seq = self.state.input_buffer[-len(req) :]
-
-            # ✨ ใช้ deep_normalize เพื่อแก้ปัญหา [[0]]
-            norm_req = [self._deep_normalize(x) for x in req]
-            norm_seq = [self._deep_normalize(x) for x in current_seq]
-
-            if norm_seq == norm_req:
-                self.state.current_recipe_data = recipe
-                self.state.feedback_mode = "success"
-                self.state.feedback_start_time = current_time
-                self._show_ui(
-                    f"✅ ถูกต้อง!\n{recipe.get('name', 'Success')}\n(รอสักครู่...)"
-                )
-                self.state.input_buffer.clear()
-                return True
-
-        self.state.feedback_mode = "fail"
-        self.state.feedback_start_time = current_time
-        self._show_ui("❌ ไม่ตรงกับสูตรไหนเลย\n(รอสักครู่...)")
-        self.state.input_buffer.clear()
-        return True
-
-    def _process_feedback(self, current_time: float, ui_virtual, joystick, app_config):
-        if self.state.feedback_mode is None:
-            return False
-        elapsed = current_time - self.state.feedback_start_time
-
-        if elapsed < 1.0:
+        # Phase 1: จัดการหน้าจอ Feedback และส่งสัญญาณ EXIT
+        res = self._process_feedback(current_time, ui_virtual, joystick, app_config)
+        if res and res != True:
+            return res
+        if res is True:
             return True
 
-        # ✨ จุดที่แก้ไข 3: รับค่าตอบกลับจาก Action (เช่น SAVE_CONFIG) เพื่อส่งต่อให้ Engine ใหญ่
-        result = False
-        if self.state.feedback_mode == "success" and self.state.current_recipe_data:
-            result = self._execute_action(
-                ui_virtual,
-                joystick,
-                app_config,
-                self.state.current_recipe_data.get("action"),
-            )
-
-        self.state.feedback_mode = None
-        self.state.current_recipe_data = None
-        self._hide_ui()
-        self.state.is_active = False
-
-        # ถ้า Action ส่งค่าพิเศษมา (เช่น SAVE_CONFIG หรือ EXIT) ให้ส่งต่อไปที่ Engine ใหญ่
-        return result if result else True
-
-    def _check_trigger(self, joystick, mod_mapping, current_time: float) -> bool:
-        trigger_val = mod_mapping.get("buttons", {}).get("open_listener")
-        if trigger_val is None:
-            return False
-
+        # Phase 2: ตรวจสอบปุ่มเปิดรับสูตร (L+R)
+        trigger_val = mod_mapping.get("buttons", {}).get("open_listener", [10, 11])
         triggered = False
         try:
             if isinstance(trigger_val, int):
                 triggered = joystick.get_button(trigger_val)
-            elif isinstance(trigger_val, list):
+            else:
                 triggered = all(joystick.get_button(b) for b in trigger_val)
         except:
             pass
@@ -236,58 +187,65 @@ class SequenceEngine:
             self.state.input_buffer.clear()
             self.state.last_input_time = current_time
             self.state.reference_inputs = self._get_current_inputs(joystick)
-            self._show_ui("🎮 พิมพ์สูตรเลย...")
+            self._show_ui("🎮 Cheat Code Mode...")
             return True
-        return False
 
-    def _process_input(self, joystick, current_time: float):
-        current_inputs = self._get_current_inputs(joystick)
-        new_inputs = [x for x in current_inputs if x not in self.state.reference_inputs]
-        released = [x for x in self.state.reference_inputs if x not in current_inputs]
+        if not self.state.is_active:
+            return False
 
+        # Phase 3: ตรวจสอบ Timeout และเปรียบเทียบสูตร
+        if current_time - self.state.last_input_time > self.state.TIMEOUT_SECONDS:
+            if self.state.input_buffer:
+                recipes = self._get_recipes()
+                current_seq_norm = [
+                    self._deep_normalize(x) for x in self.state.input_buffer
+                ]
+
+                for recipe in recipes:
+                    req_seq = [
+                        self._deep_normalize(x) for x in recipe.get("sequence", [])
+                    ]
+                    if current_seq_norm == req_seq:
+                        self.state.current_recipe_data = recipe
+                        self.state.feedback_mode = "success"
+                        self.state.feedback_start_time = current_time
+                        self._show_ui(f"✅ สำเร็จ!\n{recipe.get('name')}")
+                        return True
+
+                self.state.feedback_mode = "fail"
+                self.state.feedback_start_time = current_time
+                self._show_ui("❌ สูตรไม่ถูกต้อง")
+                return True
+            else:
+                self.state.is_active = False
+                self._hide_ui()
+                return False
+
+        # Phase 4: รับ Input จากจอย
+        curr = self._get_current_inputs(joystick)
+        new = [x for x in curr if x not in self.state.reference_inputs]
+        released = [x for x in self.state.reference_inputs if x not in curr]
         for r in released:
             if r in self.state.reference_inputs:
                 self.state.reference_inputs.remove(r)
 
-        if new_inputs:
-            self.state.last_input_time = current_time
-            input_to_add = new_inputs[0] if len(new_inputs) == 1 else new_inputs
-            self.state.input_buffer.append(self._deep_normalize(input_to_add))
+        if new:
+            from menus.utils import get_emoji
 
-            # อัปเดต UI แสดง Emoji ของปุ่มที่กดไปแล้ว
+            self.state.last_input_time = current_time
+            self.state.input_buffer.append(new[0])
             seq_str = "".join([get_emoji(x) for x in self.state.input_buffer])
             self._show_ui(seq_str)
-            for n in new_inputs:
+            for n in new:
                 if n not in self.state.reference_inputs:
                     self.state.reference_inputs.append(n)
 
-    def run(self, ui_virtual, joystick, app_config, mod_mapping) -> Any:
-        current_time = time.time()
-
-        # Phase 1: Feedback
-        res = self._process_feedback(current_time, ui_virtual, joystick, app_config)
-        if res:
-            return res
-
-        # Phase 2: Timeout & Match
-        if self.state.is_active:
-            if self._check_timeout(current_time):
-                return True
-
-        # Phase 3: Trigger Check
-        if self._check_trigger(joystick, mod_mapping, current_time):
-            return True
-
-        # Phase 4: Input Listening
-        if self.state.is_active:
-            self._process_input(joystick, current_time)
-            return True
-
-        return False
+        return True
 
 
-_engine = SequenceEngine()
+# --- 4. การสร้าง Instance (ต้องอยู่ล่างสุดหลังประกาศ Class) ---
+_engine_instance = SequenceEngine()
 
 
 def run(ui_virtual, joystick, app_config, mod_mapping):
-    return _engine.run(ui_virtual, joystick, app_config, mod_mapping)
+    return _engine_instance.run(ui_virtual, joystick, app_config, mod_mapping)

@@ -1,6 +1,7 @@
 import os
 import signal
 import sys
+import time
 from pathlib import Path
 
 # อนุญาตให้ Pygame อ่านจอยแม้โปรแกรมจะอยู่เบื้องหลัง
@@ -9,73 +10,92 @@ os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
 
-# Add project root to path (สำหรับกรณีรันจากที่อื่น)
-project_root = Path(__file__).parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-
 from engine import JoyConEngine
 
 
 class JoyConApp:
-    """Wrapper class สำหรับจัดการ Application Lifecycle ด้วย QTimer (Qt-Native)"""
-
     def __init__(self):
-        # สร้าง QApplication ก่อน
         self.app = QApplication(sys.argv)
         self.engine = JoyConEngine()
 
-        # 1. Main Engine Timer: ทำหน้าที่รัน Tick ของเกมแพด
+        # 1. Main Engine Timer
         self.engine_timer = QTimer()
         self.engine_timer.timeout.connect(self._run_tick)
 
-        # 2. Signal Catcher Timer: ทริคสำหรับให้ Python ตรวจจับ Ctrl+C ได้ขณะรัน Qt Event Loop
+        # 2. Signal Catcher Timer
         self.signal_timer = QTimer()
         self.signal_timer.timeout.connect(lambda: None)
 
     def _signal_handler(self, signum, frame):
-        """จัดการการกด Ctrl+C เพื่อปิดโปรแกรมอย่างปลอดภัย"""
-        print("\n⚠️ ได้รับสัญญาณหยุด...")
+        print("\n⚠️ ได้รับสัญญาณหยุด (Signal Interrupt)...")
         self.cleanup()
 
     def _setup_signal_handlers(self):
-        """ตั้งค่า Signal Handlers"""
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
         if hasattr(signal, "SIGBREAK"):
             signal.signal(signal.SIGBREAK, self._signal_handler)
 
     def run(self):
-        """เริ่มการทำงานของแอปพลิเคชัน"""
+        """เริ่มการทำงานของแอปพลิเคชัน พร้อมแสดง Boot Logs"""
         self._setup_signal_handlers()
 
+        # 🚀 ส่วนแสดง Boot Logs (สวยงาม)
         try:
-            print("🚀 ระบบ JoyConMe พร้อมทำงาน (Native Qt Loop)...")
-            print("   - กด Ctrl+C เพื่อหยุด")
-            print("   - หรือใช้สูตรลับปิดโปรแกรม (ถ้าตั้งไว้)")
+            print("\n" + "⚡" * 25)
+            print("   JOYCON-ME SYSTEM STARTING...")
+            print("⚡" * 25)
 
-            # คำนวณ Tick Rate เป็น Milliseconds (วินาที * 1000)
+            print(f"🖥️  UI System   : Qt for Python (Ready)")
+
+            # ตรวจเช็คชื่อจอย
+            joy_name = (
+                self.engine._joystick.get_name()
+                if self.engine._joystick
+                else "Not Found"
+            )
+            print(f"🎮 Controller  : {joy_name}")
+
+            # คำนวณ Tick Rate
             interval_ms = int(self.engine.get_sleep_time() * 1000)
+            print(
+                f"⏱️  Performance : {1000 / interval_ms:.0f} Hz (Tick: {interval_ms}ms)"
+            )
 
-            # เริ่มทำงาน Timer ทั้งสองตัว
+            # แสดงรายชื่อ Action ที่โหลดมา (Engine จะ print ตารางนี้ตอนโหลด)
+            # เราเรียก _load_actions ใหม่ที่นี่เพื่อโชว์ log สวยๆ (ถ้า Engine ยังไม่ได้ทำ)
+            # self.engine._load_actions()
+
+            print("\n💡 System is running in background.")
+            print("   - Press Ctrl+C to stop.")
+            print("   - Or use secret sequence to Exit.")
+            print("-" * 55)
+
+            # เริ่มทำงาน Timer
             self.engine_timer.start(interval_ms)
-            self.signal_timer.start(500)  # ให้ Python ตื่นมาเช็ค Signal ทุกๆ 0.5 วิ
+            self.signal_timer.start(500)
 
-            # เข้าสู่ Native Qt Event Loop (บล็อกการทำงานไว้ที่นี่จนกว่าจะปิดแอป)
+            # เข้าสู่ Qt Event Loop
             exit_code = self.app.exec()
             sys.exit(exit_code)
 
         except Exception as e:
-            print(f"\n❌ Fatal Error: {e}")
-            import traceback
-
-            traceback.print_exc()
+            # ✨ บรรทัดที่หายไปและทำให้เกิด SyntaxError คือกลุ่มนี้ครับ!
+            print(f"\n❌ Fatal Error during startup: {e}")
             self.cleanup()
 
     def _run_tick(self):
-        """ฟังก์ชันที่ถูกเรียกซ้ำๆ ตามค่า Interval ของ QTimer"""
+        """รันรอบการทำงานของ Engine และเช็คสัญญาณพิเศษ"""
         try:
-            self.engine.run_tick()
+            result = self.engine.run_tick()
+
+            # ตรวจสอบสัญญาณปิดโปรแกรม
+            if result == "EXIT":
+                print("\n🛑 [Main] Received EXIT signal. Closing...")
+                self.cleanup()
+            elif result == "SAVE_CONFIG":
+                self.engine.save_app_config()
+
         except Exception as e:
             print(f"⚠️ Error in engine tick loop: {e}")
 
@@ -88,26 +108,15 @@ class JoyConApp:
         if self.engine:
             try:
                 self.engine.cleanup()
-            except Exception as e:
-                print(f"⚠️ Error during cleanup: {e}")
+            except:
+                pass
 
-        # สั่งปิดหน้าต่าง UI และ Event Loop
         self.app.quit()
         print("👋 ปิดโปรแกรมเรียบร้อย")
         sys.exit(0)
 
 
 def main():
-    """Entry point"""
-    # ตรวจสอบ Python version
-    if sys.version_info < (3, 8):
-        print("❌ ต้องการ Python 3.8+")
-        sys.exit(1)
-
-    # ตรวจสอบ Linux (evdev ใช้ได้เฉพาะ Linux)
-    if sys.platform != "linux":
-        print("⚠️ Warning: evdev อาจทำงานไม่เต็มที่บน OS นี้")
-
     app = JoyConApp()
     app.run()
 

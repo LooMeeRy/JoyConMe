@@ -7,6 +7,7 @@ from pynput.keyboard import Controller, Key
 ACTION_INFO = {
     "id": "system_control",
     "name": "ควบคุมระบบเครื่อง",
+    "priority": 50,
     "actions": [
         {"key": "vol_up", "type": "button", "desc": "เพิ่มเสียง"},
         {"key": "vol_down", "type": "button", "desc": "ลดเสียง"},

@@ -1,3 +1,4 @@
+# actions/radial_setup.py
 import importlib
 import json
 import math
@@ -8,6 +9,7 @@ from typing import Any, Dict, List, Optional
 
 import pygame
 
+# --- การนำเข้า Module ---
 try:
     from ui.overlay_ui import RadialMenuOverlay
 except ImportError:
@@ -16,7 +18,13 @@ except ImportError:
 try:
     from menus.utils import format_button_name, get_emoji
 except ImportError:
-    from utils import format_button_name, get_emoji
+
+    def format_button_name(x):
+        return str(x)
+
+    def get_emoji(x):
+        return "🔘"
+
 
 try:
     from menus import main_menu
@@ -25,8 +33,8 @@ except ImportError:
 
 ACTION_INFO = {
     "id": "radial_setup",
-    "name": "ระบบตั้งค่าเมนูวงกลม",
-    "priority": 100,
+    "name": "ระบบเมนูวงกลม (Advanced)",
+    "priority": 1,
     "is_blocking": True,
     "actions": [{"key": "open_menu", "type": "button", "desc": "เปิด/ปิด เมนูวงกลม"}],
 }
@@ -38,16 +46,12 @@ class RadialState:
     current_menu_id: str = "main"
     wait_for_neutral: bool = False
     listen_mode: Optional[str] = None
-
-    # ระบบ Accumulator สำหรับเก็บปุ่ม Combo
     max_combo_detected: List[Any] = field(default_factory=list)
     last_input_time: float = 0.0
     is_holding: bool = False
     has_started_sequence: bool = False
-
     overlay_window: Optional[Any] = None
     last_btn_state: bool = False
-
     GRACE_PERIOD: float = 0.5
     TIMEOUT_SECONDS: float = 5.0
 
@@ -71,10 +75,10 @@ class RadialMenuController:
                 h_id = mapping_value["hat"]
                 target_dir = mapping_value["dir"]
                 current_val = joystick.get_hat(h_id)
-                if target_dir[0] != 0 and current_val[0] == target_dir[0]:
-                    return True
-                if target_dir[1] != 0 and current_val[1] == target_dir[1]:
-                    return True
+                # เช็คทั้งแนวตั้งและแนวนอน (รองรับการกดเฉียง)
+                return (target_dir[0] != 0 and current_val[0] == target_dir[0]) or (
+                    target_dir[1] != 0 and current_val[1] == target_dir[1]
+                )
             except:
                 pass
         return False
@@ -87,35 +91,26 @@ class RadialMenuController:
             for i in range(joystick.get_numbuttons()):
                 if joystick.get_button(i):
                     inputs.append(i)
-        except:
-            pass
-        try:
             for h in range(joystick.get_numhats()):
                 val = joystick.get_hat(h)
                 if val != (0, 0):
                     inputs.append({"hat": h, "dir": list(val)})
+            if include_analog:
+                for a in range(joystick.get_numaxes()):
+                    if abs(joystick.get_axis(a)) > 0.85:
+                        inputs.append(a)
         except:
             pass
-        if include_analog:
-            try:
-                for a in range(joystick.get_numaxes()):
-                    val = joystick.get_axis(a)
-                    if abs(val) > 0.85:
-                        inputs.append(a)
-            except:
-                pass
         return inputs
 
     def open_menu(self):
         if main_menu:
             main_menu.reload_menus()
-
         self.state.is_active = True
         self.state.current_menu_id = "main"
         self.state.wait_for_neutral = True
         self.state.listen_mode = None
         self.state.max_combo_detected = []
-
         if RadialMenuOverlay and not self.state.overlay_window:
             items = main_menu.MENU_ITEMS if main_menu else ["Error"]
             self.state.overlay_window = RadialMenuOverlay(menu_items=items)
@@ -133,8 +128,7 @@ class RadialMenuController:
         try:
             axis_x = joystick.get_axis(0)
             axis_y = joystick.get_axis(1)
-            magnitude = math.sqrt(axis_x**2 + axis_y**2)
-            if magnitude > 0.4:
+            if math.hypot(axis_x, axis_y) > 0.4:
                 angle = (math.degrees(math.atan2(axis_y, axis_x)) + 90) % 360
                 self.state.overlay_window.update_selection(angle)
         except:
@@ -144,164 +138,146 @@ class RadialMenuController:
         if not self.state.overlay_window:
             return None
         try:
-            selected_idx = self.state.overlay_window.current_selection
-            selected_item = self.state.overlay_window.menu_items[selected_idx]
-        except (IndexError, AttributeError):
+            idx = self.state.overlay_window.current_selection
+            item = self.state.overlay_window.menu_items[idx]
+        except:
             return None
 
         context = {
             "overlay": self.state.overlay_window,
             "joystick": joystick,
             "app_config": app_config,
+            "controller": self,
         }
 
-        result = None
         if main_menu:
-            menu_handler = main_menu.get_menu_module(self.state.current_menu_id)
-            if menu_handler and hasattr(menu_handler, "run"):
-                result = menu_handler.run(selected_item, context)
-        return result
+            handler = main_menu.get_menu_module(self.state.current_menu_id)
+            if handler and hasattr(handler, "run"):
+                return handler.run(item, context)
+        return None
 
     def process_listen_mode(self, joystick) -> bool:
         if self.state.listen_mode is None:
             return False
-
-        current_inputs = self.get_current_physical_inputs(
-            joystick, include_analog=False
-        )
         overlay = self.state.overlay_window
         if not overlay:
             return False
 
-        # --- ช่วงรอให้ปล่อยทุกปุ่มก่อนเริ่มบันทึก ---
+        inputs = self.get_current_physical_inputs(joystick)
+
         if self.state.wait_for_neutral:
-            if len(current_inputs) > 0:
-                overlay.center_msg = "กรุณาปล่อยทุกปุ่มก่อน..."
-            else:
+            if not inputs:
                 self.state.wait_for_neutral = False
-                self.state.max_combo_detected = []
-                self.state.is_holding = False
-                self.state.last_input_time = time.time()
-                self.state.has_started_sequence = False
-                overlay.center_msg = "พร้อมแล้ว!\n(กดปุ่ม Combo ได้เลย)"
+                overlay.center_msg = "พร้อมบันทึก..."
+            else:
+                overlay.center_msg = "ปล่อยปุ่มก่อน..."
             return True
 
-        # --- ช่วงกำลังกดปุ่ม ---
-        if len(current_inputs) > 0:
+        if inputs:
             self.state.is_holding = True
             self.state.last_input_time = time.time()
             self.state.has_started_sequence = True
-
-            # สะสมปุ่มที่เคยกด: ถ้าปุ่มไหนยังไม่มีในลิสต์ ให้เพิ่มเข้าไป
-            for inp in current_inputs:
+            for inp in inputs:
                 if inp not in self.state.max_combo_detected:
                     self.state.max_combo_detected.append(inp)
 
-            # แสดงผลปุ่มที่ระบบจำได้ในขณะนี้
-            parts = []
-            for inp in self.state.max_combo_detected:
-                if isinstance(inp, int):
-                    parts.append(f"{inp}️⃣")
-                elif isinstance(inp, dict):
-                    parts.append(get_emoji(inp))
+            parts = [
+                get_emoji(i) if isinstance(i, dict) else f"{i}️⃣"
+                for i in self.state.max_combo_detected
+            ]
             overlay.center_msg = f"ตรวจเจอ:\n{' + '.join(parts)}"
             overlay.timeout_progress = 0.0
 
-        # --- ช่วงปล่อยมือออกจากจอย (Finalize) ---
-        elif len(current_inputs) == 0 and self.state.is_holding:
+        elif self.state.is_holding:
             self.state.is_holding = False
-            final_val = self.state.max_combo_detected
+            final = self.state.max_combo_detected
+            handler = (
+                main_menu.get_menu_module(self.state.current_menu_id)
+                if main_menu
+                else None
+            )
 
-            active_menu = None
-            if main_menu:
-                active_menu = main_menu.get_menu_module(self.state.current_menu_id)
-
-            if self.state.listen_mode == "input" and active_menu:
-                if hasattr(active_menu, "set_detected_input"):
-                    # ส่งค่าที่สะสมได้ทั้งหมดไปให้เมนู
-                    active_menu.set_detected_input(final_val)
-                if hasattr(active_menu, "proceed_after_input"):
-                    result = active_menu.proceed_after_input({"overlay": overlay})
-                    if result == "UPDATE_UI":
+            if self.state.listen_mode == "input" and handler:
+                if hasattr(handler, "set_detected_input"):
+                    handler.set_detected_input(final)
+                if hasattr(handler, "proceed_after_input"):
+                    if handler.proceed_after_input({"overlay": overlay}) == "UPDATE_UI":
                         self.state.listen_mode = None
-                        self.state.max_combo_detected = []
                         return True
-
-            elif self.state.listen_mode == "sequence" and active_menu:
-                if hasattr(active_menu, "is_recording") and active_menu.is_recording:
-                    if hasattr(active_menu, "add_sequence_input"):
-                        active_menu.add_sequence_input(final_val, {"overlay": overlay})
-
+            elif self.state.listen_mode == "sequence" and handler:
+                if getattr(handler, "is_recording", False) and hasattr(
+                    handler, "add_sequence_input"
+                ):
+                    handler.add_sequence_input(final, {"overlay": overlay})
             self.state.max_combo_detected = []
 
-        # ระบบ Timeout สำหรับ Sequence
-        else:
-            if self.state.listen_mode == "sequence" and self.state.has_started_sequence:
-                elapsed = time.time() - self.state.last_input_time
-                if elapsed > self.state.GRACE_PERIOD:
-                    progress = (
-                        elapsed - self.state.GRACE_PERIOD
-                    ) / self.state.TIMEOUT_SECONDS
-                    overlay.timeout_progress = min(progress, 1.0)
-                    secs_left = int(
-                        self.state.TIMEOUT_SECONDS - (elapsed - self.state.GRACE_PERIOD)
+        elif self.state.listen_mode == "sequence" and self.state.has_started_sequence:
+            elapsed = time.time() - self.state.last_input_time
+            if elapsed > self.state.GRACE_PERIOD:
+                prog = (elapsed - self.state.GRACE_PERIOD) / self.state.TIMEOUT_SECONDS
+                overlay.timeout_progress = min(prog, 1.0)
+                overlay.center_msg = f"บันทึกใน {int(self.state.TIMEOUT_SECONDS - (elapsed - self.state.GRACE_PERIOD))}..."
+                if prog >= 1.0:
+                    handler = (
+                        main_menu.get_menu_module(self.state.current_menu_id)
+                        if main_menu
+                        else None
                     )
-                    overlay.center_msg = f"หยุดบันทึกใน\n{secs_left} วินาที..."
-
-                    if progress >= 1.0:
-                        if main_menu:
-                            active_menu = main_menu.get_menu_module(
-                                self.state.current_menu_id
-                            )
-                            if active_menu and hasattr(active_menu, "is_recording"):
-                                active_menu.is_recording = False
-
-                        self.state.has_started_sequence = False
-                        overlay.timeout_progress = 0.0
-                        overlay.center_msg = "หยุดบันทึกแล้ว\nเลือกเมนูด้านล่าง"
-                        self.state.wait_for_neutral = True
-                        self.state.listen_mode = None
-
+                    if handler:
+                        handler.is_recording = False
+                    self.state.has_started_sequence = False
+                    self.state.listen_mode = None
+                    self.state.wait_for_neutral = True
+                    overlay.center_msg = "บันทึกแล้ว"
         return True
 
     def run(
         self, ui_virtual, joystick, app_config, mod_mapping, trigger_key=None
-    ) -> Optional[str]:
+    ) -> Any:
+        # 🟢 1. เปิดผ่าน Secret Sequence
         if trigger_key == "open_menu":
-            self.open_menu()
+            if not self.state.is_active:
+                self.open_menu()
+            else:
+                self.close_menu()
             return True
 
         if not joystick:
             return False
 
+        # 🟢 2. เปิดผ่านปุ่มจอย
         trigger_config = mod_mapping.get("buttons", {}).get("open_menu")
         btn_pressed = self.is_combo_pressed(joystick, trigger_config)
-        is_just_pressed = btn_pressed and not self.state.last_btn_state
-        self.state.last_btn_state = btn_pressed
-
-        if is_just_pressed:
+        if btn_pressed and not self.state.last_btn_state:
             if self.state.is_active:
                 self.close_menu()
-                return "RELOAD"
             else:
                 self.open_menu()
+        self.state.last_btn_state = btn_pressed
 
-        if not self.state.is_active or not self.state.overlay_window:
+        if not self.state.is_active:
             return False
 
-        if self.state.listen_mode is not None:
-            result = self.process_listen_mode(joystick)
-            self.state.overlay_window.update()
-            return result
+        # 🟢 3. จัดการโหมด Listen
+        if self.state.listen_mode:
+            self.process_listen_mode(joystick)
+            if self.state.overlay_window:
+                self.state.overlay_window.update()
+            return True
 
+        # 🟢 4. รอให้ปล่อยปุ่มก่อนรับคำสั่งใหม่
         if self.state.wait_for_neutral:
-            if not joystick.get_button(0):
+            if not any(
+                joystick.get_button(i) for i in range(joystick.get_numbuttons())
+            ):
                 self.state.wait_for_neutral = False
-            self.state.overlay_window.update()
+            if self.state.overlay_window:
+                self.state.overlay_window.update()
             return True
 
         self.update_selection_from_axis(joystick)
 
+        # 🟢 5. ยืนยันเลือกเมนู
         if joystick.get_button(0):
             result = self.handle_menu_selection(joystick, app_config)
 
@@ -309,55 +285,44 @@ class RadialMenuController:
                 self.close_menu()
                 return "RELOAD"
 
+            elif result in ["SAVE_MAPPING", "SAVE_CONFIG"]:
+                self.close_menu()
+                # ✨ คืนค่า result (Signal) เพื่อให้ Engine รู้ แต่ยังคงบล็อก Mouse ในเฟรมนี้
+                return result
+
             elif isinstance(result, str) and result.startswith("SWITCH:"):
                 target = result.split(":")[1]
                 self.state.current_menu_id = target
                 self.state.wait_for_neutral = True
-
                 if main_menu:
-                    active_menu = main_menu.get_menu_module(target)
-                    if active_menu:
-                        if hasattr(active_menu, "reset"):
-                            active_menu.reset()
-
-                        if hasattr(active_menu, "MENU_MAIN"):
-                            self.state.overlay_window.menu_items = active_menu.MENU_MAIN
-                        elif hasattr(active_menu, "MENU_ITEMS"):
-                            self.state.overlay_window.menu_items = (
-                                active_menu.MENU_ITEMS
-                            )
-                        else:
-                            self.state.overlay_window.menu_items = ["ไม่มีเมนู"]
-
+                    handler = main_menu.get_menu_module(target)
+                    if handler:
+                        if hasattr(handler, "reset"):
+                            handler.reset()
+                        items = getattr(
+                            handler,
+                            "MENU_MAIN",
+                            getattr(handler, "MENU_ITEMS", ["Error"]),
+                        )
+                        self.state.overlay_window.menu_items = items
                 self.state.overlay_window.center_msg = ""
 
             elif result == "LISTEN_INPUT":
                 self.state.listen_mode = "input"
                 self.state.wait_for_neutral = True
-                self.state.max_combo_detected = []
-                self.state.is_holding = False
-                self.state.overlay_window.menu_items = ["(รอสัญญาณ)"]
-                self.state.overlay_window.center_msg = "กรุณาปล่อยทุกปุ่มก่อน..."
+                self.state.overlay_window.menu_items = ["..."]
+                self.state.overlay_window.center_msg = "รอสัญญาณปุ่ม..."
 
             elif result == "START_SEQUENCE_LISTEN":
                 self.state.listen_mode = "sequence"
                 self.state.wait_for_neutral = True
-                self.state.max_combo_detected = []
-                self.state.is_holding = False
-                self.state.last_input_time = time.time()
                 self.state.has_started_sequence = False
 
-            elif result == "STOP_SEQUENCE_LISTEN":
-                self.state.listen_mode = None
-                self.state.wait_for_neutral = True
+            pygame.time.wait(200)
 
-            elif result == "UPDATE_UI":
-                self.state.wait_for_neutral = True
-
-            pygame.time.wait(250)
-
-        self.state.overlay_window.update()
-        return True
+        if self.state.overlay_window:
+            self.state.overlay_window.update()
+        return True  # 🛑 บล็อก Mouse!
 
 
 _controller = RadialMenuController()
