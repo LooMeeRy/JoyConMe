@@ -1,17 +1,36 @@
+import importlib
+import subprocess
 import time
 from typing import Optional
 
 try:
-    from ui.keyboard_ui import CHAR_GROUPS, NUM_GROUPS, SYM_GROUPS, KeyboardOverlay
+    import pyperclip
+except ImportError:
+    pyperclip = None
+
+try:
+    from ui.keyboard_ui import CHAR_GROUPS, NUM_GROUPS, SYM_GROUPS, EMOJI_GROUPS, KeyboardOverlay
 except ImportError:
     KeyboardOverlay = None
     CHAR_GROUPS = ["ABC", "DEF", "GHI", "JKL", None, "MNO", "PQR", "STUV", "WXYZ"]
     NUM_GROUPS = ["123", "456", "789", "0-=", None, "[]\\", ";'", ",.", "/`"]
     SYM_GROUPS = ["!@#", "$%^", "&*(", ")_+", None, "{}|", ':"', "<>", "?~"]
+    EMOJI_GROUPS = [
+        "😊😂😍🥰😘😎",
+        "👍👎👌✌🤞🖕",
+        "❤️💔💕💖💗💘",
+        "🔥💯⭐🌟✨💫",
+        None,
+        "🐶🐱🐼🐸🦊🐰",
+        "🍕🍔🌮🍩🍦🍰",
+        "⚽🎮🎵🎸🎯🎨",
+        "🚗✈️🌍🌈🌊🔥",
+    ]
 
 
 # Mock Code สำหรับ evdev เพื่อส่งไปให้ VirtualInput ตีความบน Linux โดยไม่แครชบน Windows
 class e:
+    EV_KEY = 1
     KEY_A = 30
     KEY_B = 48
     KEY_C = 46
@@ -150,6 +169,7 @@ ACTION_INFO = {
         {"key": "backspace", "type": "button", "desc": "ลบ"},
         {"key": "space", "type": "button", "desc": "เว้นวรรค"},
         {"key": "shift", "type": "button", "desc": "shift"},
+        {"key": "emoji_toggle", "type": "button", "desc": "เปลี่ยนเป็นโหมดอิโมจิ"},
     ],
 }
 
@@ -162,17 +182,26 @@ def _type_char(ui_virtual, char: str, is_upper: bool = False):
     if char.isalpha() and char.isascii():
         kc = _CHAR_MAP.get(char.lower(), (None, False))[0]
         shift = is_upper
-        pynput_char = char.upper() if is_upper else char.lower()
     elif char in _CHAR_MAP:
         kc, shift = _CHAR_MAP[char]
-        pynput_char = char
     else:
         return
 
     if kc is None:
         return
 
-    ui_virtual.type_char(kc, pynput_char, shift)
+    # Direct UInput write (replaces VirtualInput.type_char which doesn't exist on raw UInput)
+    if shift:
+        ui_virtual.write(e.EV_KEY, e.KEY_LEFTSHIFT, 1)
+        ui_virtual.syn()
+    ui_virtual.write(e.EV_KEY, kc, 1)
+    ui_virtual.syn()
+    time.sleep(0.02)
+    ui_virtual.write(e.EV_KEY, kc, 0)
+    ui_virtual.syn()
+    if shift:
+        ui_virtual.write(e.EV_KEY, e.KEY_LEFTSHIFT, 0)
+        ui_virtual.syn()
 
 
 def _analog_to_cell(ax: float, ay: float) -> Optional[int]:
@@ -199,8 +228,10 @@ class KeyboardController:
         self._btn_y_prev = False
         self._btn_b_prev = False
         self._toggle_btn_prev = False
+        self._emoji_toggle_btn_prev = False
         self.is_shift = False
         self.is_num_mode = False
+        self.is_emoji_mode = False
         self._last_a_time = 0.0
         self._last_a_release_time = 0.0
         self._pending_commit = False
@@ -210,6 +241,7 @@ class KeyboardController:
         self._selected_cell = 4
         self._char_index = -1
         self._pending_commit = False
+        self.is_emoji_mode = False
         if KeyboardOverlay:
             self._overlay = KeyboardOverlay()
             self._overlay.show()
@@ -240,12 +272,34 @@ class KeyboardController:
                 self._overlay.set_selected_cell(new_cell)
                 self._overlay.set_char_index(-1)
 
+    def _paste_emoji(self, ui_virtual, emoji: str):
+        """คัดลอก emoji เข้าคลิปบอร์ดแล้ว paste ด้วย Ctrl+V"""
+        try:
+            if pyperclip:
+                pyperclip.copy(emoji)
+            else:
+                subprocess.run(["wl-copy", emoji], check=False, timeout=2)
+        except:
+            return
+        time.sleep(0.05)
+        ui_virtual.write(e.EV_KEY, e.KEY_LEFTCTRL, 1)
+        ui_virtual.syn()
+        ui_virtual.write(e.EV_KEY, e.KEY_V, 1)
+        ui_virtual.syn()
+        time.sleep(0.02)
+        ui_virtual.write(e.EV_KEY, e.KEY_V, 0)
+        ui_virtual.syn()
+        ui_virtual.write(e.EV_KEY, e.KEY_LEFTCTRL, 0)
+        ui_virtual.syn()
+
     def _handle_btn_a(self, ui_virtual, is_pressed: bool):
         now = time.time()
         is_just_pressed = is_pressed and not self._btn_a_prev
 
         if is_just_pressed:
-            if self.is_num_mode and self.is_shift:
+            if self.is_emoji_mode:
+                group = EMOJI_GROUPS[self._selected_cell]
+            elif self.is_num_mode and self.is_shift:
                 group = SYM_GROUPS[self._selected_cell]
             elif self.is_num_mode:
                 group = NUM_GROUPS[self._selected_cell]
@@ -253,6 +307,14 @@ class KeyboardController:
                 group = CHAR_GROUPS[self._selected_cell]
 
             if group is None:
+                # ศูนย์กลาง = ออกจากโหมดอิโมจิ
+                if self.is_emoji_mode:
+                    self.is_emoji_mode = False
+                    self._char_index = -1
+                    self._pending_commit = False
+                    if self._overlay:
+                        self._overlay.set_selected_cell(self._selected_cell)
+                        self._overlay.set_mode(self.is_shift, self.is_num_mode, self.is_emoji_mode)
                 return
 
             n = len(group)
@@ -267,18 +329,27 @@ class KeyboardController:
             char = group[self._char_index]
 
             if self._pending_commit:
-                ui_virtual.tap_special(e.KEY_BACKSPACE, "backspace")
+                ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 1)
+                ui_virtual.syn()
+                time.sleep(0.02)
+                ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 0)
+                ui_virtual.syn()
                 if self._typed_text:
                     self._typed_text = self._typed_text[:-1]
 
-            _type_char(ui_virtual, char, is_upper=self.is_shift)
-
-            if not self.is_num_mode:
-                typed_char = char.upper() if self.is_shift else char.lower()
+            if self.is_emoji_mode:
+                # อิโมจิ → คลิปบอร์ด + paste
+                emoji_char = char
+                self._paste_emoji(ui_virtual, emoji_char)
+                self._typed_text += emoji_char
             else:
-                typed_char = char
+                _type_char(ui_virtual, char, is_upper=self.is_shift)
+                if not self.is_num_mode:
+                    typed_char = char.upper() if self.is_shift else char.lower()
+                else:
+                    typed_char = char
+                self._typed_text += typed_char
 
-            self._typed_text += typed_char
             self._pending_commit = True
 
             if self._overlay:
@@ -310,7 +381,11 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            ui_virtual.tap_special(e.KEY_BACKSPACE, "backspace")
+            ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 1)
+            ui_virtual.syn()
+            time.sleep(0.02)
+            ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 0)
+            ui_virtual.syn()
             if self._typed_text:
                 self._typed_text = self._typed_text[:-1]
                 if self._overlay:
@@ -323,19 +398,37 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            ui_virtual.tap_special(e.KEY_SPACE, "space")
+            ui_virtual.write(e.EV_KEY, e.KEY_SPACE, 1)
+            ui_virtual.syn()
+            time.sleep(0.02)
+            ui_virtual.write(e.EV_KEY, e.KEY_SPACE, 0)
+            ui_virtual.syn()
             self._typed_text += " "
             if self._overlay:
                 self._overlay.set_typed_text(self._typed_text)
 
     def _handle_btn_b(self, ui_virtual, is_pressed: bool):
         if is_pressed and not self._btn_b_prev:
+            # 🎯 ถ้าอยู่ในโหมดอิโมจิและเลือกช่องกลาง → ออกจากโหมด
+            if self.is_emoji_mode and self._selected_cell == 4:
+                self.is_emoji_mode = False
+                self._char_index = -1
+                self._pending_commit = False
+                if self._overlay:
+                    self._overlay.set_selected_cell(self._selected_cell)
+                    self._overlay.set_mode(self.is_shift, self.is_num_mode, self.is_emoji_mode)
+                return
+
             if self._pending_commit:
                 self._pending_commit = False
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            ui_virtual.tap_special(e.KEY_ENTER, "enter")
+            ui_virtual.write(e.EV_KEY, e.KEY_ENTER, 1)
+            ui_virtual.syn()
+            time.sleep(0.02)
+            ui_virtual.write(e.EV_KEY, e.KEY_ENTER, 0)
+            ui_virtual.syn()
             self._typed_text = ""
             if self._overlay:
                 self._overlay.set_typed_text(self._typed_text)
@@ -367,6 +460,28 @@ class KeyboardController:
                     else:
                         self.open()
                 self._toggle_btn_prev = pressed
+            except:
+                pass
+
+        # 🎯 ปุ่ม toggle โหมดอิโมจิ
+        emoji_btn = mod_mapping.get("buttons", {}).get("emoji_toggle")
+        if emoji_btn is not None and self.is_active:
+            try:
+                if isinstance(emoji_btn, int):
+                    pressed = joystick.get_button(emoji_btn)
+                elif isinstance(emoji_btn, list):
+                    pressed = all(joystick.get_button(b) for b in emoji_btn)
+                else:
+                    pressed = False
+
+                if pressed and not self._emoji_toggle_btn_prev:
+                    self.is_emoji_mode = not self.is_emoji_mode
+                    self._char_index = -1
+                    self._pending_commit = False
+                    if self._overlay:
+                        self._overlay.set_selected_cell(self._selected_cell)
+                        self._overlay.set_mode(self.is_shift, self.is_num_mode, self.is_emoji_mode)
+                self._emoji_toggle_btn_prev = pressed
             except:
                 pass
 
@@ -411,7 +526,7 @@ class KeyboardController:
         self._btn_b_prev = btn_b
 
         if self._overlay:
-            self._overlay.set_mode(self.is_shift, self.is_num_mode)
+            self._overlay.set_mode(self.is_shift, self.is_num_mode, self.is_emoji_mode)
 
         return True
 

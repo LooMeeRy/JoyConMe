@@ -31,6 +31,16 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
     if not joystick or not ui_virtual:
         return
 
+    # 🛡️ Skip if virtual keyboard is active (prevent mouse drift while typing)
+    try:
+        from actions.keyboard import _controller as kb_ctrl
+        if kb_ctrl.is_active:
+            _left_is_pressed = False
+            _right_is_pressed = False
+            return False
+    except ImportError:
+        pass
+
     # 1. Trigger Mode (สูตรลับ)
     if trigger_key is not None:
         if trigger_key == "left_click":

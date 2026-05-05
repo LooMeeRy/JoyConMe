@@ -10,5 +10,24 @@
             "ctrl",
             "v"
         ]
+    ],
+    "macro_3": [
+        [
+            "alt",
+            "f4"
+        ]
+    ],
+    "macro_4": [
+        [
+            "alt",
+            "tab"
+        ]
+    ],
+    "macro_5": [
+        [
+            "alt",
+            "shift",
+            "tab"
+        ]
     ]
 }

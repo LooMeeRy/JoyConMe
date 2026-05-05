@@ -73,6 +73,12 @@ K_MAP = {
     "f3": e.KEY_F3,
     "f4": e.KEY_F4,
     "f5": e.KEY_F5,
+    "f6": e.KEY_F6,
+    "f7": e.KEY_F7,
+    "f8": e.KEY_F8,
+    "f9": e.KEY_F9,
+    "f10": e.KEY_F10,
+    "f11": e.KEY_F11,
     "f12": e.KEY_F12,
 }
 
@@ -144,7 +150,20 @@ def _trigger_macro(ui_virtual, state_key, is_active, macro_name, macro_library):
         run._pressed_state[state_key] = False
 
 
-def run(ui_virtual, joystick, app_config, mapping):
+def run(ui_virtual, joystick, app_config, mapping, trigger_key=None):
+    # 🔥 เมื่อถูกเรียกจาก Sequence Engine: trigger_key = ชื่อมาโคร (เช่น "macro_3")
+    #    ให้รันมาโครนั้นทันที โดยไม่ต้องอ่าน mapping จากจอย
+    if trigger_key:
+        macro_library = load_macro_library()
+        sequence = macro_library.get(trigger_key)
+        if sequence:
+            for step in sequence:
+                execute_step(ui_virtual, step)
+                time.sleep(0.01)
+            return True
+        return False
+
+    # 🔽 โหมดปกติ: อ่าน mapping จากจอย แล้วรันมาโครที่ผูกกับปุ่ม
     if not joystick or not mapping:
         return False
     if not hasattr(run, "_pressed_state"):

@@ -152,6 +152,7 @@ class JoyConEngine:
 
     def _init_virtual_device(self):
         keys = [
+            # 🔤 ตัวอักษร A-Z
             e.KEY_A,
             e.KEY_B,
             e.KEY_C,
@@ -178,6 +179,7 @@ class JoyConEngine:
             e.KEY_X,
             e.KEY_Y,
             e.KEY_Z,
+            # 🔢 ตัวเลข 0-9
             e.KEY_1,
             e.KEY_2,
             e.KEY_3,
@@ -188,19 +190,58 @@ class JoyConEngine:
             e.KEY_8,
             e.KEY_9,
             e.KEY_0,
+            # 🔣 อักขระพิเศษ (Special Characters)
+            e.KEY_MINUS,
+            e.KEY_EQUAL,
+            e.KEY_LEFTBRACE,
+            e.KEY_RIGHTBRACE,
+            e.KEY_BACKSLASH,
+            e.KEY_SEMICOLON,
+            e.KEY_APOSTROPHE,
+            e.KEY_GRAVE,
+            e.KEY_COMMA,
+            e.KEY_DOT,
+            e.KEY_SLASH,
+            # ⌨️ ปุ่มฟังก์ชัน F1-F12
+            e.KEY_F1,
+            e.KEY_F2,
+            e.KEY_F3,
+            e.KEY_F4,
+            e.KEY_F5,
+            e.KEY_F6,
+            e.KEY_F7,
+            e.KEY_F8,
+            e.KEY_F9,
+            e.KEY_F10,
+            e.KEY_F11,
+            e.KEY_F12,
+            # 🎮 ปุ่มควบคุมทั่วไป
             e.KEY_SPACE,
             e.KEY_ENTER,
             e.KEY_ESC,
             e.KEY_BACKSPACE,
+            e.KEY_TAB,
+            e.KEY_CAPSLOCK,
+            # ⬆️⬇️⬅️➡️ ปุ่มลูกศร
+            e.KEY_UP,
+            e.KEY_DOWN,
+            e.KEY_LEFT,
+            e.KEY_RIGHT,
+            # 🔧 ปุ่ม Modifier
             e.KEY_LEFTSHIFT,
+            e.KEY_RIGHTSHIFT,
             e.KEY_LEFTCTRL,
+            e.KEY_RIGHTCTRL,
             e.KEY_LEFTALT,
+            e.KEY_RIGHTALT,
+            # 🎵 ปุ่ม Media
             e.KEY_PLAYPAUSE,
             e.KEY_NEXTSONG,
             e.KEY_PREVIOUSSONG,
             e.KEY_MUTE,
             e.KEY_VOLUMEUP,
             e.KEY_VOLUMEDOWN,
+            # 🖱️ ปุ่ม Mouse
             e.BTN_LEFT,
             e.BTN_RIGHT,
             e.BTN_MIDDLE,

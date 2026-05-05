@@ -1,0 +1,5700 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "action_engine_loop",
+        "label": "Main Tick Loop: Shield \u2192 Priority Sort \u2192 Run \u2192 Break",
+        "nodes": [
+          "action_shield",
+          "action_priority_system",
+          "event_loop_architecture",
+          "virtual_keyboard_input"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "engine.py"
+      },
+      {
+        "id": "keyboard_interactive_flow",
+        "label": "Keyboard Input Flow: Open \u2192 Navigate \u2192 Select \u2192 Type",
+        "nodes": [
+          "virtual_keyboard_input",
+          "uinput_bridge",
+          "keyboard_bug_fix",
+          "radial_menu_system"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.8,
+        "source_file": "actions/keyboard.py"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "main.py",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "id": "main_py",
+      "community": 7,
+      "norm_label": "main.py"
+    },
+    {
+      "label": "JoyConApp",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L16",
+      "id": "joyconme_main_joyconapp",
+      "community": 7,
+      "norm_label": "joyconapp"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L17",
+      "id": "joyconme_main_joyconapp_init",
+      "community": 7,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": "._signal_handler()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L29",
+      "id": "joyconme_main_joyconapp_signal_handler",
+      "community": 7,
+      "norm_label": "._signal_handler()"
+    },
+    {
+      "label": "._setup_signal_handlers()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L33",
+      "id": "joyconme_main_joyconapp_setup_signal_handlers",
+      "community": 7,
+      "norm_label": "._setup_signal_handlers()"
+    },
+    {
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L39",
+      "id": "joyconme_main_joyconapp_run",
+      "community": 7,
+      "norm_label": ".run()"
+    },
+    {
+      "label": "._run_tick()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L87",
+      "id": "joyconme_main_joyconapp_run_tick",
+      "community": 7,
+      "norm_label": "._run_tick()"
+    },
+    {
+      "label": ".cleanup()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L102",
+      "id": "joyconme_main_joyconapp_cleanup",
+      "community": 7,
+      "norm_label": ".cleanup()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L119",
+      "id": "joyconme_main_main",
+      "community": 7,
+      "norm_label": "main()"
+    },
+    {
+      "label": "\u0e40\u0e23\u0e34\u0e48\u0e21\u0e01\u0e32\u0e23\u0e17\u0e33\u0e07\u0e32\u0e19\u0e02\u0e2d\u0e07\u0e41\u0e2d\u0e1b\u0e1e\u0e25\u0e34\u0e40\u0e04\u0e0a\u0e31\u0e19 \u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e41\u0e2a\u0e14\u0e07 Boot Logs",
+      "file_type": "rationale",
+      "source_file": "main.py",
+      "source_location": "L40",
+      "id": "joyconme_main_rationale_40",
+      "community": 7,
+      "norm_label": "\u0e40\u0e23\u0e34\u0e21\u0e01\u0e32\u0e23\u0e17\u0e4d\u0e32\u0e07\u0e32\u0e19\u0e02\u0e2d\u0e07\u0e41\u0e2d\u0e1b\u0e1e\u0e25\u0e34\u0e40\u0e04\u0e0a\u0e31\u0e19 \u0e1e\u0e23\u0e2d\u0e21\u0e41\u0e2a\u0e14\u0e07 boot logs"
+    },
+    {
+      "label": "\u0e23\u0e31\u0e19\u0e23\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e17\u0e33\u0e07\u0e32\u0e19\u0e02\u0e2d\u0e07 Engine \u0e41\u0e25\u0e30\u0e40\u0e0a\u0e47\u0e04\u0e2a\u0e31\u0e0d\u0e0d\u0e32\u0e13\u0e1e\u0e34\u0e40\u0e28\u0e29",
+      "file_type": "rationale",
+      "source_file": "main.py",
+      "source_location": "L88",
+      "id": "joyconme_main_rationale_88",
+      "community": 7,
+      "norm_label": "\u0e23\u0e31\u0e19\u0e23\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e17\u0e4d\u0e32\u0e07\u0e32\u0e19\u0e02\u0e2d\u0e07 engine \u0e41\u0e25\u0e30\u0e40\u0e0a\u0e47\u0e04\u0e2a\u0e31\u0e0d\u0e0d\u0e32\u0e13\u0e1e\u0e34\u0e40\u0e28\u0e29"
+    },
+    {
+      "label": "\u0e04\u0e37\u0e19\u0e04\u0e48\u0e32\u0e17\u0e23\u0e31\u0e1e\u0e22\u0e32\u0e01\u0e23\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14\u0e01\u0e48\u0e2d\u0e19\u0e1b\u0e34\u0e14\u0e41\u0e2d\u0e1b",
+      "file_type": "rationale",
+      "source_file": "main.py",
+      "source_location": "L103",
+      "id": "joyconme_main_rationale_103",
+      "community": 7,
+      "norm_label": "\u0e04\u0e37\u0e19\u0e04\u0e32\u0e17\u0e23\u0e31\u0e1e\u0e22\u0e32\u0e01\u0e23\u0e17\u0e31\u0e07\u0e2b\u0e21\u0e14\u0e01\u0e2d\u0e19\u0e1b\u0e34\u0e14\u0e41\u0e2d\u0e1b"
+    },
+    {
+      "label": "virtual_input.py",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L1",
+      "id": "virtual_input_py",
+      "community": 8,
+      "norm_label": "virtual_input.py"
+    },
+    {
+      "label": "VirtualInput",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L5",
+      "id": "joyconme_virtual_input_virtualinput",
+      "community": 8,
+      "norm_label": "virtualinput"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L12",
+      "id": "joyconme_virtual_input_virtualinput_init",
+      "community": 8,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".mouse_move()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L60",
+      "id": "joyconme_virtual_input_virtualinput_mouse_move",
+      "community": 8,
+      "norm_label": ".mouse_move()"
+    },
+    {
+      "label": ".mouse_scroll()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L70",
+      "id": "joyconme_virtual_input_virtualinput_mouse_scroll",
+      "community": 8,
+      "norm_label": ".mouse_scroll()"
+    },
+    {
+      "label": ".mouse_click()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L77",
+      "id": "joyconme_virtual_input_virtualinput_mouse_click",
+      "community": 8,
+      "norm_label": ".mouse_click()"
+    },
+    {
+      "label": ".tap_special()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L90",
+      "id": "joyconme_virtual_input_virtualinput_tap_special",
+      "community": 8,
+      "norm_label": ".tap_special()"
+    },
+    {
+      "label": ".type_char()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L104",
+      "id": "joyconme_virtual_input_virtualinput_type_char",
+      "community": 8,
+      "norm_label": ".type_char()"
+    },
+    {
+      "label": ".close()",
+      "file_type": "code",
+      "source_file": "virtual_input.py",
+      "source_location": "L122",
+      "id": "joyconme_virtual_input_virtualinput_close",
+      "community": 8,
+      "norm_label": ".close()"
+    },
+    {
+      "label": "Hybrid Abstraction Layer \u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e40\u0e21\u0e32\u0e2a\u0e4c\u0e41\u0e25\u0e30\u0e04\u0e35\u0e22\u0e4c\u0e1a\u0e2d\u0e23\u0e4c\u0e14     Linux -> evdev (UInput)",
+      "file_type": "rationale",
+      "source_file": "virtual_input.py",
+      "source_location": "L6",
+      "id": "joyconme_virtual_input_rationale_6",
+      "community": 8,
+      "norm_label": "hybrid abstraction layer \u0e2a\u0e4d\u0e32\u0e2b\u0e23\u0e31\u0e1a\u0e40\u0e21\u0e32\u0e2a\u0e4c\u0e41\u0e25\u0e30\u0e04\u0e35\u0e22\u0e4c\u0e1a\u0e2d\u0e23\u0e4c\u0e14     linux -> evdev (uinput)"
+    },
+    {
+      "label": "\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e1b\u0e38\u0e48\u0e21\u0e1e\u0e34\u0e40\u0e28\u0e29 \u0e40\u0e0a\u0e48\u0e19 backspace, enter, space",
+      "file_type": "rationale",
+      "source_file": "virtual_input.py",
+      "source_location": "L91",
+      "id": "joyconme_virtual_input_rationale_91",
+      "community": 8,
+      "norm_label": "\u0e2a\u0e4d\u0e32\u0e2b\u0e23\u0e31\u0e1a\u0e1b\u0e21\u0e1e\u0e34\u0e40\u0e28\u0e29 \u0e40\u0e0a\u0e19 backspace, enter, space"
+    },
+    {
+      "label": "\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e1e\u0e34\u0e21\u0e1e\u0e4c\u0e15\u0e31\u0e27\u0e2d\u0e31\u0e01\u0e29\u0e23\u0e1b\u0e01\u0e15\u0e34",
+      "file_type": "rationale",
+      "source_file": "virtual_input.py",
+      "source_location": "L105",
+      "id": "joyconme_virtual_input_rationale_105",
+      "community": 8,
+      "norm_label": "\u0e2a\u0e4d\u0e32\u0e2b\u0e23\u0e31\u0e1a\u0e1e\u0e34\u0e21\u0e1e\u0e4c\u0e15\u0e31\u0e27\u0e2d\u0e31\u0e01\u0e29\u0e23\u0e1b\u0e01\u0e15\u0e34"
+    },
+    {
+      "label": "engine.py",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L1",
+      "id": "engine_py",
+      "community": 4,
+      "norm_label": "engine.py"
+    },
+    {
+      "label": "load_mapping()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L21",
+      "id": "joyconme_engine_load_mapping",
+      "community": 4,
+      "norm_label": "load_mapping()"
+    },
+    {
+      "label": "JoyConEngine",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L36",
+      "id": "joyconme_engine_joyconengine",
+      "community": 4,
+      "norm_label": "joyconengine"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L41",
+      "id": "joyconme_engine_joyconengine_init",
+      "community": 4,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": "._init_configs()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L56",
+      "id": "joyconme_engine_joyconengine_init_configs",
+      "community": 4,
+      "norm_label": "._init_configs()"
+    },
+    {
+      "label": "._load_app_config()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L63",
+      "id": "joyconme_engine_joyconengine_load_app_config",
+      "community": 4,
+      "norm_label": "._load_app_config()"
+    },
+    {
+      "label": ".reload_mapping_from_disk()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L74",
+      "id": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "community": 4,
+      "norm_label": ".reload_mapping_from_disk()"
+    },
+    {
+      "label": ".save_app_config()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L91",
+      "id": "joyconme_engine_joyconengine_save_app_config",
+      "community": 4,
+      "norm_label": ".save_app_config()"
+    },
+    {
+      "label": ".save_mapping()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L99",
+      "id": "joyconme_engine_joyconengine_save_mapping",
+      "community": 4,
+      "norm_label": ".save_mapping()"
+    },
+    {
+      "label": "._load_actions()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L107",
+      "id": "joyconme_engine_joyconengine_load_actions",
+      "community": 4,
+      "norm_label": "._load_actions()"
+    },
+    {
+      "label": "._init_hardware()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L140",
+      "id": "joyconme_engine_joyconengine_init_hardware",
+      "community": 4,
+      "norm_label": "._init_hardware()"
+    },
+    {
+      "label": "._init_virtual_device()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L153",
+      "id": "joyconme_engine_joyconengine_init_virtual_device",
+      "community": 4,
+      "norm_label": "._init_virtual_device()"
+    },
+    {
+      "label": ".get_sleep_time()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L216",
+      "id": "joyconme_engine_joyconengine_get_sleep_time",
+      "community": 4,
+      "norm_label": ".get_sleep_time()"
+    },
+    {
+      "label": ".run_tick()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L222",
+      "id": "joyconme_engine_joyconengine_run_tick",
+      "community": 4,
+      "norm_label": ".run_tick()"
+    },
+    {
+      "label": "._run_action()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L268",
+      "id": "joyconme_engine_joyconengine_run_action",
+      "community": 4,
+      "norm_label": "._run_action()"
+    },
+    {
+      "label": ".cleanup()",
+      "file_type": "code",
+      "source_file": "engine.py",
+      "source_location": "L283",
+      "id": "joyconme_engine_joyconengine_cleanup",
+      "community": 4,
+      "norm_label": ".cleanup()"
+    },
+    {
+      "label": "\u2728 \u0e42\u0e2b\u0e25\u0e14 Mapping \u0e43\u0e2b\u0e21\u0e48\u0e08\u0e32\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e41\u0e25\u0e30 Update \u0e41\u0e23\u0e21\u0e17\u0e31\u0e19\u0e17\u0e35",
+      "file_type": "rationale",
+      "source_file": "engine.py",
+      "source_location": "L75",
+      "id": "joyconme_engine_rationale_75",
+      "community": 4,
+      "norm_label": "\u2728 \u0e42\u0e2b\u0e25\u0e14 mapping \u0e43\u0e2b\u0e21\u0e08\u0e32\u0e01\u0e44\u0e1f\u0e25\u0e4c\u0e41\u0e25\u0e30 update \u0e41\u0e23\u0e21\u0e17\u0e31\u0e19\u0e17\u0e35"
+    },
+    {
+      "label": "keyboard_menu.py",
+      "file_type": "code",
+      "source_file": "menus/keyboard_menu.py",
+      "source_location": "L1",
+      "id": "menus_keyboard_menu_py",
+      "community": 20,
+      "norm_label": "keyboard_menu.py"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/keyboard_menu.py",
+      "source_location": "L7",
+      "id": "menus_keyboard_menu_run",
+      "community": 20,
+      "norm_label": "run()"
+    },
+    {
+      "label": "profile_manager.py",
+      "file_type": "code",
+      "source_file": "menus/profile_manager.py",
+      "source_location": "L1",
+      "id": "menus_profile_manager_py",
+      "community": 15,
+      "norm_label": "profile_manager.py"
+    },
+    {
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "menus/profile_manager.py",
+      "source_location": "L20",
+      "id": "menus_profile_manager_reset",
+      "community": 15,
+      "norm_label": "reset()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/profile_manager.py",
+      "source_location": "L26",
+      "id": "menus_profile_manager_run",
+      "community": 15,
+      "norm_label": "run()"
+    },
+    {
+      "label": "utils.py",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L1",
+      "id": "menus_utils_py",
+      "community": 0,
+      "norm_label": "utils.py"
+    },
+    {
+      "label": "get_project_root()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L8",
+      "id": "menus_utils_get_project_root",
+      "community": 0,
+      "norm_label": "get_project_root()"
+    },
+    {
+      "label": "get_config_path()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L14",
+      "id": "menus_utils_get_config_path",
+      "community": 0,
+      "norm_label": "get_config_path()"
+    },
+    {
+      "label": "load_json_safe()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L19",
+      "id": "menus_utils_load_json_safe",
+      "community": 0,
+      "norm_label": "load_json_safe()"
+    },
+    {
+      "label": "save_json_safe()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L31",
+      "id": "menus_utils_save_json_safe",
+      "community": 0,
+      "norm_label": "save_json_safe()"
+    },
+    {
+      "label": "load_config()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L44",
+      "id": "menus_utils_load_config",
+      "community": 0,
+      "norm_label": "load_config()"
+    },
+    {
+      "label": "save_config()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L48",
+      "id": "menus_utils_save_config",
+      "community": 0,
+      "norm_label": "save_config()"
+    },
+    {
+      "label": "load_mapping()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L52",
+      "id": "menus_utils_load_mapping",
+      "community": 0,
+      "norm_label": "load_mapping()"
+    },
+    {
+      "label": "save_mapping()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L56",
+      "id": "menus_utils_save_mapping",
+      "community": 0,
+      "norm_label": "save_mapping()"
+    },
+    {
+      "label": "load_macros()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L61",
+      "id": "menus_utils_load_macros",
+      "community": 0,
+      "norm_label": "load_macros()"
+    },
+    {
+      "label": "save_macros()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L66",
+      "id": "menus_utils_save_macros",
+      "community": 0,
+      "norm_label": "save_macros()"
+    },
+    {
+      "label": "load_recipes()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L71",
+      "id": "menus_utils_load_recipes",
+      "community": 0,
+      "norm_label": "load_recipes()"
+    },
+    {
+      "label": "save_recipes()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L75",
+      "id": "menus_utils_save_recipes",
+      "community": 0,
+      "norm_label": "save_recipes()"
+    },
+    {
+      "label": "get_all_available_actions()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L80",
+      "id": "menus_utils_get_all_available_actions",
+      "community": 0,
+      "norm_label": "get_all_available_actions()"
+    },
+    {
+      "label": "get_emoji()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L142",
+      "id": "menus_utils_get_emoji",
+      "community": 0,
+      "norm_label": "get_emoji()"
+    },
+    {
+      "label": "format_button_name()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L169",
+      "id": "menus_utils_format_button_name",
+      "community": 0,
+      "norm_label": "format_button_name()"
+    },
+    {
+      "label": "normalize_input()",
+      "file_type": "code",
+      "source_file": "menus/utils.py",
+      "source_location": "L198",
+      "id": "menus_utils_normalize_input",
+      "community": 0,
+      "norm_label": "normalize_input()"
+    },
+    {
+      "label": "\u0e2b\u0e32 path \u0e02\u0e2d\u0e07\u0e44\u0e1f\u0e25\u0e4c config",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L15",
+      "id": "menus_utils_rationale_15",
+      "community": 0,
+      "norm_label": "\u0e2b\u0e32 path \u0e02\u0e2d\u0e07\u0e44\u0e1f\u0e25\u0e4c config"
+    },
+    {
+      "label": "\u0e42\u0e2b\u0e25\u0e14 JSON \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L20",
+      "id": "menus_utils_rationale_20",
+      "community": 0,
+      "norm_label": "\u0e42\u0e2b\u0e25\u0e14 json \u0e2d\u0e22\u0e32\u0e07\u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22"
+    },
+    {
+      "label": "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01 JSON \u0e2d\u0e22\u0e48\u0e32\u0e07\u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L32",
+      "id": "menus_utils_rationale_32",
+      "community": 0,
+      "norm_label": "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01 json \u0e2d\u0e22\u0e32\u0e07\u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22"
+    },
+    {
+      "label": "\u0e42\u0e2b\u0e25\u0e14\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e21\u0e32\u0e42\u0e04\u0e23\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14\u0e08\u0e32\u0e01\u0e04\u0e25\u0e31\u0e07",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L62",
+      "id": "menus_utils_rationale_62",
+      "community": 0,
+      "norm_label": "\u0e42\u0e2b\u0e25\u0e14\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e21\u0e32\u0e42\u0e04\u0e23\u0e17\u0e31\u0e07\u0e2b\u0e21\u0e14\u0e08\u0e32\u0e01\u0e04\u0e25\u0e31\u0e07"
+    },
+    {
+      "label": "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e21\u0e32\u0e42\u0e04\u0e23\u0e25\u0e07\u0e04\u0e25\u0e31\u0e07",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L67",
+      "id": "menus_utils_rationale_67",
+      "community": 0,
+      "norm_label": "\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e21\u0e32\u0e42\u0e04\u0e23\u0e25\u0e07\u0e04\u0e25\u0e31\u0e07"
+    },
+    {
+      "label": "\u0e2a\u0e41\u0e01\u0e19 Action Modules \u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L81",
+      "id": "menus_utils_rationale_81",
+      "community": 0,
+      "norm_label": "\u0e2a\u0e41\u0e01\u0e19 action modules \u0e17\u0e31\u0e07\u0e2b\u0e21\u0e14"
+    },
+    {
+      "label": "\u0e41\u0e1b\u0e25\u0e07 input \u0e40\u0e1b\u0e47\u0e19 emoji",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L143",
+      "id": "menus_utils_rationale_143",
+      "community": 0,
+      "norm_label": "\u0e41\u0e1b\u0e25\u0e07 input \u0e40\u0e1b\u0e47\u0e19 emoji"
+    },
+    {
+      "label": "\u0e41\u0e1b\u0e25\u0e07\u0e04\u0e48\u0e32 input \u0e40\u0e1b\u0e47\u0e19\u0e02\u0e49\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e2d\u0e48\u0e32\u0e19\u0e07\u0e48\u0e32\u0e22",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L170",
+      "id": "menus_utils_rationale_170",
+      "community": 0,
+      "norm_label": "\u0e41\u0e1b\u0e25\u0e07\u0e04\u0e32 input \u0e40\u0e1b\u0e47\u0e19\u0e02\u0e2d\u0e04\u0e27\u0e32\u0e21\u0e2d\u0e32\u0e19\u0e07\u0e32\u0e22"
+    },
+    {
+      "label": "Normalize input value \u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e40\u0e1b\u0e23\u0e35\u0e22\u0e1a\u0e40\u0e17\u0e35\u0e22\u0e1a",
+      "file_type": "rationale",
+      "source_file": "menus/utils.py",
+      "source_location": "L199",
+      "id": "menus_utils_rationale_199",
+      "community": 0,
+      "norm_label": "normalize input value \u0e2a\u0e4d\u0e32\u0e2b\u0e23\u0e31\u0e1a\u0e40\u0e1b\u0e23\u0e35\u0e22\u0e1a\u0e40\u0e17\u0e35\u0e22\u0e1a"
+    },
+    {
+      "label": "button_menu.py",
+      "file_type": "code",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L1",
+      "id": "menus_button_menu_py",
+      "community": 11,
+      "norm_label": "button_menu.py"
+    },
+    {
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L30",
+      "id": "menus_button_menu_reset",
+      "community": 11,
+      "norm_label": "reset()"
+    },
+    {
+      "label": "get_edit_items()",
+      "file_type": "code",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L48",
+      "id": "menus_button_menu_get_edit_items",
+      "community": 11,
+      "norm_label": "get_edit_items()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L62",
+      "id": "menus_button_menu_run",
+      "community": 11,
+      "norm_label": "run()"
+    },
+    {
+      "label": "set_detected_input()",
+      "file_type": "code",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L282",
+      "id": "menus_button_menu_set_detected_input",
+      "community": 11,
+      "norm_label": "set_detected_input()"
+    },
+    {
+      "label": "proceed_after_input()",
+      "file_type": "code",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L295",
+      "id": "menus_button_menu_proceed_after_input",
+      "community": 11,
+      "norm_label": "proceed_after_input()"
+    },
+    {
+      "label": "mouse_menu.py",
+      "file_type": "code",
+      "source_file": "menus/mouse_menu.py",
+      "source_location": "L1",
+      "id": "menus_mouse_menu_py",
+      "community": 0,
+      "norm_label": "mouse_menu.py"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/mouse_menu.py",
+      "source_location": "L13",
+      "id": "menus_mouse_menu_run",
+      "community": 0,
+      "norm_label": "run()"
+    },
+    {
+      "label": "macro_library.py",
+      "file_type": "code",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L1",
+      "id": "menus_macro_library_py",
+      "community": 12,
+      "norm_label": "macro_library.py"
+    },
+    {
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L78",
+      "id": "menus_macro_library_reset",
+      "community": 12,
+      "norm_label": "reset()"
+    },
+    {
+      "label": "get_keys_menu()",
+      "file_type": "code",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L87",
+      "id": "menus_macro_library_get_keys_menu",
+      "community": 12,
+      "norm_label": "get_keys_menu()"
+    },
+    {
+      "label": "get_sequence_preview()",
+      "file_type": "code",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L110",
+      "id": "menus_macro_library_get_sequence_preview",
+      "community": 12,
+      "norm_label": "get_sequence_preview()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L122",
+      "id": "menus_macro_library_run",
+      "community": 12,
+      "norm_label": "run()"
+    },
+    {
+      "label": "\u2728 \u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e0a\u0e48\u0e27\u0e22\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e04\u0e35\u0e22\u0e4c\u0e41\u0e1a\u0e1a\u0e41\u0e1a\u0e48\u0e07\u0e2b\u0e19\u0e49\u0e32",
+      "file_type": "rationale",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L88",
+      "id": "menus_macro_library_rationale_88",
+      "community": 12,
+      "norm_label": "\u2728 \u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e0a\u0e27\u0e22\u0e2a\u0e23\u0e32\u0e07\u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e04\u0e35\u0e22\u0e4c\u0e41\u0e1a\u0e1a\u0e41\u0e1a\u0e07\u0e2b\u0e19\u0e32"
+    },
+    {
+      "label": "main_menu.py",
+      "file_type": "code",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L1",
+      "id": "menus_main_menu_py",
+      "community": 13,
+      "norm_label": "main_menu.py"
+    },
+    {
+      "label": "reload_menus()",
+      "file_type": "code",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L11",
+      "id": "menus_main_menu_reload_menus",
+      "community": 13,
+      "norm_label": "reload_menus()"
+    },
+    {
+      "label": "get_menu_module()",
+      "file_type": "code",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L52",
+      "id": "menus_main_menu_get_menu_module",
+      "community": 13,
+      "norm_label": "get_menu_module()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L61",
+      "id": "menus_main_menu_run",
+      "community": 13,
+      "norm_label": "run()"
+    },
+    {
+      "label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e41\u0e01\u0e19\u0e2b\u0e32\u0e44\u0e1f\u0e25\u0e4c\u0e40\u0e21\u0e19\u0e39\u0e43\u0e2b\u0e21\u0e48\u0e46 \u0e41\u0e1a\u0e1a\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34 (Plug & Play)",
+      "file_type": "rationale",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L12",
+      "id": "menus_main_menu_rationale_12",
+      "community": 13,
+      "norm_label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e2a\u0e4d\u0e32\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e41\u0e01\u0e19\u0e2b\u0e32\u0e44\u0e1f\u0e25\u0e4c\u0e40\u0e21\u0e19\u0e43\u0e2b\u0e21\u0e46 \u0e41\u0e1a\u0e1a\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34 (plug & play)"
+    },
+    {
+      "label": "\u0e2a\u0e48\u0e07\u0e04\u0e37\u0e19 Module \u0e02\u0e2d\u0e07\u0e40\u0e21\u0e19\u0e39\u0e15\u0e32\u0e21 target \u0e17\u0e35\u0e48\u0e23\u0e49\u0e2d\u0e07\u0e02\u0e2d",
+      "file_type": "rationale",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L53",
+      "id": "menus_main_menu_rationale_53",
+      "community": 13,
+      "norm_label": "\u0e2a\u0e07\u0e04\u0e37\u0e19 module \u0e02\u0e2d\u0e07\u0e40\u0e21\u0e19\u0e15\u0e32\u0e21 target \u0e17\u0e35\u0e23\u0e2d\u0e07\u0e02\u0e2d"
+    },
+    {
+      "label": "__init__.py",
+      "file_type": "code",
+      "source_file": "ui/__init__.py",
+      "source_location": "L1",
+      "id": "menus_init_py",
+      "community": 22,
+      "norm_label": "__init__.py"
+    },
+    {
+      "label": "cheat_menu.py",
+      "file_type": "code",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L1",
+      "id": "menus_cheat_menu_py",
+      "community": 0,
+      "norm_label": "cheat_menu.py"
+    },
+    {
+      "label": "get_recipe_items()",
+      "file_type": "code",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L26",
+      "id": "menus_cheat_menu_get_recipe_items",
+      "community": 0,
+      "norm_label": "get_recipe_items()"
+    },
+    {
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L40",
+      "id": "menus_cheat_menu_reset",
+      "community": 0,
+      "norm_label": "reset()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L51",
+      "id": "menus_cheat_menu_run",
+      "community": 0,
+      "norm_label": "run()"
+    },
+    {
+      "label": "toggle_recording()",
+      "file_type": "code",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L236",
+      "id": "menus_cheat_menu_toggle_recording",
+      "community": 0,
+      "norm_label": "toggle_recording()"
+    },
+    {
+      "label": "add_sequence_input()",
+      "file_type": "code",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L249",
+      "id": "menus_cheat_menu_add_sequence_input",
+      "community": 0,
+      "norm_label": "add_sequence_input()"
+    },
+    {
+      "label": "macro_keyboard.py",
+      "file_type": "code",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L1",
+      "id": "actions_macro_keyboard_py",
+      "community": 10,
+      "norm_label": "macro_keyboard.py"
+    },
+    {
+      "label": "load_macro_library()",
+      "file_type": "code",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L80",
+      "id": "actions_macro_keyboard_load_macro_library",
+      "community": 10,
+      "norm_label": "load_macro_library()"
+    },
+    {
+      "label": "execute_step()",
+      "file_type": "code",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L91",
+      "id": "actions_macro_keyboard_execute_step",
+      "community": 10,
+      "norm_label": "execute_step()"
+    },
+    {
+      "label": "is_input_active()",
+      "file_type": "code",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L113",
+      "id": "actions_macro_keyboard_is_input_active",
+      "community": 10,
+      "norm_label": "is_input_active()"
+    },
+    {
+      "label": "_trigger_macro()",
+      "file_type": "code",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L133",
+      "id": "actions_macro_keyboard_trigger_macro",
+      "community": 10,
+      "norm_label": "_trigger_macro()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L147",
+      "id": "actions_macro_keyboard_run",
+      "community": 10,
+      "norm_label": "run()"
+    },
+    {
+      "label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e40\u0e0a\u0e47\u0e04\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e1b\u0e38\u0e48\u0e21/\u0e41\u0e01\u0e19/D-Pad \u0e41\u0e1a\u0e1a\u0e23\u0e2d\u0e07\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e01\u0e14 Combo \u0e17\u0e38\u0e01\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a",
+      "file_type": "rationale",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L114",
+      "id": "actions_macro_keyboard_rationale_114",
+      "community": 10,
+      "norm_label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e40\u0e0a\u0e47\u0e04\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e1b\u0e21/\u0e41\u0e01\u0e19/d-pad \u0e41\u0e1a\u0e1a\u0e23\u0e2d\u0e07\u0e23\u0e31\u0e1a\u0e01\u0e32\u0e23\u0e01\u0e14 combo \u0e17\u0e01\u0e23\u0e1b\u0e41\u0e1a\u0e1a"
+    },
+    {
+      "label": "keyboard.py",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L1",
+      "id": "actions_keyboard_py",
+      "community": 1,
+      "norm_label": "keyboard.py"
+    },
+    {
+      "label": "e",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L14",
+      "id": "actions_keyboard_e",
+      "community": 1,
+      "norm_label": "e"
+    },
+    {
+      "label": "_type_char()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L162",
+      "id": "actions_keyboard_type_char",
+      "community": 1,
+      "norm_label": "_type_char()"
+    },
+    {
+      "label": "_analog_to_cell()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L188",
+      "id": "actions_keyboard_analog_to_cell",
+      "community": 1,
+      "norm_label": "_analog_to_cell()"
+    },
+    {
+      "label": "KeyboardController",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L200",
+      "id": "actions_keyboard_keyboardcontroller",
+      "community": 1,
+      "norm_label": "keyboardcontroller"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L201",
+      "id": "actions_keyboard_keyboardcontroller_init",
+      "community": 1,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".open()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L218",
+      "id": "actions_keyboard_keyboardcontroller_open",
+      "community": 1,
+      "norm_label": ".open()"
+    },
+    {
+      "label": ".close()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L228",
+      "id": "actions_keyboard_keyboardcontroller_close",
+      "community": 1,
+      "norm_label": ".close()"
+    },
+    {
+      "label": "._handle_analog()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L235",
+      "id": "actions_keyboard_keyboardcontroller_handle_analog",
+      "community": 1,
+      "norm_label": "._handle_analog()"
+    },
+    {
+      "label": "._handle_btn_a()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L253",
+      "id": "actions_keyboard_keyboardcontroller_handle_btn_a",
+      "community": 1,
+      "norm_label": "._handle_btn_a()"
+    },
+    {
+      "label": "._check_auto_commit()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L307",
+      "id": "actions_keyboard_keyboardcontroller_check_auto_commit",
+      "community": 1,
+      "norm_label": "._check_auto_commit()"
+    },
+    {
+      "label": "._handle_btn_x()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L320",
+      "id": "actions_keyboard_keyboardcontroller_handle_btn_x",
+      "community": 1,
+      "norm_label": "._handle_btn_x()"
+    },
+    {
+      "label": "._handle_btn_y()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L337",
+      "id": "actions_keyboard_keyboardcontroller_handle_btn_y",
+      "community": 1,
+      "norm_label": "._handle_btn_y()"
+    },
+    {
+      "label": "._handle_btn_b()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L353",
+      "id": "actions_keyboard_keyboardcontroller_handle_btn_b",
+      "community": 1,
+      "norm_label": "._handle_btn_b()"
+    },
+    {
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L369",
+      "id": "actions_keyboard_keyboardcontroller_run",
+      "community": 1,
+      "norm_label": ".run()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L448",
+      "id": "actions_keyboard_run",
+      "community": 1,
+      "norm_label": "run()"
+    },
+    {
+      "label": "action_profile.py",
+      "file_type": "code",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L1",
+      "id": "actions_action_profile_py",
+      "community": 14,
+      "norm_label": "action_profile.py"
+    },
+    {
+      "label": "show_osd()",
+      "file_type": "code",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L28",
+      "id": "actions_action_profile_show_osd",
+      "community": 14,
+      "norm_label": "show_osd()"
+    },
+    {
+      "label": "hide_osd()",
+      "file_type": "code",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L79",
+      "id": "actions_action_profile_hide_osd",
+      "community": 14,
+      "norm_label": "hide_osd()"
+    },
+    {
+      "label": "is_triggered()",
+      "file_type": "code",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L85",
+      "id": "actions_action_profile_is_triggered",
+      "community": 14,
+      "norm_label": "is_triggered()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L103",
+      "id": "actions_action_profile_run",
+      "community": 14,
+      "norm_label": "run()"
+    },
+    {
+      "label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e41\u0e2a\u0e14\u0e07\u0e41\u0e08\u0e49\u0e07\u0e40\u0e15\u0e37\u0e2d\u0e19\u0e41\u0e1a\u0e1a Compact (\u0e40\u0e25\u0e47\u0e01\u0e41\u0e25\u0e30\u0e44\u0e21\u0e48\u0e14\u0e36\u0e07\u0e2a\u0e32\u0e22\u0e15\u0e32)",
+      "file_type": "rationale",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L29",
+      "id": "actions_action_profile_rationale_29",
+      "community": 14,
+      "norm_label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e41\u0e2a\u0e14\u0e07\u0e41\u0e08\u0e07\u0e40\u0e15\u0e37\u0e2d\u0e19\u0e41\u0e1a\u0e1a compact (\u0e40\u0e25\u0e47\u0e01\u0e41\u0e25\u0e30\u0e44\u0e21\u0e14\u0e36\u0e07\u0e2a\u0e32\u0e22\u0e15\u0e32)"
+    },
+    {
+      "label": "sequence_engine.py",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L1",
+      "id": "actions_sequence_engine_py",
+      "community": 6,
+      "norm_label": "sequence_engine.py"
+    },
+    {
+      "label": "SequenceState",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L19",
+      "id": "actions_sequence_engine_sequencestate",
+      "community": 6,
+      "norm_label": "sequencestate"
+    },
+    {
+      "label": "SequenceEngine",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L31",
+      "id": "actions_sequence_engine_sequenceengine",
+      "community": 6,
+      "norm_label": "sequenceengine"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L34",
+      "id": "actions_sequence_engine_sequenceengine_init",
+      "community": 6,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": "._init_ui()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L46",
+      "id": "actions_sequence_engine_sequenceengine_init_ui",
+      "community": 6,
+      "norm_label": "._init_ui()"
+    },
+    {
+      "label": "._show_ui()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L71",
+      "id": "actions_sequence_engine_sequenceengine_show_ui",
+      "community": 6,
+      "norm_label": "._show_ui()"
+    },
+    {
+      "label": "._hide_ui()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L89",
+      "id": "actions_sequence_engine_sequenceengine_hide_ui",
+      "community": 6,
+      "norm_label": "._hide_ui()"
+    },
+    {
+      "label": "._get_recipes()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L93",
+      "id": "actions_sequence_engine_sequenceengine_get_recipes",
+      "community": 6,
+      "norm_label": "._get_recipes()"
+    },
+    {
+      "label": "._deep_normalize()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L103",
+      "id": "actions_sequence_engine_sequenceengine_deep_normalize",
+      "community": 6,
+      "norm_label": "._deep_normalize()"
+    },
+    {
+      "label": "._execute_action()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L111",
+      "id": "actions_sequence_engine_sequenceengine_execute_action",
+      "community": 6,
+      "norm_label": "._execute_action()"
+    },
+    {
+      "label": "._process_feedback()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L129",
+      "id": "actions_sequence_engine_sequenceengine_process_feedback",
+      "community": 6,
+      "norm_label": "._process_feedback()"
+    },
+    {
+      "label": "._get_current_inputs()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L150",
+      "id": "actions_sequence_engine_sequenceengine_get_current_inputs",
+      "community": 6,
+      "norm_label": "._get_current_inputs()"
+    },
+    {
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L164",
+      "id": "actions_sequence_engine_sequenceengine_run",
+      "community": 6,
+      "norm_label": ".run()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L250",
+      "id": "actions_sequence_engine_run",
+      "community": 6,
+      "norm_label": "run()"
+    },
+    {
+      "label": "\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e41\u0e01\u0e30\u0e01\u0e49\u0e32\u0e21\u0e1b\u0e39 [[...]] \u0e41\u0e25\u0e30\u0e41\u0e1b\u0e25\u0e07\u0e40\u0e1b\u0e47\u0e19 String \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e40\u0e1b\u0e23\u0e35\u0e22\u0e1a\u0e40\u0e17\u0e35\u0e22\u0e1a\u0e2a\u0e39\u0e15\u0e23",
+      "file_type": "rationale",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L104",
+      "id": "actions_sequence_engine_rationale_104",
+      "community": 6,
+      "norm_label": "\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e41\u0e01\u0e30\u0e01\u0e32\u0e21\u0e1b [[...]] \u0e41\u0e25\u0e30\u0e41\u0e1b\u0e25\u0e07\u0e40\u0e1b\u0e47\u0e19 string \u0e40\u0e1e\u0e37\u0e2d\u0e40\u0e1b\u0e23\u0e35\u0e22\u0e1a\u0e40\u0e17\u0e35\u0e22\u0e1a\u0e2a\u0e15\u0e23"
+    },
+    {
+      "label": "mouse.py",
+      "file_type": "code",
+      "source_file": "actions/mouse.py",
+      "source_location": "L1",
+      "id": "actions_mouse_py",
+      "community": 21,
+      "norm_label": "mouse.py"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/mouse.py",
+      "source_location": "L28",
+      "id": "actions_mouse_run",
+      "community": 21,
+      "norm_label": "run()"
+    },
+    {
+      "label": "radial_setup.py",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L1",
+      "id": "actions_radial_setup_py",
+      "community": 2,
+      "norm_label": "radial_setup.py"
+    },
+    {
+      "label": "format_button_name()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L22",
+      "id": "actions_radial_setup_format_button_name",
+      "community": 2,
+      "norm_label": "format_button_name()"
+    },
+    {
+      "label": "get_emoji()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L25",
+      "id": "actions_radial_setup_get_emoji",
+      "community": 2,
+      "norm_label": "get_emoji()"
+    },
+    {
+      "label": "RadialState",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L44",
+      "id": "actions_radial_setup_radialstate",
+      "community": 2,
+      "norm_label": "radialstate"
+    },
+    {
+      "label": "RadialMenuController",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L59",
+      "id": "actions_radial_setup_radialmenucontroller",
+      "community": 2,
+      "norm_label": "radialmenucontroller"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L60",
+      "id": "actions_radial_setup_radialmenucontroller_init",
+      "community": 2,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".is_combo_pressed()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L63",
+      "id": "actions_radial_setup_radialmenucontroller_is_combo_pressed",
+      "community": 2,
+      "norm_label": ".is_combo_pressed()"
+    },
+    {
+      "label": ".get_current_physical_inputs()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L97",
+      "id": "actions_radial_setup_radialmenucontroller_get_current_physical_inputs",
+      "community": 2,
+      "norm_label": ".get_current_physical_inputs()"
+    },
+    {
+      "label": ".open_menu()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L123",
+      "id": "actions_radial_setup_radialmenucontroller_open_menu",
+      "community": 2,
+      "norm_label": ".open_menu()"
+    },
+    {
+      "label": ".close_menu()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L136",
+      "id": "actions_radial_setup_radialmenucontroller_close_menu",
+      "community": 2,
+      "norm_label": ".close_menu()"
+    },
+    {
+      "label": ".update_selection_from_axis()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L142",
+      "id": "actions_radial_setup_radialmenucontroller_update_selection_from_axis",
+      "community": 2,
+      "norm_label": ".update_selection_from_axis()"
+    },
+    {
+      "label": ".handle_menu_selection()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L154",
+      "id": "actions_radial_setup_radialmenucontroller_handle_menu_selection",
+      "community": 2,
+      "norm_label": ".handle_menu_selection()"
+    },
+    {
+      "label": ".process_listen_mode()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L176",
+      "id": "actions_radial_setup_radialmenucontroller_process_listen_mode",
+      "community": 2,
+      "norm_label": ".process_listen_mode()"
+    },
+    {
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L241",
+      "id": "actions_radial_setup_radialmenucontroller_run",
+      "community": 2,
+      "norm_label": ".run()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L336",
+      "id": "actions_radial_setup_run",
+      "community": 2,
+      "norm_label": "run()"
+    },
+    {
+      "label": "exit_app.py",
+      "file_type": "code",
+      "source_file": "actions/exit_app.py",
+      "source_location": "L1",
+      "id": "actions_exit_app_py",
+      "community": 16,
+      "norm_label": "exit_app.py"
+    },
+    {
+      "label": "is_pressed()",
+      "file_type": "code",
+      "source_file": "actions/exit_app.py",
+      "source_location": "L17",
+      "id": "actions_exit_app_is_pressed",
+      "community": 16,
+      "norm_label": "is_pressed()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/exit_app.py",
+      "source_location": "L51",
+      "id": "actions_exit_app_run",
+      "community": 16,
+      "norm_label": "run()"
+    },
+    {
+      "label": "action_shield.py",
+      "file_type": "code",
+      "source_file": "actions/action_shield.py",
+      "source_location": "L1",
+      "id": "actions_action_shield_py",
+      "community": 17,
+      "norm_label": "action_shield.py"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/action_shield.py",
+      "source_location": "L16",
+      "id": "actions_action_shield_run",
+      "community": 17,
+      "norm_label": "run()"
+    },
+    {
+      "label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e2b\u0e25\u0e31\u0e01\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e25\u0e31\u0e1a\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e40\u0e01\u0e23\u0e32\u0e30\u0e1b\u0e49\u0e2d\u0e07\u0e01\u0e31\u0e19 (Shield)",
+      "file_type": "rationale",
+      "source_file": "actions/action_shield.py",
+      "source_location": "L17",
+      "id": "actions_action_shield_rationale_17",
+      "community": 17,
+      "norm_label": "\u0e1f\u0e31\u0e07\u0e01\u0e4c\u0e0a\u0e31\u0e19\u0e2b\u0e25\u0e31\u0e01\u0e2a\u0e4d\u0e32\u0e2b\u0e23\u0e31\u0e1a\u0e2a\u0e25\u0e31\u0e1a\u0e2a\u0e16\u0e32\u0e19\u0e30\u0e40\u0e01\u0e23\u0e32\u0e30\u0e1b\u0e2d\u0e07\u0e01\u0e31\u0e19 (shield)"
+    },
+    {
+      "label": "system_control.py",
+      "file_type": "code",
+      "source_file": "actions/system_control.py",
+      "source_location": "L1",
+      "id": "actions_system_control_py",
+      "community": 18,
+      "norm_label": "system_control.py"
+    },
+    {
+      "label": "is_triggered()",
+      "file_type": "code",
+      "source_file": "actions/system_control.py",
+      "source_location": "L26",
+      "id": "actions_system_control_is_triggered",
+      "community": 18,
+      "norm_label": "is_triggered()"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "actions/system_control.py",
+      "source_location": "L50",
+      "id": "actions_system_control_run",
+      "community": 18,
+      "norm_label": "run()"
+    },
+    {
+      "label": "loader.py",
+      "file_type": "code",
+      "source_file": "config/loader.py",
+      "source_location": "L1",
+      "id": "config_loader_py",
+      "community": 1,
+      "norm_label": "loader.py"
+    },
+    {
+      "label": "load_json()",
+      "file_type": "code",
+      "source_file": "config/loader.py",
+      "source_location": "L7",
+      "id": "config_loader_load_json",
+      "community": 1,
+      "norm_label": "load_json()"
+    },
+    {
+      "label": "\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e08\u0e32\u0e01\u0e44\u0e1f\u0e25\u0e4c JSON \u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19",
+      "file_type": "rationale",
+      "source_file": "config/loader.py",
+      "source_location": "L8",
+      "id": "config_loader_rationale_8",
+      "community": 1,
+      "norm_label": "\u0e42\u0e2b\u0e25\u0e14\u0e02\u0e2d\u0e21\u0e25\u0e08\u0e32\u0e01\u0e44\u0e1f\u0e25\u0e4c json \u0e40\u0e17\u0e32\u0e19\u0e31\u0e19"
+    },
+    {
+      "label": "setup.py",
+      "file_type": "code",
+      "source_file": "config/setup.py",
+      "source_location": "L1",
+      "id": "config_setup_py",
+      "community": 1,
+      "norm_label": "setup.py"
+    },
+    {
+      "label": "create_if_not_exists()",
+      "file_type": "code",
+      "source_file": "config/setup.py",
+      "source_location": "L27",
+      "id": "config_setup_create_if_not_exists",
+      "community": 1,
+      "norm_label": "create_if_not_exists()"
+    },
+    {
+      "label": "initialize_configs()",
+      "file_type": "code",
+      "source_file": "config/setup.py",
+      "source_location": "L35",
+      "id": "config_setup_initialize_configs",
+      "community": 1,
+      "norm_label": "initialize_configs()"
+    },
+    {
+      "label": "keyboard_ui.py",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L1",
+      "id": "ui_keyboard_ui_py",
+      "community": 5,
+      "norm_label": "keyboard_ui.py"
+    },
+    {
+      "label": "KeyboardOverlay",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L69",
+      "id": "ui_keyboard_ui_keyboardoverlay",
+      "community": 5,
+      "norm_label": "keyboardoverlay"
+    },
+    {
+      "label": "QMainWindow",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "qmainwindow",
+      "community": 2,
+      "norm_label": "qmainwindow"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L74",
+      "id": "ui_keyboard_ui_keyboardoverlay_init",
+      "community": 5,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".showEvent()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L100",
+      "id": "ui_keyboard_ui_keyboardoverlay_showevent",
+      "community": 5,
+      "norm_label": ".showevent()"
+    },
+    {
+      "label": "._snap_to_corner()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L105",
+      "id": "ui_keyboard_ui_keyboardoverlay_snap_to_corner",
+      "community": 5,
+      "norm_label": "._snap_to_corner()"
+    },
+    {
+      "label": "._force_top()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L113",
+      "id": "ui_keyboard_ui_keyboardoverlay_force_top",
+      "community": 5,
+      "norm_label": "._force_top()"
+    },
+    {
+      "label": ".set_mode()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L124",
+      "id": "ui_keyboard_ui_keyboardoverlay_set_mode",
+      "community": 5,
+      "norm_label": ".set_mode()"
+    },
+    {
+      "label": ".set_selected_cell()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L135",
+      "id": "ui_keyboard_ui_keyboardoverlay_set_selected_cell",
+      "community": 5,
+      "norm_label": ".set_selected_cell()"
+    },
+    {
+      "label": ".set_char_index()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L140",
+      "id": "ui_keyboard_ui_keyboardoverlay_set_char_index",
+      "community": 5,
+      "norm_label": ".set_char_index()"
+    },
+    {
+      "label": ".set_typed_text()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L144",
+      "id": "ui_keyboard_ui_keyboardoverlay_set_typed_text",
+      "community": 5,
+      "norm_label": ".set_typed_text()"
+    },
+    {
+      "label": ".paintEvent()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L147",
+      "id": "ui_keyboard_ui_keyboardoverlay_paintevent",
+      "community": 5,
+      "norm_label": ".paintevent()"
+    },
+    {
+      "label": "._draw_panel()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L154",
+      "id": "ui_keyboard_ui_keyboardoverlay_draw_panel",
+      "community": 5,
+      "norm_label": "._draw_panel()"
+    },
+    {
+      "label": "._draw_grid()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L159",
+      "id": "ui_keyboard_ui_keyboardoverlay_draw_grid",
+      "community": 5,
+      "norm_label": "._draw_grid()"
+    },
+    {
+      "label": "._draw_cell()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L168",
+      "id": "ui_keyboard_ui_keyboardoverlay_draw_cell",
+      "community": 5,
+      "norm_label": "._draw_cell()"
+    },
+    {
+      "label": "._draw_dots()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L214",
+      "id": "ui_keyboard_ui_keyboardoverlay_draw_dots",
+      "community": 5,
+      "norm_label": "._draw_dots()"
+    },
+    {
+      "label": "._draw_hints()",
+      "file_type": "code",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L225",
+      "id": "ui_keyboard_ui_keyboardoverlay_draw_hints",
+      "community": 5,
+      "norm_label": "._draw_hints()"
+    },
+    {
+      "label": "mapper_ui.py",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L1",
+      "id": "ui_mapper_ui_py",
+      "community": 3,
+      "norm_label": "mapper_ui.py"
+    },
+    {
+      "label": "MapperApp",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L15",
+      "id": "ui_mapper_ui_mapperapp",
+      "community": 3,
+      "norm_label": "mapperapp"
+    },
+    {
+      "label": "App",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "app",
+      "community": 3,
+      "norm_label": "app"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L30",
+      "id": "ui_mapper_ui_mapperapp_init",
+      "community": 3,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".load_mapping()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L46",
+      "id": "ui_mapper_ui_mapperapp_load_mapping",
+      "community": 3,
+      "norm_label": ".load_mapping()"
+    },
+    {
+      "label": ".scan_actions()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L55",
+      "id": "ui_mapper_ui_mapperapp_scan_actions",
+      "community": 3,
+      "norm_label": ".scan_actions()"
+    },
+    {
+      "label": ".compose()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L73",
+      "id": "ui_mapper_ui_mapperapp_compose",
+      "community": 3,
+      "norm_label": ".compose()"
+    },
+    {
+      "label": ".on_mount()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L109",
+      "id": "ui_mapper_ui_mapperapp_on_mount",
+      "community": 3,
+      "norm_label": ".on_mount()"
+    },
+    {
+      "label": ".refresh_table()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L114",
+      "id": "ui_mapper_ui_mapperapp_refresh_table",
+      "community": 3,
+      "norm_label": ".refresh_table()"
+    },
+    {
+      "label": ".on_data_table_row_selected()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L123",
+      "id": "ui_mapper_ui_mapperapp_on_data_table_row_selected",
+      "community": 3,
+      "norm_label": ".on_data_table_row_selected()"
+    },
+    {
+      "label": ".on_button_pressed()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L127",
+      "id": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "community": 3,
+      "norm_label": ".on_button_pressed()"
+    },
+    {
+      "label": ".show_edit_menu()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L153",
+      "id": "ui_mapper_ui_mapperapp_show_edit_menu",
+      "community": 3,
+      "norm_label": ".show_edit_menu()"
+    },
+    {
+      "label": ".start_listen()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L158",
+      "id": "ui_mapper_ui_mapperapp_start_listen",
+      "community": 3,
+      "norm_label": ".start_listen()"
+    },
+    {
+      "label": ".poll_joy()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L167",
+      "id": "ui_mapper_ui_mapperapp_poll_joy",
+      "community": 3,
+      "norm_label": ".poll_joy()"
+    },
+    {
+      "label": ".input_captured()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L197",
+      "id": "ui_mapper_ui_mapperapp_input_captured",
+      "community": 3,
+      "norm_label": ".input_captured()"
+    },
+    {
+      "label": ".show_action_picker()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L210",
+      "id": "ui_mapper_ui_mapperapp_show_action_picker",
+      "community": 3,
+      "norm_label": ".show_action_picker()"
+    },
+    {
+      "label": ".save_logic()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L229",
+      "id": "ui_mapper_ui_mapperapp_save_logic",
+      "community": 3,
+      "norm_label": ".save_logic()"
+    },
+    {
+      "label": ".delete_logic()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L285",
+      "id": "ui_mapper_ui_mapperapp_delete_logic",
+      "community": 3,
+      "norm_label": ".delete_logic()"
+    },
+    {
+      "label": ".finalize()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L292",
+      "id": "ui_mapper_ui_mapperapp_finalize",
+      "community": 3,
+      "norm_label": ".finalize()"
+    },
+    {
+      "label": ".reset_ui_states()",
+      "file_type": "code",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L300",
+      "id": "ui_mapper_ui_mapperapp_reset_ui_states",
+      "community": 3,
+      "norm_label": ".reset_ui_states()"
+    },
+    {
+      "label": "overlay_ui.py",
+      "file_type": "code",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L1",
+      "id": "ui_overlay_ui_py",
+      "community": 2,
+      "norm_label": "overlay_ui.py"
+    },
+    {
+      "label": "RadialMenuOverlay",
+      "file_type": "code",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L9",
+      "id": "ui_overlay_ui_radialmenuoverlay",
+      "community": 2,
+      "norm_label": "radialmenuoverlay"
+    },
+    {
+      "label": ".__init__()",
+      "file_type": "code",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L10",
+      "id": "ui_overlay_ui_radialmenuoverlay_init",
+      "community": 2,
+      "norm_label": ".__init__()"
+    },
+    {
+      "label": ".center_window()",
+      "file_type": "code",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L30",
+      "id": "ui_overlay_ui_radialmenuoverlay_center_window",
+      "community": 2,
+      "norm_label": ".center_window()"
+    },
+    {
+      "label": ".paintEvent()",
+      "file_type": "code",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L36",
+      "id": "ui_overlay_ui_radialmenuoverlay_paintevent",
+      "community": 2,
+      "norm_label": ".paintevent()"
+    },
+    {
+      "label": ".update_selection()",
+      "file_type": "code",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L170",
+      "id": "ui_overlay_ui_radialmenuoverlay_update_selection",
+      "community": 2,
+      "norm_label": ".update_selection()"
+    },
+    {
+      "label": "JoyConMe System",
+      "file_type": "rationale",
+      "source_file": "engine.py",
+      "source_location": null,
+      "id": "joyconme_system",
+      "community": 9,
+      "norm_label": "joyconme system"
+    },
+    {
+      "label": "Event Loop Architecture",
+      "file_type": "rationale",
+      "source_file": "engine.py",
+      "source_location": null,
+      "id": "event_loop_architecture",
+      "community": 9,
+      "norm_label": "event loop architecture"
+    },
+    {
+      "label": "Action Priority & Blocking System",
+      "file_type": "rationale",
+      "source_file": "engine.py",
+      "source_location": null,
+      "id": "action_priority_system",
+      "community": 9,
+      "norm_label": "action priority & blocking system"
+    },
+    {
+      "label": "Profile System",
+      "file_type": "rationale",
+      "source_file": "config/mapping.json",
+      "source_location": null,
+      "id": "profile_system",
+      "community": 19,
+      "norm_label": "profile system"
+    },
+    {
+      "label": "Cheat Code / Sequence Input System",
+      "file_type": "rationale",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": null,
+      "id": "cheat_code_system",
+      "community": 9,
+      "norm_label": "cheat code / sequence input system"
+    },
+    {
+      "label": "Radial Menu System",
+      "file_type": "rationale",
+      "source_file": "actions/radial_setup.py",
+      "source_location": null,
+      "id": "radial_menu_system",
+      "community": 9,
+      "norm_label": "radial menu system"
+    },
+    {
+      "label": "Virtual Keyboard Character Input",
+      "file_type": "rationale",
+      "source_file": "actions/keyboard.py",
+      "source_location": null,
+      "id": "virtual_keyboard_input",
+      "community": 9,
+      "norm_label": "virtual keyboard character input"
+    },
+    {
+      "label": "UInput Virtual Device Bridge",
+      "file_type": "rationale",
+      "source_file": "engine.py",
+      "source_location": null,
+      "id": "uinput_bridge",
+      "community": 9,
+      "norm_label": "uinput virtual device bridge"
+    },
+    {
+      "label": "Config-Driven Button Mapping",
+      "file_type": "rationale",
+      "source_file": "config/mapping.json",
+      "source_location": null,
+      "id": "config_driven_mapping",
+      "community": 19,
+      "norm_label": "config-driven button mapping"
+    },
+    {
+      "label": "Macro Recording & Playback",
+      "file_type": "rationale",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": null,
+      "id": "macro_recording_system",
+      "community": 19,
+      "norm_label": "macro recording & playback"
+    },
+    {
+      "label": "Action Shield (Lock All Non-System Actions)",
+      "file_type": "rationale",
+      "source_file": "actions/action_shield.py",
+      "source_location": null,
+      "id": "action_shield",
+      "community": 9,
+      "norm_label": "action shield (lock all non-system actions)"
+    },
+    {
+      "label": "Cross-Platform Input Abstraction",
+      "file_type": "rationale",
+      "source_file": "virtual_input.py",
+      "source_location": null,
+      "id": "cross_platform_input",
+      "community": 9,
+      "norm_label": "cross-platform input abstraction"
+    },
+    {
+      "label": "Plug & Play Menu System",
+      "file_type": "rationale",
+      "source_file": "menus/main_menu.py",
+      "source_location": null,
+      "id": "plug_and_play_menus",
+      "community": 9,
+      "norm_label": "plug & play menu system"
+    },
+    {
+      "label": "Keyboard UInput Bug (type_char/tap_special)",
+      "file_type": "rationale",
+      "source_file": "actions/keyboard.py",
+      "source_location": null,
+      "id": "keyboard_bug_fix",
+      "community": 9,
+      "norm_label": "keyboard uinput bug (type_char/tap_special)"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "main_py",
+      "target": "joyconme_main_joyconapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "main_py",
+      "target": "joyconme_main_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_main_joyconapp_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_main_joyconapp_signal_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_main_joyconapp_setup_signal_handlers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_main_joyconapp_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_main_joyconapp_run_tick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_main_joyconapp_cleanup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "joyconme_main_main",
+      "target": "joyconme_main_joyconapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "main.py",
+      "source_location": "L13",
+      "weight": 0.8,
+      "source": "joyconme_main_joyconapp",
+      "target": "joyconme_engine_joyconengine",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "main.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp_init",
+      "target": "joyconme_engine_joyconengine"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp_signal_handler",
+      "target": "joyconme_main_joyconapp_cleanup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp_run",
+      "target": "joyconme_main_joyconapp_setup_signal_handlers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp_run",
+      "target": "joyconme_main_joyconapp_cleanup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "joyconme_main_main",
+      "target": "joyconme_main_joyconapp_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "joyconme_main_rationale_40",
+      "target": "joyconme_main_joyconapp_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "joyconme_main_joyconapp_run_tick",
+      "target": "joyconme_main_joyconapp_cleanup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "joyconme_main_rationale_88",
+      "target": "joyconme_main_joyconapp_run_tick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "joyconme_main_rationale_103",
+      "target": "joyconme_main_joyconapp_cleanup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "virtual_input_py",
+      "target": "joyconme_virtual_input_virtualinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_mouse_move",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_mouse_scroll",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_mouse_click",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_tap_special",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_type_char",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput",
+      "target": "joyconme_virtual_input_virtualinput_close",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_rationale_6",
+      "target": "joyconme_virtual_input_virtualinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "virtual_input.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_virtualinput_init",
+      "target": "actions_keyboard_keyboardcontroller"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_rationale_91",
+      "target": "joyconme_virtual_input_virtualinput_tap_special",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "virtual_input.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "joyconme_virtual_input_rationale_105",
+      "target": "joyconme_virtual_input_virtualinput_type_char",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "engine_py",
+      "target": "joyconme_engine_load_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "engine_py",
+      "target": "joyconme_engine_joyconengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "target": "joyconme_engine_load_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "engine.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "joyconme_engine_load_mapping",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_init_configs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_load_app_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_save_app_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_save_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_load_actions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_init_hardware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_init_virtual_device",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L216",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_get_sleep_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_run_tick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L268",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_run_action",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L283",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine",
+      "target": "joyconme_engine_joyconengine_cleanup",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_init",
+      "target": "joyconme_engine_joyconengine_init_configs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_init",
+      "target": "joyconme_engine_joyconengine_init_hardware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_init",
+      "target": "joyconme_engine_joyconengine_init_virtual_device",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_init",
+      "target": "joyconme_engine_joyconengine_load_actions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_init_configs",
+      "target": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_init_configs",
+      "target": "joyconme_engine_joyconengine_load_app_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "engine.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_load_app_config",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "target": "joyconme_engine_joyconengine_save_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L258",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_run_tick",
+      "target": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "joyconme_engine_rationale_75",
+      "target": "joyconme_engine_joyconengine_reload_mapping_from_disk",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L255",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_run_tick",
+      "target": "joyconme_engine_joyconengine_save_app_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "engine.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_save_app_config",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "engine.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_save_mapping",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L227",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_run_tick",
+      "target": "joyconme_engine_joyconengine_init_hardware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "engine.py",
+      "source_location": "L248",
+      "weight": 1.0,
+      "source": "joyconme_engine_joyconengine_run_tick",
+      "target": "joyconme_engine_joyconengine_run_action",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/keyboard_menu.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "menus_keyboard_menu_py",
+      "target": "menus_keyboard_menu_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/profile_manager.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "menus_profile_manager_py",
+      "target": "menus_profile_manager_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/profile_manager.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "menus_profile_manager_py",
+      "target": "menus_profile_manager_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/profile_manager.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "menus_profile_manager_run",
+      "target": "menus_profile_manager_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_get_project_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_load_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_save_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_load_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_save_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_load_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_save_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_load_macros",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_save_macros",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_load_recipes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_save_recipes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_get_all_available_actions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_get_emoji",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_format_button_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L198",
+      "weight": 1.0,
+      "source": "menus_utils_py",
+      "target": "menus_utils_normalize_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "menus_utils_get_config_path",
+      "target": "menus_utils_get_project_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "menus_utils_get_all_available_actions",
+      "target": "menus_utils_get_project_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "menus_utils_load_config",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "menus_utils_save_config",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "menus_utils_load_mapping",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "menus_utils_save_mapping",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "menus_utils_load_macros",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "menus_utils_save_macros",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "menus_utils_load_recipes",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "menus_utils_save_recipes",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_15",
+      "target": "menus_utils_get_config_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "menus_utils_load_config",
+      "target": "menus_utils_load_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "menus_utils_load_mapping",
+      "target": "menus_utils_load_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "menus_utils_load_macros",
+      "target": "menus_utils_load_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "menus_utils_load_recipes",
+      "target": "menus_utils_load_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_20",
+      "target": "menus_utils_load_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/utils.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "menus_utils_load_json_safe",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "menus_utils_save_config",
+      "target": "menus_utils_save_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "menus_utils_save_mapping",
+      "target": "menus_utils_save_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "menus_utils_save_macros",
+      "target": "menus_utils_save_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "menus_utils_save_recipes",
+      "target": "menus_utils_save_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_32",
+      "target": "menus_utils_save_json_safe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/utils.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "menus_utils_save_json_safe",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/mouse_menu.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "menus_mouse_menu_run",
+      "target": "menus_utils_save_config"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "source": "menus_utils_get_all_available_actions",
+      "target": "menus_utils_load_macros",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_62",
+      "target": "menus_utils_load_macros",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/macro_library.py",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "menus_macro_library_run",
+      "target": "menus_utils_load_macros"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_67",
+      "target": "menus_utils_save_macros",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/macro_library.py",
+      "source_location": "L195",
+      "weight": 1.0,
+      "source": "menus_macro_library_run",
+      "target": "menus_utils_save_macros"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_run",
+      "target": "menus_utils_load_recipes"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_run",
+      "target": "menus_utils_save_recipes"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_81",
+      "target": "menus_utils_get_all_available_actions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/button_menu.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "menus_button_menu_run",
+      "target": "menus_utils_get_all_available_actions"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_run",
+      "target": "menus_utils_get_all_available_actions"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_143",
+      "target": "menus_utils_get_emoji",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L170",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_170",
+      "target": "menus_utils_format_button_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/utils.py",
+      "source_location": "L199",
+      "weight": 1.0,
+      "source": "menus_utils_rationale_199",
+      "target": "menus_utils_normalize_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "menus_button_menu_py",
+      "target": "menus_button_menu_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "menus_button_menu_py",
+      "target": "menus_button_menu_get_edit_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "menus_button_menu_py",
+      "target": "menus_button_menu_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L282",
+      "weight": 1.0,
+      "source": "menus_button_menu_py",
+      "target": "menus_button_menu_set_detected_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L295",
+      "weight": 1.0,
+      "source": "menus_button_menu_py",
+      "target": "menus_button_menu_proceed_after_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "menus_button_menu_run",
+      "target": "menus_button_menu_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/button_menu.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "menus_button_menu_run",
+      "target": "menus_button_menu_get_edit_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/mouse_menu.py",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "menus_mouse_menu_py",
+      "target": "menus_mouse_menu_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "menus_macro_library_py",
+      "target": "menus_macro_library_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "menus_macro_library_py",
+      "target": "menus_macro_library_get_keys_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "menus_macro_library_py",
+      "target": "menus_macro_library_get_sequence_preview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "menus_macro_library_py",
+      "target": "menus_macro_library_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L180",
+      "weight": 1.0,
+      "source": "menus_macro_library_run",
+      "target": "menus_macro_library_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L185",
+      "weight": 1.0,
+      "source": "menus_macro_library_run",
+      "target": "menus_macro_library_get_keys_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "menus_macro_library_rationale_88",
+      "target": "menus_macro_library_get_keys_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/macro_library.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "menus_macro_library_run",
+      "target": "menus_macro_library_get_sequence_preview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "menus_main_menu_py",
+      "target": "menus_main_menu_reload_menus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "menus_main_menu_py",
+      "target": "menus_main_menu_get_menu_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "menus_main_menu_py",
+      "target": "menus_main_menu_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "menus_main_menu_rationale_12",
+      "target": "menus_main_menu_reload_menus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/main_menu.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "menus_main_menu_rationale_53",
+      "target": "menus_main_menu_get_menu_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_py",
+      "target": "menus_cheat_menu_get_recipe_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_py",
+      "target": "menus_cheat_menu_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_py",
+      "target": "menus_cheat_menu_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L236",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_py",
+      "target": "menus_cheat_menu_toggle_recording",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_py",
+      "target": "menus_cheat_menu_add_sequence_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_run",
+      "target": "menus_cheat_menu_get_recipe_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "menus/cheat_menu.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "menus_cheat_menu_run",
+      "target": "menus_cheat_menu_reset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_py",
+      "target": "actions_macro_keyboard_load_macro_library",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_py",
+      "target": "actions_macro_keyboard_execute_step",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_py",
+      "target": "actions_macro_keyboard_is_input_active",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_py",
+      "target": "actions_macro_keyboard_trigger_macro",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_py",
+      "target": "actions_macro_keyboard_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_run",
+      "target": "actions_macro_keyboard_load_macro_library",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_load_macro_library",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_trigger_macro",
+      "target": "actions_macro_keyboard_execute_step",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_run",
+      "target": "actions_macro_keyboard_is_input_active",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_rationale_114",
+      "target": "actions_macro_keyboard_is_input_active",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/macro_keyboard.py",
+      "source_location": "L172",
+      "weight": 1.0,
+      "source": "actions_macro_keyboard_run",
+      "target": "actions_macro_keyboard_trigger_macro",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "actions_keyboard_py",
+      "target": "actions_keyboard_e",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "actions_keyboard_py",
+      "target": "actions_keyboard_type_char",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L188",
+      "weight": 1.0,
+      "source": "actions_keyboard_py",
+      "target": "actions_keyboard_analog_to_cell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L200",
+      "weight": 1.0,
+      "source": "actions_keyboard_py",
+      "target": "actions_keyboard_keyboardcontroller",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L448",
+      "weight": 1.0,
+      "source": "actions_keyboard_py",
+      "target": "actions_keyboard_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L5",
+      "weight": 0.8,
+      "source": "actions_keyboard_e",
+      "target": "ui_keyboard_ui_keyboardoverlay",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L288",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_handle_btn_a",
+      "target": "actions_keyboard_type_char",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_handle_analog",
+      "target": "actions_keyboard_analog_to_cell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_open",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L228",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_close",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L235",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_handle_analog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L253",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L307",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_check_auto_commit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L320",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_x",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L337",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_y",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L353",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L369",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "actions_keyboard_keyboardcontroller_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L5",
+      "weight": 0.8,
+      "source": "actions_keyboard_keyboardcontroller",
+      "target": "ui_keyboard_ui_keyboardoverlay",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_open",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "actions/keyboard.py",
+      "source_location": "L224",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_open",
+      "target": "ui_keyboard_ui_keyboardoverlay"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_get_recipes",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "config/loader.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "config_loader_load_json",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "config/setup.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "config_setup_create_if_not_exists",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_load_mapping",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L294",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_finalize",
+      "target": "actions_keyboard_keyboardcontroller_open"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L372",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_close",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L402",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_handle_analog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L427",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_a",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L432",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_check_auto_commit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L428",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_x",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L429",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_y",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/keyboard.py",
+      "source_location": "L430",
+      "weight": 1.0,
+      "source": "actions_keyboard_keyboardcontroller_run",
+      "target": "actions_keyboard_keyboardcontroller_handle_btn_b",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "actions_action_profile_py",
+      "target": "actions_action_profile_show_osd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "actions_action_profile_py",
+      "target": "actions_action_profile_hide_osd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "actions_action_profile_py",
+      "target": "actions_action_profile_is_triggered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "actions_action_profile_py",
+      "target": "actions_action_profile_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "actions_action_profile_run",
+      "target": "actions_action_profile_show_osd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "actions_action_profile_rationale_29",
+      "target": "actions_action_profile_show_osd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "actions_action_profile_run",
+      "target": "actions_action_profile_hide_osd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_profile.py",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "actions_action_profile_run",
+      "target": "actions_action_profile_is_triggered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_py",
+      "target": "actions_sequence_engine_sequencestate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_py",
+      "target": "actions_sequence_engine_sequenceengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L250",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_py",
+      "target": "actions_sequence_engine_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_init",
+      "target": "actions_sequence_engine_sequencestate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_init_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_show_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_hide_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_get_recipes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_deep_normalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_execute_action",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_process_feedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_get_current_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine",
+      "target": "actions_sequence_engine_sequenceengine_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_init",
+      "target": "actions_sequence_engine_sequenceengine_init_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_run",
+      "target": "actions_sequence_engine_sequenceengine_show_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_process_feedback",
+      "target": "actions_sequence_engine_sequenceengine_hide_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L221",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_run",
+      "target": "actions_sequence_engine_sequenceengine_hide_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L199",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_run",
+      "target": "actions_sequence_engine_sequenceengine_get_recipes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_run",
+      "target": "actions_sequence_engine_sequenceengine_deep_normalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_rationale_104",
+      "target": "actions_sequence_engine_sequenceengine_deep_normalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_execute_action",
+      "target": "actions_sequence_engine_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L138",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_process_feedback",
+      "target": "actions_sequence_engine_sequenceengine_execute_action",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_run",
+      "target": "actions_sequence_engine_sequenceengine_process_feedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/sequence_engine.py",
+      "source_location": "L189",
+      "weight": 1.0,
+      "source": "actions_sequence_engine_sequenceengine_run",
+      "target": "actions_sequence_engine_sequenceengine_get_current_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/mouse.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "actions_mouse_py",
+      "target": "actions_mouse_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "actions_radial_setup_py",
+      "target": "actions_radial_setup_format_button_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "actions_radial_setup_py",
+      "target": "actions_radial_setup_get_emoji",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "actions_radial_setup_py",
+      "target": "actions_radial_setup_radialstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "actions_radial_setup_py",
+      "target": "actions_radial_setup_radialmenucontroller",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L336",
+      "weight": 1.0,
+      "source": "actions_radial_setup_py",
+      "target": "actions_radial_setup_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L208",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_process_listen_mode",
+      "target": "actions_radial_setup_get_emoji",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_init",
+      "target": "actions_radial_setup_radialstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "source": "actions_radial_setup_radialstate",
+      "target": "ui_overlay_ui_radialmenuoverlay",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_is_combo_pressed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_get_current_physical_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_open_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_close_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_update_selection_from_axis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_handle_menu_selection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_process_listen_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L241",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "actions_radial_setup_radialmenucontroller_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L14",
+      "weight": 0.8,
+      "source": "actions_radial_setup_radialmenucontroller",
+      "target": "ui_overlay_ui_radialmenuoverlay",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L257",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_run",
+      "target": "actions_radial_setup_radialmenucontroller_is_combo_pressed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L184",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_process_listen_mode",
+      "target": "actions_radial_setup_radialmenucontroller_get_current_physical_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L247",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_run",
+      "target": "actions_radial_setup_radialmenucontroller_open_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_open_menu",
+      "target": "ui_overlay_ui_radialmenuoverlay"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_run",
+      "target": "actions_radial_setup_radialmenucontroller_close_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L283",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_run",
+      "target": "actions_radial_setup_radialmenucontroller_update_selection_from_axis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L173",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_handle_menu_selection",
+      "target": "actions_radial_setup_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L293",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_run",
+      "target": "actions_radial_setup_radialmenucontroller_handle_menu_selection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/radial_setup.py",
+      "source_location": "L270",
+      "weight": 1.0,
+      "source": "actions_radial_setup_radialmenucontroller_run",
+      "target": "actions_radial_setup_radialmenucontroller_process_listen_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/exit_app.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "actions_exit_app_py",
+      "target": "actions_exit_app_is_pressed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/exit_app.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "actions_exit_app_py",
+      "target": "actions_exit_app_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/exit_app.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "actions_exit_app_run",
+      "target": "actions_exit_app_is_pressed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_shield.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "actions_action_shield_py",
+      "target": "actions_action_shield_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/action_shield.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "actions_action_shield_rationale_17",
+      "target": "actions_action_shield_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/system_control.py",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "actions_system_control_py",
+      "target": "actions_system_control_is_triggered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/system_control.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "actions_system_control_py",
+      "target": "actions_system_control_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "actions/system_control.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "actions_system_control_run",
+      "target": "actions_system_control_is_triggered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "config/loader.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "config_loader_py",
+      "target": "config_loader_load_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "config/loader.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "config_loader_rationale_8",
+      "target": "config_loader_load_json",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "config/setup.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "config_setup_py",
+      "target": "config_setup_create_if_not_exists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "config/setup.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "config_setup_py",
+      "target": "config_setup_initialize_configs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "config/setup.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "config_setup_initialize_configs",
+      "target": "config_setup_create_if_not_exists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_py",
+      "target": "ui_keyboard_ui_keyboardoverlay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "qmainwindow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_showevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_snap_to_corner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_force_top",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_set_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_set_selected_cell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_set_char_index",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L144",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_set_typed_text",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_paintevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_panel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_grid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_cell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L214",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_dots",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L225",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_hints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_radialmenuoverlay",
+      "target": "qmainwindow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay_paintevent",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_panel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay_paintevent",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_grid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay_draw_grid",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_cell",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L185",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay_draw_cell",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_hints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/keyboard_ui.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "source": "ui_keyboard_ui_keyboardoverlay_draw_cell",
+      "target": "ui_keyboard_ui_keyboardoverlay_draw_dots",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_py",
+      "target": "ui_mapper_ui_mapperapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_load_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_scan_actions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_compose",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_on_mount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_refresh_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_on_data_table_row_selected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_show_edit_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_start_listen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_poll_joy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_input_captured",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_show_action_picker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L229",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_save_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_delete_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L292",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_finalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L300",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp",
+      "target": "ui_mapper_ui_mapperapp_reset_ui_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_init",
+      "target": "ui_mapper_ui_mapperapp_load_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_init",
+      "target": "ui_mapper_ui_mapperapp_scan_actions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_mount",
+      "target": "ui_mapper_ui_mapperapp_refresh_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L296",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_finalize",
+      "target": "ui_mapper_ui_mapperapp_refresh_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "target": "ui_mapper_ui_mapperapp_reset_ui_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "target": "ui_mapper_ui_mapperapp_start_listen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L138",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "target": "ui_mapper_ui_mapperapp_show_edit_menu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "target": "ui_mapper_ui_mapperapp_show_action_picker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "target": "ui_mapper_ui_mapperapp_save_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_on_button_pressed",
+      "target": "ui_mapper_ui_mapperapp_delete_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_show_edit_menu",
+      "target": "ui_mapper_ui_mapperapp_reset_ui_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_poll_joy",
+      "target": "ui_mapper_ui_mapperapp_input_captured",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_input_captured",
+      "target": "ui_mapper_ui_mapperapp_show_action_picker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L283",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_save_logic",
+      "target": "ui_mapper_ui_mapperapp_finalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L290",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_delete_logic",
+      "target": "ui_mapper_ui_mapperapp_finalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/mapper_ui.py",
+      "source_location": "L297",
+      "weight": 1.0,
+      "source": "ui_mapper_ui_mapperapp_finalize",
+      "target": "ui_mapper_ui_mapperapp_reset_ui_states",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_py",
+      "target": "ui_overlay_ui_radialmenuoverlay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_radialmenuoverlay",
+      "target": "ui_overlay_ui_radialmenuoverlay_init",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_radialmenuoverlay",
+      "target": "ui_overlay_ui_radialmenuoverlay_center_window",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_radialmenuoverlay",
+      "target": "ui_overlay_ui_radialmenuoverlay_paintevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L170",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_radialmenuoverlay",
+      "target": "ui_overlay_ui_radialmenuoverlay_update_selection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/overlay_ui.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "ui_overlay_ui_radialmenuoverlay_init",
+      "target": "ui_overlay_ui_radialmenuoverlay_center_window",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "engine.py",
+      "source": "joyconme_system",
+      "target": "event_loop_architecture"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "engine.py",
+      "source": "joyconme_system",
+      "target": "action_priority_system"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "engine.py",
+      "source": "joyconme_system",
+      "target": "uinput_bridge"
+    },
+    {
+      "relation": "controls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "engine.py",
+      "source": "action_priority_system",
+      "target": "action_shield"
+    },
+    {
+      "relation": "prioritizes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "engine.py",
+      "source": "action_priority_system",
+      "target": "virtual_keyboard_input"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/mapping.json",
+      "source": "profile_system",
+      "target": "config_driven_mapping"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/recipes.json",
+      "source": "cheat_code_system",
+      "target": "radial_menu_system"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "config/recipes.json",
+      "source": "cheat_code_system",
+      "target": "action_shield"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "actions/radial_setup.py",
+      "source": "radial_menu_system",
+      "target": "plug_and_play_menus"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "actions/keyboard.py",
+      "source": "virtual_keyboard_input",
+      "target": "uinput_bridge"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "actions/keyboard.py",
+      "source": "keyboard_bug_fix",
+      "target": "virtual_keyboard_input"
+    },
+    {
+      "relation": "references",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "actions/keyboard.py",
+      "source": "virtual_keyboard_input",
+      "target": "cross_platform_input"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "actions/keyboard.py",
+      "source": "keyboard_bug_fix",
+      "target": "uinput_bridge"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "virtual_input.py",
+      "source": "cross_platform_input",
+      "target": "uinput_bridge"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "actions/macro_keyboard.py",
+      "source": "macro_recording_system",
+      "target": "config_driven_mapping"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "action_engine_loop",
+      "label": "Main Tick Loop: Shield \u2192 Priority Sort \u2192 Run \u2192 Break",
+      "nodes": [
+        "action_shield",
+        "action_priority_system",
+        "event_loop_architecture",
+        "virtual_keyboard_input"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "engine.py"
+    },
+    {
+      "id": "keyboard_interactive_flow",
+      "label": "Keyboard Input Flow: Open \u2192 Navigate \u2192 Select \u2192 Type",
+      "nodes": [
+        "virtual_keyboard_input",
+        "uinput_bridge",
+        "keyboard_bug_fix",
+        "radial_menu_system"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "actions/keyboard.py"
+    }
+  ],
+  "built_at_commit": "67e4ebb56748ad4c055b9df45e83139550c3d461"
+}

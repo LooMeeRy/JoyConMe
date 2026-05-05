@@ -180,8 +180,20 @@ class RadialMenuController:
         if not overlay:
             return False
 
-        # ให้ดักจับแกน Analog ได้
-        inputs = self.get_current_physical_inputs(joystick, include_analog=True)
+        # ⏱️ Check timeout for sequence recording
+        if self.state.has_started_sequence and self.state.listen_mode == "sequence":
+            elapsed = time.time() - self.state.last_input_time
+            if elapsed >= self.state.TIMEOUT_SECONDS:
+                self.state.listen_mode = None
+                self.state.has_started_sequence = False
+                overlay.center_msg = "⏱️ หมดเวลา!"
+                overlay.timeout_progress = 0.0
+                return True
+            overlay.timeout_progress = 1.0 - (elapsed / self.state.TIMEOUT_SECONDS)
+
+        # No analog capture during sequence recording
+        include_analog = (self.state.listen_mode != "sequence")
+        inputs = self.get_current_physical_inputs(joystick, include_analog=include_analog)
 
         if self.state.wait_for_neutral:
             if not inputs:
@@ -193,6 +205,7 @@ class RadialMenuController:
 
         if inputs:
             self.state.is_holding = True
+            # Reset timer on every press (inactivity timeout)
             self.state.last_input_time = time.time()
             self.state.has_started_sequence = True
             for inp in inputs:
@@ -227,6 +240,7 @@ class RadialMenuController:
                 if hasattr(handler, "proceed_after_input"):
                     if handler.proceed_after_input({"overlay": overlay}) == "UPDATE_UI":
                         self.state.listen_mode = None
+                        self.state.max_combo_detected = []
                         return True
             elif self.state.listen_mode == "sequence" and handler:
                 if getattr(handler, "is_recording", False) and hasattr(
@@ -297,7 +311,12 @@ class RadialMenuController:
                 return "RELOAD"
 
             elif result in ["SAVE_MAPPING", "SAVE_CONFIG"]:
-                self.close_menu()
+                if self.state.current_menu_id == "button_main":
+                    # 🔥 จากเมนูตั้งปุ่ม — กลับไปหน้ารายการที่ตั้งไว้ ไม่ปิดเมนู
+                    self.state.wait_for_neutral = True
+                else:
+                    # 🔥 จากเมนูอื่น (profile_manager ฯลฯ) — ปิดเมนูตามเดิม
+                    self.close_menu()
                 return result
 
             elif isinstance(result, str) and result.startswith("SWITCH:"):
@@ -320,8 +339,21 @@ class RadialMenuController:
             elif result == "LISTEN_INPUT":
                 self.state.listen_mode = "input"
                 self.state.wait_for_neutral = True
+                self.state.max_combo_detected = []
+                self.state.is_holding = False
                 self.state.overlay_window.menu_items = ["..."]
                 self.state.overlay_window.center_msg = "รอสัญญาณปุ่ม/แกน..."
+
+            elif result == "START_SEQUENCE_LISTEN":
+                self.state.listen_mode = "sequence"
+                self.state.wait_for_neutral = True
+                self.state.max_combo_detected = []
+                self.state.is_holding = False
+                self.state.has_started_sequence = False
+                self.state.last_input_time = 0.0
+
+            elif result == "STOP_SEQUENCE_LISTEN":
+                self.state.listen_mode = None
 
             pygame.time.wait(200)
 

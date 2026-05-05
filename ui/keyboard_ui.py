@@ -40,6 +40,18 @@ SYM_GROUPS = [
     "?~",
 ]
 
+EMOJI_GROUPS = [
+    "😊😂😍🥰😘😎",  # Smileys
+    "👍👎👌✌🤞🖕",  # Hands
+    "❤️💔💕💖💗💘",  # Hearts
+    "🔥💯⭐🌟✨💫",  # Popular
+    None,              # Center (hints)
+    "🐶🐱🐼🐸🦊🐰",  # Animals
+    "🍕🍔🌮🍩🍦🍰",  # Food
+    "⚽🎮🎵🎸🎯🎨",  # Activities
+    "🚗✈️🌍🌈🌊🔥",  # Travel/Nature
+]
+
 GRID_POS = [
     (0, 0),
     (1, 0),
@@ -89,6 +101,7 @@ class KeyboardOverlay(QMainWindow):
         self.char_index = -1
         self._shift = False
         self._num_mode = False
+        self._emoji_mode = False
 
         self._top_timer = QTimer(self)
         self._top_timer.timeout.connect(self._force_top)
@@ -121,13 +134,16 @@ class KeyboardOverlay(QMainWindow):
         except:
             pass
 
-    def set_mode(self, is_shift: bool, is_num: bool):
+    def set_mode(self, is_shift: bool, is_num: bool, is_emoji: bool = False):
         update = False
         if self._shift != is_shift:
             self._shift = is_shift
             update = True
         if self._num_mode != is_num:
             self._num_mode = is_num
+            update = True
+        if self._emoji_mode != is_emoji:
+            self._emoji_mode = is_emoji
             update = True
         if update:
             self.update()
@@ -166,7 +182,9 @@ class KeyboardOverlay(QMainWindow):
             self._draw_cell(p, QRect(x, y, self.CS, self.CS), idx)
 
     def _draw_cell(self, p, r, idx):
-        if self._num_mode and self._shift:
+        if self._emoji_mode:
+            group = EMOJI_GROUPS[idx]
+        elif self._num_mode and self._shift:
             group = SYM_GROUPS[idx]
         elif self._num_mode:
             group = NUM_GROUPS[idx]
@@ -182,31 +200,42 @@ class KeyboardOverlay(QMainWindow):
         p.drawRoundedRect(r, 7, 7)
 
         if is_mid:
-            self._draw_hints(p, r)
+            self._draw_hints(p, r, self._emoji_mode)
             return
 
         chars = list(group)
         if selected and self.char_index >= 0:
             ch = chars[self.char_index % len(chars)]
-            if not self._num_mode:
+            if not self._num_mode and not self._emoji_mode:
                 ch = ch.upper() if self._shift else ch.lower()
 
-            # ปรับตัวอักษรใหญ่ขึ้นอีกนิด (จาก 22 เป็น 26)
-            p.setFont(QFont("Consolas", 26, QFont.Weight.Bold))
-            p.setPen(_C_SEL_TXT)
-            p.drawText(
-                QRect(r.x(), r.y(), r.width(), r.height() - 14),
-                Qt.AlignmentFlag.AlignCenter,
-                ch,
-            )
-            self._draw_dots(p, r, chars, self.char_index % len(chars))
+            if self._emoji_mode:
+                # อิโมจิ: ตัวใหญ่ตรงกลาง ไม่มี dots
+                p.setFont(QFont("Segoe UI Emoji", 28, QFont.Weight.Bold))
+                p.setPen(_C_SEL_TXT)
+                p.drawText(
+                    QRect(r.x(), r.y(), r.width(), r.height() + 2),
+                    Qt.AlignmentFlag.AlignCenter,
+                    ch,
+                )
+            else:
+                p.setFont(QFont("Consolas", 26, QFont.Weight.Bold))
+                p.setPen(_C_SEL_TXT)
+                p.drawText(
+                    QRect(r.x(), r.y(), r.width(), r.height() - 14),
+                    Qt.AlignmentFlag.AlignCenter,
+                    ch,
+                )
+                self._draw_dots(p, r, chars, self.char_index % len(chars))
         else:
-            if not self._num_mode:
+            if self._emoji_mode:
+                p.setFont(QFont("Segoe UI Emoji", 14, QFont.Weight.Bold))
+                text = " ".join(chars)
+            elif not self._num_mode:
                 text = " ".join(c.upper() if self._shift else c.lower() for c in chars)
             else:
                 text = " ".join(chars)
 
-            # ปรับตัวอักษรช่องปกติให้ใหญ่และหนาขึ้น (จาก 11 เป็น 12 แบบ Bold)
             p.setFont(QFont("Consolas", 12, QFont.Weight.Bold))
             p.setPen(_C_TEXT if selected else _C_DIM)
             p.drawText(r, Qt.AlignmentFlag.AlignCenter, text)
@@ -222,8 +251,11 @@ class KeyboardOverlay(QMainWindow):
             p.setPen(Qt.PenStyle.NoPen)
             p.drawEllipse(sx + i * (ds + gap), dy, ds, ds)
 
-    def _draw_hints(self, p, r):
-        hints = [("A", "sel"), ("X", "del"), ("Y", "spc"), ("B", "ent")]
+    def _draw_hints(self, p, r, is_emoji: bool = False):
+        if is_emoji:
+            hints = [("A", "sel"), ("X", "del"), ("Y", "spc"), ("B", "ent"), ("←", "exit")]
+        else:
+            hints = [("A", "sel"), ("X", "del"), ("Y", "spc"), ("B", "ent")]
         # ปรับฟอนต์คำอธิบายปุ่มให้หนาขึ้น
         p.setFont(QFont("Consolas", 9, QFont.Weight.Bold))
         lh = 14

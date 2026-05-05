@@ -1,0 +1,1 @@
+{"nodes": [{"id": "radial_menu_system", "label": "Radial Menu System", "file_type": "rationale", "source_file": "actions/radial_setup.py", "source_location": null}], "edges": [{"source": "radial_menu_system", "target": "plug_and_play_menus", "relation": "uses", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "actions/radial_setup.py"}], "hyperedges": []}

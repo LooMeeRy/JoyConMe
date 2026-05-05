@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {"id": "joyconme_system", "label": "JoyConMe System", "file_type": "rationale", "source_file": "engine.py", "source_location": null},
+    {"id": "event_loop_architecture", "label": "Event Loop Architecture", "file_type": "rationale", "source_file": "engine.py", "source_location": null},
+    {"id": "action_priority_system", "label": "Action Priority & Blocking System", "file_type": "rationale", "source_file": "engine.py", "source_location": null},
+    {"id": "profile_system", "label": "Profile System", "file_type": "rationale", "source_file": "config/mapping.json", "source_location": null},
+    {"id": "cheat_code_system", "label": "Cheat Code / Sequence Input System", "file_type": "rationale", "source_file": "actions/sequence_engine.py", "source_location": null},
+    {"id": "radial_menu_system", "label": "Radial Menu System", "file_type": "rationale", "source_file": "actions/radial_setup.py", "source_location": null},
+    {"id": "virtual_keyboard_input", "label": "Virtual Keyboard Character Input", "file_type": "rationale", "source_file": "actions/keyboard.py", "source_location": null},
+    {"id": "uinput_bridge", "label": "UInput Virtual Device Bridge", "file_type": "rationale", "source_file": "engine.py", "source_location": null},
+    {"id": "config_driven_mapping", "label": "Config-Driven Button Mapping", "file_type": "rationale", "source_file": "config/mapping.json", "source_location": null},
+    {"id": "macro_recording_system", "label": "Macro Recording & Playback", "file_type": "rationale", "source_file": "actions/macro_keyboard.py", "source_location": null},
+    {"id": "action_shield", "label": "Action Shield (Lock All Non-System Actions)", "file_type": "rationale", "source_file": "actions/action_shield.py", "source_location": null},
+    {"id": "cross_platform_input", "label": "Cross-Platform Input Abstraction", "file_type": "rationale", "source_file": "virtual_input.py", "source_location": null},
+    {"id": "plug_and_play_menus", "label": "Plug & Play Menu System", "file_type": "rationale", "source_file": "menus/main_menu.py", "source_location": null},
+    {"id": "keyboard_bug_fix", "label": "Keyboard UInput Bug (type_char/tap_special)", "file_type": "rationale", "source_file": "actions/keyboard.py", "source_location": null}
+  ],
+  "edges": [
+    {"source": "joyconme_system", "target": "event_loop_architecture", "relation": "implements", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "engine.py"},
+    {"source": "joyconme_system", "target": "action_priority_system", "relation": "implements", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "engine.py"},
+    {"source": "joyconme_system", "target": "uinput_bridge", "relation": "implements", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "engine.py"},
+    {"source": "action_priority_system", "target": "action_shield", "relation": "controls", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "engine.py"},
+    {"source": "action_priority_system", "target": "virtual_keyboard_input", "relation": "prioritizes", "confidence": "EXTRACTED", "confidence_score": 0.95, "source_file": "engine.py"},
+    {"source": "virtual_keyboard_input", "target": "uinput_bridge", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.85, "source_file": "actions/keyboard.py"},
+    {"source": "keyboard_bug_fix", "target": "virtual_keyboard_input", "relation": "rationale_for", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "actions/keyboard.py"},
+    {"source": "keyboard_bug_fix", "target": "uinput_bridge", "relation": "rationale_for", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "actions/keyboard.py"},
+    {"source": "profile_system", "target": "config_driven_mapping", "relation": "implements", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "config/mapping.json"},
+    {"source": "cheat_code_system", "target": "radial_menu_system", "relation": "triggers", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "config/recipes.json"},
+    {"source": "cheat_code_system", "target": "action_shield", "relation": "triggers", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "config/recipes.json"},
+    {"source": "radial_menu_system", "target": "plug_and_play_menus", "relation": "uses", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "actions/radial_setup.py"},
+    {"source": "macro_recording_system", "target": "config_driven_mapping", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.7, "source_file": "actions/macro_keyboard.py"},
+    {"source": "cross_platform_input", "target": "uinput_bridge", "relation": "semantically_similar_to", "confidence": "INFERRED", "confidence_score": 0.8, "source_file": "virtual_input.py"},
+    {"source": "virtual_keyboard_input", "target": "cross_platform_input", "relation": "references", "confidence": "AMBIGUOUS", "confidence_score": 0.3, "source_file": "actions/keyboard.py"}
+  ],
+  "hyperedges": [
+    {"id": "action_engine_loop", "label": "Main Tick Loop: Shield → Priority Sort → Run → Break", "nodes": ["action_shield", "action_priority_system", "event_loop_architecture", "virtual_keyboard_input"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "engine.py"},
+    {"id": "keyboard_interactive_flow", "label": "Keyboard Input Flow: Open → Navigate → Select → Type", "nodes": ["virtual_keyboard_input", "uinput_bridge", "keyboard_bug_fix", "radial_menu_system"], "relation": "form", "confidence": "INFERRED", "confidence_score": 0.8, "source_file": "actions/keyboard.py"}
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
