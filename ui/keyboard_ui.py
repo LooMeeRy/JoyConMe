@@ -65,16 +65,16 @@ GRID_POS = [
 ]
 
 # --- 🎨 ส่วนที่ปรับปรุงสีให้ชัดและเด่นขึ้น ---
-_C_BG = QColor(10, 10, 15, 235)  # พื้นหลังหลัก เข้มขึ้นให้ตัวอักษรเด่น
-_C_CELL = QColor(30, 32, 40, 240)  # พื้นหลังช่องปกติ
-_C_SEL = QColor(50, 55, 70, 255)  # พื้นหลังช่องที่เลือกอยู่
-_C_BORDER = QColor(85, 90, 105, 255)  # ขอบช่องปกติ (สว่างขึ้น)
-_C_SEL_BD = QColor(0, 255, 200, 255)  # ขอบช่องที่เลือก (สีฟ้าเขียวสว่าง Neon)
-_C_TEXT = QColor(255, 255, 255, 255)  # สีตัวอักษรปกติ (ขาวจั๊วะ 100%)
-_C_SEL_TXT = QColor(255, 230, 0, 255)  # สีตัวอักษรที่กำลังกด (เหลืองทองสว่าง)
-_C_DIM = QColor(150, 155, 170, 255)  # สีตัวอักษรรอง (สว่างขึ้นอ่านง่าย)
-_C_DOT_ON = QColor(255, 230, 0, 255)  # สีจุดสถานะที่เลือกอยู่
-_C_DOT_OFF = QColor(100, 105, 120, 255)  # สีจุดที่ไม่ได้เลือก
+_C_BG = QColor(10, 10, 10, 235)       # พื้นหลังหลัก สีดำขรึม
+_C_CELL = QColor(20, 20, 20, 240)     # พื้นหลังช่องปกติ สีดำสว่างขึ้นนิดหน่อย
+_C_SEL = QColor(255, 255, 255, 255)   # พื้นหลังช่องที่เลือกอยู่ สีขาวล้วน
+_C_BORDER = QColor(50, 50, 50, 255)   # ขอบช่องปกติ สีเทาเข้ม
+_C_SEL_BD = QColor(255, 255, 255, 255) # ขอบช่องที่เลือก สีขาว
+_C_TEXT = QColor(255, 255, 255, 255)  # สีตัวอักษรปกติ สีขาว
+_C_SEL_TXT = QColor(0, 0, 0, 255)     # สีตัวอักษรที่กำลังกด สีดำ (เพื่อให้ตัดกับพื้นขาว)
+_C_DIM = QColor(120, 120, 120, 255)   # สีตัวอักษรรอง สีเทา
+_C_DOT_ON = QColor(0, 0, 0, 255)      # สีจุดสถานะที่เลือกอยู่ สีดำ (อยู่บนพื้นขาว)
+_C_DOT_OFF = QColor(200, 200, 200, 255) # สีจุดที่ไม่ได้เลือก สีเทาอ่อน (อยู่บนพื้นขาว)
 # ----------------------------------------
 
 
@@ -245,7 +245,7 @@ class KeyboardOverlay(QMainWindow):
                 text = " ".join(chars)
 
             p.setFont(QFont("Consolas", 12, QFont.Weight.Bold))
-            p.setPen(_C_TEXT if selected else _C_DIM)
+            p.setPen(_C_SEL_TXT if selected else _C_TEXT)
             p.drawText(r, Qt.AlignmentFlag.AlignCenter, text)
 
     def _draw_dots(self, p, r, chars, active):
@@ -268,9 +268,10 @@ class KeyboardOverlay(QMainWindow):
         p.setFont(QFont("Consolas", 9, QFont.Weight.Bold))
         lh = 14
         sy = r.center().y() - (len(hints) * lh) // 2
+        is_selected = (self.selected_cell == 4)
         for i, (k, d) in enumerate(hints):
             y = sy + i * lh
-            p.setPen(_C_SEL_TXT)
+            p.setPen(_C_SEL_TXT if is_selected else _C_TEXT)
             p.drawText(QRect(r.x() + 6, y, 14, lh), Qt.AlignmentFlag.AlignCenter, k)
             p.setPen(_C_DIM)
             p.drawText(

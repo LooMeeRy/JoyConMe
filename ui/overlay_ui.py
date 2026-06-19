@@ -54,11 +54,11 @@ class RadialMenuOverlay(QMainWindow):
             start_angle = center_angle_qt - (angle_step / 2)
 
             if i == self.current_selection:
-                painter.setBrush(QBrush(QColor(46, 204, 113, 230)))
-                painter.setPen(QPen(QColor(255, 255, 255), 3))
+                painter.setBrush(QBrush(QColor(255, 255, 255, 230)))
+                painter.setPen(QPen(QColor(0, 0, 0), 2))
             else:
-                painter.setBrush(QBrush(QColor(30, 30, 30, 210)))
-                painter.setPen(QPen(QColor(100, 100, 100), 1))
+                painter.setBrush(QBrush(QColor(20, 20, 20, 210)))
+                painter.setPen(QPen(QColor(60, 60, 60), 1))
 
             painter.drawPie(
                 center.x() - radius,
@@ -85,14 +85,11 @@ class RadialMenuOverlay(QMainWindow):
             box_w, box_h = 130, 60
             text_box = QRect(int(tx - box_w / 2), int(ty - box_h / 2), box_w, box_h)
 
-            painter.setPen(QColor(0, 0, 0, 255))
-            painter.drawText(
-                text_box.translated(1, 1),
-                Qt.AlignmentFlag.AlignCenter | Qt.TextFlag.TextWordWrap,
-                text,
-            )
-
-            painter.setPen(Qt.GlobalColor.white)
+            if i == self.current_selection:
+                painter.setPen(QColor(0, 0, 0))
+            else:
+                painter.setPen(QColor(255, 255, 255))
+                
             painter.drawText(
                 text_box, Qt.AlignmentFlag.AlignCenter | Qt.TextFlag.TextWordWrap, text
             )
@@ -107,8 +104,8 @@ class RadialMenuOverlay(QMainWindow):
             pen_width = 5
             countdown_radius = inner_radius - 10
 
-            # สีเขียวลดหายไป
-            painter.setPen(QPen(QColor(255, 100, 100), pen_width))
+            # พื้นหลังของวงกลมนับถอยหลัง
+            painter.setPen(QPen(QColor(60, 60, 60), pen_width))
             painter.drawEllipse(center, countdown_radius, countdown_radius)
 
             # สีแดงวิ่งตามเวลา (Start at 12 o'clock: -90 degrees)
@@ -118,7 +115,7 @@ class RadialMenuOverlay(QMainWindow):
 
             painter.setPen(
                 QPen(
-                    QColor(46, 204, 113),
+                    QColor(255, 255, 255),
                     pen_width,
                     Qt.PenStyle.SolidLine,
                     Qt.PenCapStyle.RoundCap,
@@ -137,7 +134,7 @@ class RadialMenuOverlay(QMainWindow):
         if self.center_msg:
             lines = self.center_msg.split("\n")
             painter.setFont(QFont(font_families, 10, QFont.Weight.Bold))
-            painter.setPen(QColor(255, 215, 0))
+            painter.setPen(QColor(255, 255, 255))
             line1_rect = QRect(
                 center.x() - inner_radius, center.y() - 28, inner_radius * 2, 25
             )
@@ -154,7 +151,7 @@ class RadialMenuOverlay(QMainWindow):
         elif 0 <= self.current_selection < num_items:
             selected_text = self.menu_items[self.current_selection]
             painter.setFont(QFont(font_families, 10, QFont.Weight.Bold))
-            painter.setPen(QColor(46, 204, 113))
+            painter.setPen(QColor(255, 255, 255))
             center_rect = QRect(
                 center.x() - inner_radius + 5,
                 center.y() - inner_radius + 5,

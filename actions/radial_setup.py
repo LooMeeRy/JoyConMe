@@ -54,6 +54,7 @@ class RadialState:
     last_btn_state: bool = False
     GRACE_PERIOD: float = 0.5
     TIMEOUT_SECONDS: float = 5.0
+    ui_virtual: Any = None
 
 
 class RadialMenuController:
@@ -165,6 +166,7 @@ class RadialMenuController:
             "joystick": joystick,
             "app_config": app_config,
             "controller": self,
+            "ui_virtual": self.state.ui_virtual,
         }
 
         if main_menu:
@@ -255,6 +257,8 @@ class RadialMenuController:
     def run(
         self, ui_virtual, joystick, app_config, mod_mapping, trigger_key=None
     ) -> Any:
+        self.state.ui_virtual = ui_virtual
+
         # 🟢 1. เปิดผ่าน Secret Sequence
         if trigger_key == "open_menu":
             if not self.state.is_active:
@@ -310,9 +314,13 @@ class RadialMenuController:
                 self.close_menu()
                 return "RELOAD"
 
+            elif result == "EXIT":
+                self.close_menu()
+                return "EXIT"
+
             elif result in ["SAVE_MAPPING", "SAVE_CONFIG"]:
-                if self.state.current_menu_id == "button_main":
-                    # 🔥 จากเมนูตั้งปุ่ม — กลับไปหน้ารายการที่ตั้งไว้ ไม่ปิดเมนู
+                if self.state.current_menu_id in ["button_main", "action_main"]:
+                    # 🔥 กลับไปหน้ารายการที่ตั้งไว้ ไม่ปิดเมนู
                     self.state.wait_for_neutral = True
                 else:
                     # 🔥 จากเมนูอื่น (profile_manager ฯลฯ) — ปิดเมนูตามเดิม

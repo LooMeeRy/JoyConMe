@@ -14,6 +14,23 @@
     },
     "system": {
         "show_profile_osd": false,
-        "action_shield": false
+        "action_shield": false,
+        "pinned_actions": [
+            {
+                "label": "ปิดโปรแกรมทันที",
+                "mod": "exit_app",
+                "key": "exit_now"
+            },
+            {
+                "label": "เพิ่มเสียง",
+                "mod": "system_control",
+                "key": "vol_up"
+            },
+            {
+                "label": "ลดเสียง",
+                "mod": "system_control",
+                "key": "vol_down"
+            }
+        ]
     }
 }
