@@ -30,6 +30,11 @@
                 "label": "ลดเสียง",
                 "mod": "system_control",
                 "key": "vol_down"
+            },
+            {
+                "label": "📜 macro_7",
+                "mod": "macro_keyboard",
+                "key": "macro_7"
             }
         ]
     }

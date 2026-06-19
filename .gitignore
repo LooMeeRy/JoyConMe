@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Build artifacts
+build/
+dist/
+*.spec
+*.pkg
+*.toc
+*.pyz
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+.directory
+
+# Executables
+JoyConMe
+JoyConMe.exe
+
+# Local Configs
+config/app_config.json
+config/mapping.json
+
+# IDEs
+.idea/
+.vscode/
+
+# Agent stuff
+.graphify*
+graphify-out/
