@@ -2,7 +2,6 @@ import os
 import time
 
 import pygame
-from evdev import ecodes as e
 
 # --- Action Info ---
 ACTION_INFO = {
@@ -44,17 +43,13 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
     # 1. Trigger Mode (สูตรลับ)
     if trigger_key is not None:
         if trigger_key == "left_click":
-            ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 1)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("left", True)
             time.sleep(0.05)
-            ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 0)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("left", False)
         elif trigger_key == "right_click":
-            ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 1)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("right", True)
             time.sleep(0.05)
-            ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 0)
-            ui_virtual.syn()
+            ui_virtual.mouse_click("right", False)
         return
 
     # 2. ดึงค่า Config ความเร็ว
@@ -77,7 +72,7 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
         try:
             val = joystick.get_axis(mod_mapping["analogs"]["move_x"])
             if abs(val) > 0.15:
-                ui_virtual.write(e.EV_REL, e.REL_X, int(val * speed_x))
+                ui_virtual.mouse_move(int(val * speed_x), 0)
                 moved = True
         except:
             pass
@@ -86,7 +81,7 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
         try:
             val = joystick.get_axis(mod_mapping["analogs"]["move_y"])
             if abs(val) > 0.15:
-                ui_virtual.write(e.EV_REL, e.REL_Y, int(val * speed_y))
+                ui_virtual.mouse_move(0, int(val * speed_y))
                 moved = True
         except:
             pass
@@ -96,7 +91,7 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
         try:
             val = joystick.get_axis(mod_mapping["analogs"]["scroll_y"])
             if abs(val) > 0.5:
-                ui_virtual.write(e.EV_REL, e.REL_WHEEL, 1 if val < 0 else -1)
+                ui_virtual.mouse_scroll(1 if val < 0 else -1)
                 moved = True
         except:
             pass
@@ -107,7 +102,7 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
         try:
             is_down = joystick.get_button(mod_mapping["buttons"]["left_click"])
             if is_down != _left_is_pressed:
-                ui_virtual.write(e.EV_KEY, e.BTN_LEFT, 1 if is_down else 0)
+                ui_virtual.mouse_click("left", is_down)
                 _left_is_pressed = is_down
                 moved = True
         except:
@@ -118,12 +113,10 @@ def run(ui_virtual, joystick, app_config, mod_mapping, trigger_key=None):
         try:
             is_down = joystick.get_button(mod_mapping["buttons"]["right_click"])
             if is_down != _right_is_pressed:
-                ui_virtual.write(e.EV_KEY, e.BTN_RIGHT, 1 if is_down else 0)
+                ui_virtual.mouse_click("right", is_down)
                 _right_is_pressed = is_down
                 moved = True
         except:
             pass
 
-    # สำคัญ: ถ้ามีการขยับหรือคลิก ต้องส่งสัญญาณ SYN
-    if moved:
-        ui_virtual.syn()
+

@@ -28,133 +28,6 @@ except ImportError:
     ]
 
 
-# Mock Code สำหรับ evdev เพื่อส่งไปให้ VirtualInput ตีความบน Linux โดยไม่แครชบน Windows
-class e:
-    EV_KEY = 1
-    KEY_A = 30
-    KEY_B = 48
-    KEY_C = 46
-    KEY_D = 32
-    KEY_E = 18
-    KEY_F = 33
-    KEY_G = 34
-    KEY_H = 35
-    KEY_I = 23
-    KEY_J = 36
-    KEY_K = 37
-    KEY_L = 38
-    KEY_M = 50
-    KEY_N = 49
-    KEY_O = 24
-    KEY_P = 25
-    KEY_Q = 16
-    KEY_R = 19
-    KEY_S = 31
-    KEY_T = 20
-    KEY_U = 22
-    KEY_V = 47
-    KEY_W = 17
-    KEY_X = 45
-    KEY_Y = 21
-    KEY_Z = 44
-    KEY_1 = 2
-    KEY_2 = 3
-    KEY_3 = 4
-    KEY_4 = 5
-    KEY_5 = 6
-    KEY_6 = 7
-    KEY_7 = 8
-    KEY_8 = 9
-    KEY_9 = 10
-    KEY_0 = 11
-    KEY_MINUS = 12
-    KEY_EQUAL = 13
-    KEY_LEFTBRACE = 26
-    KEY_RIGHTBRACE = 27
-    KEY_BACKSLASH = 43
-    KEY_SEMICOLON = 39
-    KEY_APOSTROPHE = 40
-    KEY_COMMA = 51
-    KEY_DOT = 52
-    KEY_SLASH = 53
-    KEY_GRAVE = 41
-    KEY_BACKSPACE = 14
-    KEY_ENTER = 28
-    KEY_SPACE = 57
-    KEY_LEFTSHIFT = 42
-
-
-# Map ตัวอักษรสำหรับ Linux (evdev) ส่วน pynput จะรับ String แทน
-_CHAR_MAP = {
-    "a": (e.KEY_A, False),
-    "b": (e.KEY_B, False),
-    "c": (e.KEY_C, False),
-    "d": (e.KEY_D, False),
-    "e": (e.KEY_E, False),
-    "f": (e.KEY_F, False),
-    "g": (e.KEY_G, False),
-    "h": (e.KEY_H, False),
-    "i": (e.KEY_I, False),
-    "j": (e.KEY_J, False),
-    "k": (e.KEY_K, False),
-    "l": (e.KEY_L, False),
-    "m": (e.KEY_M, False),
-    "n": (e.KEY_N, False),
-    "o": (e.KEY_O, False),
-    "p": (e.KEY_P, False),
-    "q": (e.KEY_Q, False),
-    "r": (e.KEY_R, False),
-    "s": (e.KEY_S, False),
-    "t": (e.KEY_T, False),
-    "u": (e.KEY_U, False),
-    "v": (e.KEY_V, False),
-    "w": (e.KEY_W, False),
-    "x": (e.KEY_X, False),
-    "y": (e.KEY_Y, False),
-    "z": (e.KEY_Z, False),
-    "1": (e.KEY_1, False),
-    "!": (e.KEY_1, True),
-    "2": (e.KEY_2, False),
-    "@": (e.KEY_2, True),
-    "3": (e.KEY_3, False),
-    "#": (e.KEY_3, True),
-    "4": (e.KEY_4, False),
-    "$": (e.KEY_4, True),
-    "5": (e.KEY_5, False),
-    "%": (e.KEY_5, True),
-    "6": (e.KEY_6, False),
-    "^": (e.KEY_6, True),
-    "7": (e.KEY_7, False),
-    "&": (e.KEY_7, True),
-    "8": (e.KEY_8, False),
-    "*": (e.KEY_8, True),
-    "9": (e.KEY_9, False),
-    "(": (e.KEY_9, True),
-    "0": (e.KEY_0, False),
-    ")": (e.KEY_0, True),
-    "-": (e.KEY_MINUS, False),
-    "_": (e.KEY_MINUS, True),
-    "=": (e.KEY_EQUAL, False),
-    "+": (e.KEY_EQUAL, True),
-    "[": (e.KEY_LEFTBRACE, False),
-    "{": (e.KEY_LEFTBRACE, True),
-    "]": (e.KEY_RIGHTBRACE, False),
-    "}": (e.KEY_RIGHTBRACE, True),
-    "\\": (e.KEY_BACKSLASH, False),
-    "|": (e.KEY_BACKSLASH, True),
-    ";": (e.KEY_SEMICOLON, False),
-    ":": (e.KEY_SEMICOLON, True),
-    "'": (e.KEY_APOSTROPHE, False),
-    '"': (e.KEY_APOSTROPHE, True),
-    ",": (e.KEY_COMMA, False),
-    "<": (e.KEY_COMMA, True),
-    ".": (e.KEY_DOT, False),
-    ">": (e.KEY_DOT, True),
-    "/": (e.KEY_SLASH, False),
-    "?": (e.KEY_SLASH, True),
-    "`": (e.KEY_GRAVE, False),
-    "~": (e.KEY_GRAVE, True),
-}
 
 ACTION_INFO = {
     "id": "keyboard",
@@ -179,29 +52,7 @@ _COMMIT_DELAY = 1.2
 
 
 def _type_char(ui_virtual, char: str, is_upper: bool = False):
-    if char.isalpha() and char.isascii():
-        kc = _CHAR_MAP.get(char.lower(), (None, False))[0]
-        shift = is_upper
-    elif char in _CHAR_MAP:
-        kc, shift = _CHAR_MAP[char]
-    else:
-        return
-
-    if kc is None:
-        return
-
-    # Direct UInput write (replaces VirtualInput.type_char which doesn't exist on raw UInput)
-    if shift:
-        ui_virtual.write(e.EV_KEY, e.KEY_LEFTSHIFT, 1)
-        ui_virtual.syn()
-    ui_virtual.write(e.EV_KEY, kc, 1)
-    ui_virtual.syn()
-    time.sleep(0.02)
-    ui_virtual.write(e.EV_KEY, kc, 0)
-    ui_virtual.syn()
-    if shift:
-        ui_virtual.write(e.EV_KEY, e.KEY_LEFTSHIFT, 0)
-        ui_virtual.syn()
+    ui_virtual.type_char(char, shift=is_upper)
 
 
 def _analog_to_cell(ax: float, ay: float) -> Optional[int]:
@@ -245,7 +96,6 @@ class KeyboardController:
         if KeyboardOverlay:
             self._overlay = KeyboardOverlay()
             self._overlay.show()
-            self._overlay.raise_()
 
     def close(self):
         self.is_active = False
@@ -282,15 +132,11 @@ class KeyboardController:
         except:
             return
         time.sleep(0.05)
-        ui_virtual.write(e.EV_KEY, e.KEY_LEFTCTRL, 1)
-        ui_virtual.syn()
-        ui_virtual.write(e.EV_KEY, e.KEY_V, 1)
-        ui_virtual.syn()
+        ui_virtual.press_special('ctrl', True)
+        ui_virtual.press_special('v', True)
         time.sleep(0.02)
-        ui_virtual.write(e.EV_KEY, e.KEY_V, 0)
-        ui_virtual.syn()
-        ui_virtual.write(e.EV_KEY, e.KEY_LEFTCTRL, 0)
-        ui_virtual.syn()
+        ui_virtual.press_special('v', False)
+        ui_virtual.press_special('ctrl', False)
 
     def _handle_btn_a(self, ui_virtual, is_pressed: bool):
         now = time.time()
@@ -329,11 +175,7 @@ class KeyboardController:
             char = group[self._char_index]
 
             if self._pending_commit:
-                ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 1)
-                ui_virtual.syn()
-                time.sleep(0.02)
-                ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 0)
-                ui_virtual.syn()
+                ui_virtual.tap_special('backspace')
                 if self._typed_text:
                     self._typed_text = self._typed_text[:-1]
 
@@ -381,11 +223,7 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 1)
-            ui_virtual.syn()
-            time.sleep(0.02)
-            ui_virtual.write(e.EV_KEY, e.KEY_BACKSPACE, 0)
-            ui_virtual.syn()
+            ui_virtual.tap_special('backspace')
             if self._typed_text:
                 self._typed_text = self._typed_text[:-1]
                 if self._overlay:
@@ -398,11 +236,7 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            ui_virtual.write(e.EV_KEY, e.KEY_SPACE, 1)
-            ui_virtual.syn()
-            time.sleep(0.02)
-            ui_virtual.write(e.EV_KEY, e.KEY_SPACE, 0)
-            ui_virtual.syn()
+            ui_virtual.tap_special('space')
             self._typed_text += " "
             if self._overlay:
                 self._overlay.set_typed_text(self._typed_text)
@@ -424,11 +258,7 @@ class KeyboardController:
                 self._char_index = -1
                 if self._overlay:
                     self._overlay.set_char_index(-1)
-            ui_virtual.write(e.EV_KEY, e.KEY_ENTER, 1)
-            ui_virtual.syn()
-            time.sleep(0.02)
-            ui_virtual.write(e.EV_KEY, e.KEY_ENTER, 0)
-            ui_virtual.syn()
+            ui_virtual.tap_special('enter')
             self._typed_text = ""
             if self._overlay:
                 self._overlay.set_typed_text(self._typed_text)

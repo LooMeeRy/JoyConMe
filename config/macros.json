@@ -29,5 +29,11 @@
             "shift",
             "tab"
         ]
+    ],
+    "macro_6": [
+        [
+            "alt",
+            "space"
+        ]
     ]
 }

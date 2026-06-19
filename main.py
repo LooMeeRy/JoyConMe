@@ -6,6 +6,8 @@ from pathlib import Path
 
 # อนุญาตให้ Pygame อ่านจอยแม้โปรแกรมจะอยู่เบื้องหลัง
 os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
+# Force X11 backend to bypass Wayland window restrictions (Allows move() and focus control)
+os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication

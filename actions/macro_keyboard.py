@@ -5,81 +5,11 @@ import os
 import time
 from pathlib import Path
 
-from evdev import ecodes as e
-
 ACTION_INFO = {
     "id": "macro_keyboard",
     "name": "ระบบรันมาโครคีย์บอร์ด",
     "priority": 10,
     "is_blocking": False,
-}
-
-# 🗺️ คลังรหัสคีย์
-K_MAP = {
-    "a": e.KEY_A,
-    "b": e.KEY_B,
-    "c": e.KEY_C,
-    "d": e.KEY_D,
-    "e": e.KEY_E,
-    "f": e.KEY_F,
-    "g": e.KEY_G,
-    "h": e.KEY_H,
-    "i": e.KEY_I,
-    "j": e.KEY_J,
-    "k": e.KEY_K,
-    "l": e.KEY_L,
-    "m": e.KEY_M,
-    "n": e.KEY_N,
-    "o": e.KEY_O,
-    "p": e.KEY_P,
-    "q": e.KEY_Q,
-    "r": e.KEY_R,
-    "s": e.KEY_S,
-    "t": e.KEY_T,
-    "u": e.KEY_U,
-    "v": e.KEY_V,
-    "w": e.KEY_W,
-    "x": e.KEY_X,
-    "y": e.KEY_Y,
-    "z": e.KEY_Z,
-    "1": e.KEY_1,
-    "2": e.KEY_2,
-    "3": e.KEY_3,
-    "4": e.KEY_4,
-    "5": e.KEY_5,
-    "6": e.KEY_6,
-    "7": e.KEY_7,
-    "8": e.KEY_8,
-    "9": e.KEY_9,
-    "0": e.KEY_0,
-    "ctrl": e.KEY_LEFTCTRL,
-    "lctrl": e.KEY_LEFTCTRL,
-    "rctrl": e.KEY_RIGHTCTRL,
-    "shift": e.KEY_LEFTSHIFT,
-    "lshift": e.KEY_LEFTSHIFT,
-    "rshift": e.KEY_RIGHTSHIFT,
-    "alt": e.KEY_LEFTALT,
-    "space": e.KEY_SPACE,
-    "enter": e.KEY_ENTER,
-    "backspace": e.KEY_BACKSPACE,
-    "tab": e.KEY_TAB,
-    "esc": e.KEY_ESC,
-    "up": e.KEY_UP,
-    "down": e.KEY_DOWN,
-    "left": e.KEY_LEFT,
-    "right": e.KEY_RIGHT,
-    "f1": e.KEY_F1,
-    "f2": e.KEY_F2,
-    "f3": e.KEY_F3,
-    "f4": e.KEY_F4,
-    "f5": e.KEY_F5,
-    "f6": e.KEY_F6,
-    "f7": e.KEY_F7,
-    "f8": e.KEY_F8,
-    "f9": e.KEY_F9,
-    "f10": e.KEY_F10,
-    "f11": e.KEY_F11,
-    "f12": e.KEY_F12,
 }
 
 
@@ -97,23 +27,14 @@ def load_macro_library():
 def execute_step(ui, step):
     if isinstance(step, list):
         # Combo (เช่น กด Ctrl + C พร้อมกัน)
-        codes = [K_MAP.get(k.lower()) for k in step if k.lower() in K_MAP]
-        for c in codes:
-            ui.write(e.EV_KEY, c, 1)
-        ui.syn()
+        for k in step:
+            ui.press_special(k.lower(), True)
         time.sleep(0.05)
-        for c in codes:
-            ui.write(e.EV_KEY, c, 0)
-        ui.syn()
+        for k in step:
+            ui.press_special(k.lower(), False)
     else:
         # ปุ่มเดี่ยว
-        code = K_MAP.get(step.lower())
-        if code:
-            ui.write(e.EV_KEY, code, 1)
-            ui.syn()
-            time.sleep(0.03)
-            ui.write(e.EV_KEY, code, 0)
-            ui.syn()
+        ui.tap_special(step.lower())
 
 
 def is_input_active(joystick, val):

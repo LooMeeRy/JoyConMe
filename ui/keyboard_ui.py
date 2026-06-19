@@ -86,15 +86,23 @@ class KeyboardOverlay(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("JoyConMe_Keyboard")
-        self.setWindowFlags(
+        flags = (
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
             | Qt.WindowType.Tool
             | Qt.WindowType.X11BypassWindowManagerHint
         )
+        if hasattr(Qt.WindowType, "WindowTransparentForInput"):
+            flags |= Qt.WindowType.WindowTransparentForInput
+        if hasattr(Qt.WindowType, "WindowDoesNotAcceptFocus"):
+            flags |= Qt.WindowType.WindowDoesNotAcceptFocus
+        self.setWindowFlags(flags)
+
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WidgetAttribute.WA_X11DoNotAcceptFocus)
+        if hasattr(Qt.WidgetAttribute, "WA_TransparentForMouseEvents"):
+            self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         self.selected_cell = 4
